@@ -1,0 +1,371 @@
+.search_bar_container
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #FFFFFF;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+.search_bar
+{
+    width: 91%;
+    height: 85px;
+    display: grid;
+    grid-template-columns: 1% 23% 19% 28% 18% 4% 1%;
+    gap: 1%; 
+    align-items: center;
+}
+.location
+{
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+}
+.selection_btn
+{
+    width: 100%;
+    height: 50px;
+    border: 2px solid #5BA3E2;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    z-index: 100;
+    text-align: left;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+.location .selection_btn
+{
+    grid-template-columns: 15% 72% 13%;
+}
+.residence .selection_btn
+{
+    grid-template-columns: 20% 63% 17%;
+}
+.quantity .selection_btn
+{
+    grid-template-columns: 20% 62% 18%;
+}
+.date_time .selection_btn
+{
+    grid-template-columns: 15% 30% 14% 30% 11%;
+}
+.location .selection_btn img
+{
+    width: 36%;
+}
+.residence .selection_btn img
+{
+    width: 46%;
+}
+.quantity .selection_btn img
+{
+    width: 36%;
+}
+.date_time .selection_btn img
+{
+    width: 37%;
+}
+.selection_btn img
+{
+    height: auto;
+}
+.selection_btn input
+{
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #47687D;
+    font-weight: 600;
+    background-color: transparent;
+    cursor: pointer;
+}
+/* .residence .selection_btn input, .quantity .selection_btn input
+{
+    cursor: pointer;
+} */
+.selection_btn input:focus
+{
+    outline: none;
+}
+.selection_btn i
+{
+    height: auto;
+    margin-left: 0px;
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2);
+    -webkit-background-clip: text; /* để set màu áp dụng cho icon chứ không phải cho nền */
+    -webkit-text-fill-color: transparent;
+}
+.selection_btn .fa-x
+{
+    font-size: 16px;
+}
+.selection_btn .fa-angle-down, .selection_btn .fa-angle-up
+{
+    font-size: 19px;
+}
+.location .selection_btn i:hover, .residence .selection_btn i:hover
+{
+    background: linear-gradient(45deg,#00dede, #00BABA); 
+    -webkit-background-clip: text; /* để set màu áp dụng cho icon chứ không phải cho nền */
+    -webkit-text-fill-color: transparent;
+}
+.selection_option {
+    display: none;
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    margin-top: 5px;
+    border: 2px solid #5BA3E2;
+    border-radius: 10px 10px 10px 10px;
+    height: auto;
+    cursor: pointer;
+    z-index: 2;
+}
+.option {
+    margin-bottom: 8px; 
+    background-color: #f9f9f9;
+    color: #47687D;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 0px 0px 0px 0px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.option:hover, .option.selected 
+{
+    background-color: #e6e6e6;  
+}
+
+.location .option
+{
+    text-indent: 12px;
+}
+.location .option img
+{
+    width: 14px;
+    margin-left: 15px;
+    height: auto;
+}
+.residence .option i
+{
+    font-size: 15px;
+    text-indent: 13px;
+}
+.residence .option
+{
+    text-indent: 10px;
+}
+.quantity .option
+{
+    text-indent: 16px;
+}
+.option_describe
+{
+    font-size: 14px;
+    color: #47687D;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    text-indent: 15px;   
+}
+.residence
+{
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    cursor: pointer;
+}
+
+.date_time
+{
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    cursor: pointer;
+}
+.quantity
+{
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    cursor: pointer;
+}
+.search
+{
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+}
+.search_button
+{
+    width: 100%;
+    height: 49px;
+    border: 2px solid #5BA3E2;
+    border-radius: 10px;
+    background-image: linear-gradient(135deg, #AAD6FF, #5BA3E2);
+    cursor: pointer;
+}
+.search_button:hover
+{
+    background-image: linear-gradient(45deg,#AAD6FF, #5BA3E2); 
+}
+.search_button i
+{
+    font-size: 22px;
+    color: white;
+}
+
+.input_date
+{
+    border: none;
+    cursor: pointer;
+}
+.date_time .selection_btn div
+{
+    font-size: 30px;
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2);
+    -webkit-background-clip: text; /* để set màu áp dụng cho icon chứ không phải cho nền */
+    -webkit-text-fill-color: transparent;
+    /* line-height: 1px; */
+    /* margin-bottom: 7%; */
+}
+.date_time .selection_btn hr {
+    border: 0;
+    height: 2.5px;
+    background-color: #5BA3E2;
+    /* background: linear-gradient(to right, #5BA3E2, #AAD6FF, #5BA3E2); */
+    width: 25%; /* Độ dài của đường */
+}
+
+.selection_option_layout
+{
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    /* height: 400px; */
+    height: auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.date_time .selection_option
+{
+
+    width: 130%;
+    padding: 10px;
+    margin-left: -15%;
+}
+
+.calendar {
+    width: 100%;
+}
+
+.calendar-header {
+    height: 39px;
+    display: grid;
+    grid-template-columns: 75% 5% 20%;
+    align-items: center;
+}
+
+.calendar-body {
+    padding: 10px;
+    height: 235px;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(153, 153, 153);
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.days span {
+    padding: 10px 5px;
+    font-size: 13px;
+    cursor: pointer;
+    line-height: 13px;
+}
+
+.day_today
+{
+    color:#5BA3E2!important;
+}
+
+.selected_date {
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2)!important;
+    color: white!important;
+    border-radius: 3px 3px 3px 3px;
+}
+
+.day_after:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.days .today {
+    /* background-color: #007bff; */
+    color: #007bff;
+    border-radius: 4px;
+}
+
+.days .day_after {
+    color: black;
+}
+
+.day_before {
+    color: rgb(186, 186, 186);
+}
+
+/* #prev-month, #next-month */
+.month_btn
+{
+    border: none;
+    background: transparent;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.calendar-header .fa-angle-left, .calendar-header .fa-angle-right
+{
+    font-size: 17.5px;
+}
+.icon-move
+{
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2);
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+}
+.icon-move:hover
+{
+    background: linear-gradient(45deg,#00dede, #00BABA); 
+    -webkit-background-clip: text; /* để set màu áp dụng cho icon chứ không phải cho nền */
+    -webkit-text-fill-color: transparent;
+}
+.icon-hidden
+{
+    background: linear-gradient(45deg, #f5f5f5, #9f9f9f);
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+}
+.month-year
+{
+    margin-left: 10%;
+    font-size: 13px;
+    font-weight: 600;
+    color: #757575;
+}

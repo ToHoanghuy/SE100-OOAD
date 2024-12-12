@@ -1,0 +1,639 @@
+body {
+    margin: 0;
+    background-color: #F5F5F5 !important;
+}
+
+.box-slider {
+    margin-top: 9.5%;
+    width: 100%;
+    height: 390px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 8%;
+    overflow: hidden;
+}
+.box-inner {
+    perspective: 1000px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    cursor: pointer;
+}
+
+.box {
+    margin-top: 30px;
+    width: 230px;
+    height: 100%;
+    font-size: 15px;
+    /* transition: transform 1s ease, width 0.3s ease, height 0.3s ease; */
+    transition: transform 1.7s ease, opacity 1s ease, width 0.5s ease, height 0.5s ease;
+    /* transition: transform 1.5s ease-in-out, width 1s ease-in-out, height 3s ease-in-out; */
+}
+
+.box-focus {
+    width: calc(230px * 1.1); 
+    height: 100%;
+    transition: transform 1.7s ease, opacity 1s ease, width 0.5s ease, height 0.5s ease;
+    /* font-size: 17px; */
+    font-size: calc(15px * 1.1); 
+}
+
+.box .box-inner{
+    display: grid;
+    grid-template-rows: 30px 320px;
+}
+
+.box-focus .box-inner{
+    display: grid;
+    grid-template-rows: 30px calc(320px * 1.1);
+}
+
+.flipped {
+    transform: rotateY(180deg);
+}
+
+.box-inner img {
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.all {
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 45% 55%;
+}
+
+.background {
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    /* height: 90%; */
+    height: 90vh;
+    /* max-height: 300px; */
+    overflow: hidden;
+}
+
+.background-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    will-change: opacity;
+    transition: opacity 1.2s ease-in-out, transform 0.7s ease-in-out;
+    mix-blend-mode: screen;
+}
+
+.change_button {
+    /* position: absolute; */
+    height: 5%;
+    width: 100%;
+    margin-top: 3%;
+    /* z-index: 1; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.right_arrow,
+.left_arrow {
+    height: 35px;
+    width: 35px;
+    background-color: #F8F8F8;
+    opacity: 0.6;
+    border-radius: 20px 20px 20px;
+    font-size: 16px;
+    color: rgb(70, 70, 70);
+    border: none;
+    cursor: pointer;
+}
+
+.right_arrow:hover {
+    opacity: 0.7;
+}
+
+.box-inner span {
+    display: flex;
+    justify-items: center;
+    align-content: left;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+    margin-left: 8px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+.slogan
+{
+    position: relative;
+    display: flex;                 
+    flex-direction: column;       
+    align-items: flex-start; 
+    margin-top: 12%;
+    height: 250px;
+    width: 100%;
+    margin-left: 20%;
+}
+.name
+{
+    font-family: 'Inter', sans-serif;
+    font-size: 60px;
+    font-weight: bold;
+    margin-top: 3%;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+.describe
+{
+    /* margin-top: -55px; */
+    margin-top: 1%;
+    font-size: 17.5px;
+    font-family: 'Fira Sans', sans-serif;
+    color: #525252;
+    margin-left: 12px;
+}
+.show
+{
+    margin-top: 10%;
+    margin-left: 2px;
+    width: 160px;
+    height: 42px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16.5px;
+    cursor: pointer;
+    background-color: #ffffff;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
+}
+.show span
+{
+    font-weight: bold;
+    color: #4B6C82;
+    opacity: 1;
+}
+.show:hover
+{
+    opacity: 0.9;
+}
+.header
+{
+    height: 90vh;
+    overflow: hidden;
+}
+.note_container
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.speacial_note, .residence_frame
+{
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.speacial_note
+{
+    width: 91%;
+}
+.residence_frame
+{
+    width: 91%;
+}
+.note
+{
+    min-width: calc(25% - 40px);
+    height: 100px;
+    background-color: white;
+    margin: 20px;
+    border: 2px solid #5BA3E2;
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);  
+}
+.residence_note
+{
+    min-width: calc(100% / 3 - 40px);
+    height: 190px;
+    margin: 20px;
+    background-color: white;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2); 
+}
+.app_ads_banner
+{
+    width: 87%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.note, .residence_note
+{
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+
+/* Propose Container */
+.discover_container, .propose_container
+{
+    background-color: #FFFFFF;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);  
+    display: flex;
+    justify-content: center;
+}
+
+.discover_container
+{
+    width: 100%;
+    height: 390px;
+}
+
+.propose_container
+{
+    width: 100%;
+    height: 450px;
+}
+
+.card_ele_slider
+{
+    /* margin-left: 6%; */
+    display: flex; /* Sử dụng flexbox để bố trí thẻ */
+    width: 100%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 1%, black 99%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 1%, black 99%, transparent);
+}
+
+
+
+.card_ele
+{   
+    transition: transform 0.7s ease, opacity  1s ease-out !important;
+}
+
+.discover_container .card_ele
+{
+    margin: 15px; 
+    min-width: calc(20% - 30px); /* Đảm bảo hiển thị 5 thẻ trong một hàng */
+    height: 210px;
+}
+.propose_container .card_ele
+{
+    margin: 20px; 
+    min-width: calc(25% - 40px); /* Đảm bảo hiển thị 5 thẻ trong một hàng */
+    height: 300px;
+}
+.card_info
+{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative; 
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.card_img
+{
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 11px;
+    cursor: pointer;
+    transition: transform 0.3s ease;/* hiệu ứng phóng to ảnh */
+}
+.card_info_img
+{
+    width: 100%;
+    object-fit: cover;
+    height: 54%;
+    border-radius: 15px 15px 0px 0px;
+    margin-bottom: 2.5%;
+}
+
+.card_img:hover, .card_ele:hover .card_img
+{
+    transform: scale(1.05);
+}
+.card_info:hover
+{
+    transform: scale(1.05);
+}
+
+.card_ele:hover .discover_card_name
+/* ,.card_info:hover .card_info_name */
+{
+    background: linear-gradient(135deg,#99cbfa, #5BA3E2);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.discover_card_name, .card_info_name, .card_info_dst
+{
+    white-space: nowrap; /* Không xuống dòng */
+    overflow: hidden; /* Ẩn phần nội dung tràn ra */
+    text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu nội dung quá dài */
+    display: inline-block; 
+    font-family: 'Inter', sans-serif;
+}
+.discover_card_name, .card_info_name
+{
+    color: #476C83;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+}
+.discover_card_name
+{
+    max-width: 98%; /* Đảm bảo không vượt quá độ rộng của container */
+    margin-left: 1%;
+    font-size: 17.5px;
+}
+.card_info
+{
+    overflow: hidden;
+}
+.card_info_name, .card_info_dst, .card_info_race
+{
+    width: 90%;
+    margin-left: 5%;
+}
+.card_info_name
+{
+    font-size: 16px;
+    /* margin-bottom: 1%; */
+    /* margin-bottom: 7px; */
+}
+.card_prefer
+{
+    position: absolute; /* Đặt vị trí tuyệt đối cho nút */
+    top: 15px; /* Khoảng cách từ đỉnh */
+    right: 15px; /* Khoảng cách từ trái */
+    width: 33px;
+    height: 33px;
+    background-color: white;
+    border: 1.5px solid #EF99A2;
+    /* padding: 5px; */
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card_discount
+{
+    position: absolute; /* Đặt vị trí tuyệt đối cho nút */
+    width: 30%;
+    min-width: 70px;
+    top:-10%;
+    left: -9%;
+    aspect-ratio: 1;
+    border-radius: 60px;
+    background: linear-gradient(135deg, #FCD08F, #FDBD77, #FFAB5E);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    font-family: 'Inter', sans-serif;
+}
+
+.card_discount_value
+{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 17px;
+    padding-right: 9px;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+}
+.card_discount_symbol
+{
+    margin-left: 1px;
+    margin-right: 1px;
+    font-size: 13px;
+}
+.card_prefer:hover
+{
+    box-shadow: 0px 1px 5px rgba(222, 0, 0, 0.2); 
+    transform: scale(1.1);
+}
+
+.card_prefer i
+{
+    margin-top: 1px;
+    color: #EF99A2;
+    font-size: 15.5px;
+}
+.card_info_dst
+{
+    font-size: 14px;
+    color: #7292A7;
+    margin-bottom: 1%;
+}
+.card_info_dst i
+{
+    width: 6%;
+    height: auto;
+    margin-right: 4px;
+    margin-top: 2px;
+    color: #00BABA;
+}
+.card_info_race
+{
+    display: flex;  
+    align-items: flex-end;
+    margin-bottom: 4%;
+}
+.card_info_race span
+{
+    font-size: 13px;
+    color: #7292A7;
+    letter-spacing: 0.5px;
+}
+.card_info_star
+{
+    width: 20%;
+    height: 22px;
+    background-color: #99cbfa;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #FCD08F, #FDBD77, #FFAB5E);
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc nếu cần */
+    gap: 5px;
+    margin-right: 3%;
+}
+.card_info_star i
+{
+    color: white;
+    font-size: 11px;
+    margin-left: 14%;
+}
+.card_info_star span
+{
+    font-weight: bold;
+    color: white;
+    font-size: 13px;
+    margin-bottom: 1px;
+}
+.card_info_price
+{
+    float: right;
+    margin-right: 4.5%;
+}
+.discount_price
+{
+    font-weight: bold;
+    color: #2DD7A4;
+    font-size: 20px;
+    /* margin-left: 2%; */
+}
+.original_price
+{
+    color: #7292A7;
+    font-size: 14px;
+    margin-right: 8px;
+}
+.discover_card_name
+{
+    /* font-weight: 550; */
+    margin-left: 0%;
+}
+
+.card_button
+{
+    width: 100%;
+    height: 30px;
+    text-align: center ;
+}
+.discover_container .card_button
+{
+    margin-top: -160px;
+}
+.propose_container .card_button
+{
+    margin-top: -220px;
+}
+.card_button button
+{
+    height: 32px;
+    width: 32px;
+    border-radius: 20px;
+    border: 1px solid #4b6c82bd;
+    background-color: white;
+    cursor: pointer;
+}
+.card_button .fa-angle-right, .card_button .fa-angle-left
+{
+    font-size: 14.5px;
+    color: #4B6C82;
+    opacity: 0.7;   
+}
+
+.card_button_prev, .card_button_next
+{
+    position: absolute; /* Định vị các nút bên trong .card_button */
+}
+.discover_container .card_button_prev{
+    left: 80px;
+}
+.discover_container .card_button_next
+{
+    right: 80px; 
+}
+.propose_container .card_button_prev{
+    left: 84px;
+}
+.propose_container .card_button_next
+{
+    right: 84px; 
+}
+.container_tilte
+{
+    font-family: 'Inter', sans-serif;
+    color: #327DC2;
+    font-weight: bold;
+    font-size: 29px;
+    padding-top: 38px;
+    /* margin-bottom: px; */
+    /* margin-left: 7.5%; */
+    margin-left: 1.5%;
+}
+.card_button_next:hover .fa-angle-right, .card_button_prev:hover .fa-angle-left
+{
+    color: #5BA3E2;
+}
+.card_button_next:hover, .card_button_prev:hover
+{
+    border-color: #5BA3E2;
+}
+.region_btn
+{
+    width: 80%;
+    height: 45px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-left: 1.5%;
+    display: flex;
+    align-items: center;
+    /* background-color: #7292A7; */
+}
+.region_btn button
+{
+    height: 35px;
+    width: 9%;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 15px;
+    margin-right: 1.25%;
+    border: 1px solid #4B6C82;
+    cursor: pointer;
+}
+.selected_region_btn, .unselected_region_btn:hover
+{
+    color: white;
+    background-color: #B9C4CC;
+}
+.unselected_region_btn
+{
+    color: #4B6C82;
+    background-color: white;
+}
+
+.platform_container .container_tilte
+{
+    margin-left: 0;
+}
+.platform_container
+{
+    margin: 50px 0px;
+    text-align: center;
+}
+.platform_box_container
+{
+    margin: 50px 0px;
+    width: 100%;
+    /* background-color: #B9C4CC; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.platform_box
+{
+    width: 150px;
+    height: 150px;
+    margin-left: 2%;
+    margin-right: 2%;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+}

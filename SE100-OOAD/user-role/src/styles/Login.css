@@ -1,0 +1,660 @@
+body
+{
+    background-color: #F5F5F5!important;
+}
+.root
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.comeback
+{
+    width: auto;
+    height: auto;
+    position: absolute;  
+    left: 20px;
+    top: 10px;
+    font-size: 19px;
+    cursor: pointer;
+}
+.comeback i
+{
+    color: #385876;
+    margin-right: 2.5px;
+}
+.comeback span
+{
+    color: #525252;
+}
+
+.comeback:hover  .comeback_text {
+    color: #00BABA; 
+}
+.login_container
+{
+    display: flex; /* Bật chế độ flexbox */
+    flex-direction: column; /* Xếp các phần tử theo chiều dọc */
+    align-items: center; /* Căn giữa các phần tử theo chiều ngang */
+    text-align: center; 
+    width: 55%;
+    height: 100%;
+    min-height: 100vh;
+    /* min-height: 100%; */
+    background-color: white;
+    /* border-left: 2px solid #7EB1FF; 
+    border-right: 2px solid #7EB1FF; */
+
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+.login_title
+{
+    margin-top: 15px;
+    height: 100px;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 25% 60% 15%;
+    align-items: center; 
+}
+.login_logo
+{
+    width: 70%;
+    height: auto;
+    margin-left: 15%;
+    text-align: center;
+}
+.login_title_text
+{
+    color: #52A6F3;
+    font-size: 38px;
+    font-weight: bold;
+    text-align: center;
+}
+.login_welcome_text {
+    margin-top: 3px;
+    color: #181818;
+    font-size: 22px;
+    font-weight: 500;
+    font-family: 'Fira Sans', sans-serif;
+    letter-spacing: 0.5px;
+}
+.login_desc_text 
+{
+    height: 25px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-family: 'Fira Sans', sans-serif;
+    letter-spacing: 0.5px;
+    color: #525252;
+    font-size: 16px;
+
+}
+.input_frame
+{
+    width: 70%;
+    height: auto;
+    margin-bottom: 9px;
+    text-align: left;
+    font-family: 'Lexend', sans-serif;
+}
+.file_input
+{
+    width: 100%;
+    height: 57px;
+    border: 1px solid #52A6F3;
+    border-radius: 5px;
+    background-color: #FCFCFC;
+    text-align: left;
+    margin-bottom: 2px;
+    /* padding: 2px 0px 1px 0px; */
+}
+
+.file_input label
+{
+    display: block;
+    margin-left: 15px; 
+    margin-top: 6px;
+    font-size: 14px;
+    color: #52A6F3;
+    cursor: pointer;
+    margin-bottom: -1px;
+    /* background-color: aquamarine; */
+}
+.file_input input
+{
+    width: 90%;
+    margin-right: 0px;
+    margin-left: 13px; 
+    background-color: transparent;
+    /* background-color: #7EB1FF; */
+    border: none;
+    font-size: 14px;
+    outline: none; 
+    /* margin-top: -3px; */
+    /* padding-bottom: 10px; */
+}
+.icon_frame
+{
+    width: 40px;
+    height: auto;
+    text-align: center;
+    position: absolute;  
+}
+.file_input i
+{
+    font-size: 17px;
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2);
+    -webkit-background-clip: text; /* để set màu áp dụng cho icon chứ không phải cho nền */
+    -webkit-text-fill-color: transparent;
+    cursor: pointer;
+}
+.file_input i:hover
+{
+    background: linear-gradient(45deg,#00dede, #00BABA); 
+    -webkit-background-clip: text; /* để set màu áp dụng cho icon chứ không phải cho nền */
+    -webkit-text-fill-color: transparent;
+}
+.login_note
+{
+    padding-left: 5px;
+    font-size: 13px;
+    color: #00BABA;
+}
+.sub_input
+{
+    margin-bottom: 10px;
+    width: 70%;
+    height: 25px;
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Căn chỉnh khoảng cách giữa các thẻ */
+    align-items: center;
+    font-family: 'Lexend', sans-serif;
+    font-size: 16px;
+}
+.remember_password_checkbox
+{   
+    transform: scale(1.2);
+    margin-left: 2px; 
+    margin-right: 10px;
+    cursor: pointer;
+}
+.remember_password_text
+{
+    /* color: #16151C; */
+    color: #525252;
+    font-weight: 100;
+}
+.forgot_password_text
+{
+    color: #52A6F3;
+    margin-right: 2px;
+    cursor: pointer;
+}
+.button_frame
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 70%;
+    height: 50px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    font-family: 'Lexend', sans-serif;
+    font-size: 15px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    /* position: relative;
+    overflow: hidden; */
+    display: flex; /* Bật chế độ flexbox */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang (nếu cần) */
+}
+
+.input_other
+{
+    /* margin-top: 10px; */
+    width: 70%;
+    color: #525252;
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Căn chỉnh khoảng cách giữa các thẻ */
+    align-items: center;
+}
+.input_other hr
+{
+    width: 40%;
+}
+
+.login_button
+{
+    /* background-color: #52A6F3; */
+    background: linear-gradient(45deg, #74b9f9, #52A6F3);
+    color: white;
+}
+.register_button
+{
+    /* background-color: #327DC2; */
+    background: linear-gradient(45deg, #578fc4, #327DC2);
+    color: white;
+}
+.platform_button
+{
+    border: 1px solid #52A6F3;
+    color: #828282;
+    background-color: white;
+    cursor: pointer;
+}
+.login_button:hover, .register_button:hover
+{
+    background: linear-gradient(45deg,#00dede, #00BABA); 
+}
+
+.platform_button img
+{
+    margin-right: 10px;
+}
+.google_btn img
+{
+    height: 50%;
+}
+.facebook_btn img
+{
+    height: 40%;
+}
+
+.register_container
+{
+    margin-left: auto;/* Đẩy phần tử về bên phải */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    width: 55%;
+    height: 100%;
+    min-height: 100vh;
+    background-color: white;
+    /* border-left: 2px solid #7EB1FF; */
+    box-shadow: -1px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.back_to_login
+{
+    margin-top: 15px;
+    width: 70%;
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Căn chỉnh khoảng cách giữa các thẻ */
+    align-items: center;
+}
+.back_to_login a
+{
+    cursor: pointer;
+    font-size: 17px;
+    font-family: 'Lexend', sans-serif;
+    color: #7EB1FF;
+}
+.back_to_login a:hover
+{
+    color: #00BABA;
+}
+.back_to_login hr
+{
+    width: 30%;
+    color: #525252;
+}
+.left_side_frame
+{
+    position: absolute;  
+    left: 0px;
+    top: 50%;
+    transform: translate(-20%, -50%); 
+    border-radius: 25px;
+    width: 40%;
+    height: 70%;
+    background-color: white;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1023px)
+{
+    .comeback
+    {
+        left: 13px;
+        top: 10px;
+        font-size: 14px;
+    }
+    .comeback i
+    {
+        margin-right: 2.5px;
+        font-size: 14px;
+    }
+    .login_container
+    {
+        text-align: center; 
+        width: 70%;
+        height: 100%;
+    }
+    .login_title
+    {
+        margin-top: 16px;
+        height: 80px;
+        width: 50%;
+        display: grid;
+        grid-template-columns: 25% 60% 15%;
+        align-items: center; 
+
+    }
+    .login_logo
+    {
+        width: 60%;
+        height: auto;
+        margin-left: 15%;
+        text-align: center;
+    }
+    .login_title_text
+    {
+        font-size: 28px;
+    }
+    .login_welcome_text {
+        margin-top: 0px;
+        font-size: 18px;    
+    }
+    .login_desc_text 
+    {
+        margin-top: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    .input_frame
+    {
+        width: 75%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+    .file_input
+    {
+        width: 100%;
+        height: 46px;
+        border: 1px solid #52A6F3;
+        border-radius: 5px;
+        text-align: left;
+        margin-bottom: 3px;
+    }
+
+    .file_input label
+    {
+        margin-left: 12px; 
+        margin-top: 4px;
+        margin-bottom: 0px;
+        font-size: 11px;
+        margin-bottom: -3px;
+    }
+    .file_input input
+    {
+        width: 90%;
+        margin-right: 0px;
+        margin-left: 10px; 
+        font-size: 12px;
+        outline: none; 
+    }
+    .icon_frame
+    {
+        width: 25px;
+        height: auto;
+        text-align: center;
+        position: absolute;  
+    }
+    .file_input i
+    {
+        font-size: 15px;
+    }
+    .login_note
+    {
+        padding-left: 5px;
+        font-size: 11px;
+    }
+    .sub_input
+    {
+        margin-bottom: 13px;
+        width: 75%;
+        height: 25px;
+        font-size: 14px;
+    }
+    .remember_password_checkbox
+    {   
+        transform: scale(1.1);
+        margin-left: 3px; 
+        margin-right: 4px;
+    }
+    .forgot_password_text
+    {
+        margin-right: 3px;
+    }
+    .button_frame
+    {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        width: 75%;
+        height: 45px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .input_other
+    {
+        font-size: 13px;
+        width: 75%;
+    }
+    .input_other hr
+    {
+        width: 40%;
+    }
+
+    .platform_button img
+    {
+        /* height: 45%; */
+        margin-right: 10px;
+    }
+
+    /* Trang Đăng ký */
+    .register_container
+    {
+        width: 70%;
+        height: 100%;
+    }
+
+    .back_to_login
+    {
+        margin-top: 10px;
+        width: 75%;
+    }
+    .back_to_login a
+    {
+        font-size: 13px;
+    }
+    .back_to_login hr
+    {
+        width: 30%;
+    }
+    .left_side_frame
+    {
+        left: 0px;
+        top: 50%;
+        transform: translate(-50%, -50%); 
+        border-radius: 20px;
+    }
+
+}
+
+@media only screen and (max-width: 767px)
+{
+    .comeback
+    {
+        left: 13px;
+        top: 8px;
+        font-size: 13px;
+
+    }
+    .comeback i
+    {
+        margin-right: 2px;
+        font-size: 13px;
+    }
+    .login_container
+    {
+        text-align: center; 
+        width: 100%;
+        height: 100%;
+    }
+    .login_title
+    {
+        margin-top: 25px;
+        height: 65px;
+        width: 50%;
+        display: grid;
+        grid-template-columns: 22% 72% 6%;
+        align-items: center; 
+
+    }
+    .login_logo
+    {
+        width: 65%;
+        height: auto;
+        margin-left: 15%;
+        text-align: center;
+    }
+    .login_title_text
+    {
+        font-size: 22px;
+    }
+    .login_welcome_text {
+        margin-top: 0px;
+        font-size: 15px;    
+    }
+    .login_desc_text 
+    {
+        margin-top: 3px;
+        margin-bottom: 15px;
+        font-size: 12px;
+    }
+    .input_frame
+    {
+        width: 80%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+    .file_input
+    {
+        width: 100%;
+        height: 44px;
+        border: 1px solid #52A6F3;
+        border-radius: 5px;
+        text-align: left;
+        margin-bottom: 4px;
+    }
+
+    .file_input label
+    {
+        margin-left: 12px; 
+        margin-top: 4px;
+        margin-bottom: -3px;
+        font-size: 11px;
+    }
+    .file_input input
+    {
+        width: 90%;
+        margin-right: 0px;
+        margin-left: 10px; 
+        font-size: 12px;
+        outline: none; 
+        /* margin-bottom: 8px; */
+    }
+    .icon_frame
+    {
+        width: 22px;
+        height: auto;
+        text-align: center;
+        position: absolute;  
+    }
+    .file_input i
+    {
+        font-size: 14px;
+    }
+    .login_note
+    {
+        padding-left: 5px;
+        font-size: 11px;
+    }
+    .sub_input
+    {
+        margin-bottom: 13px;
+        width: 80%;
+        height: 25px;
+        font-size: 13px;
+    }
+    .remember_password_checkbox
+    {   
+        transform: scale(1.0);
+        margin-left: 3px; 
+        margin-right: 4px;
+    }
+    .forgot_password_text
+    {
+        margin-right: 3px;
+    }
+    .button_frame
+    {
+        margin-top: 7px;
+        margin-bottom: 7px;
+        width: 80%;
+        height: 45px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .input_other
+    {
+        font-size: 13px;
+        width: 80%;
+    }
+    .input_other hr
+    {
+        width: 33%;
+    }
+
+    .platform_button img
+    {
+        /* height: 45%; */
+        margin-right: 10px;
+    }
+
+    /* Trang Đăng ký */
+    .register_container
+    {
+        width: 100%;
+        height: 100%;
+    }
+
+    .back_to_login
+    {
+        margin-top: 8px;
+        width: 80%;
+    }
+    .back_to_login a
+    {
+        font-size: 13px;
+    }
+    .back_to_login hr
+    {
+        width: 28%;
+    }
+    .left_side_frame
+    {
+        display: none;
+        left: 0px;
+        top: 50%;
+        transform: translate(-50%, -50%); 
+        border-radius: 20px;
+    }
+
+}

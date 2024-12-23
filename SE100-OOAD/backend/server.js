@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const authRoute = require('./routes/authRoute')
+const roomRoute = require('./routes/roomRoute')
+const bookingRoute = require('./routes/bookingRoute')
+const userCollectionRoute = require('./routes/userCollectionRoute')
 const locationRoute = require('./routes/locationRoute')
 const cookieParser = require('cookie-parser')
 
@@ -34,3 +37,6 @@ app.get('/signin', (req, res) => {res.render('signin')})
 
 app.use(authRoute)
 app.use(locationRoute)
+app.use(roomRoute)
+app.use(bookingRoute)
+app.use(userCollectionRoute)

@@ -48,54 +48,44 @@ const getBookingByUserId = async (userId) => {
 
 //TODO: 
 const getBookingByLocationId = async (locationId) => {
-    // Tìm tất cả các booking
-    const bookings = await Booking.find().lean();
+    const result = await Booking.aggregate([
+        { $unwind: "$items" },
 
-    if (!bookings || bookings.length === 0) {
-        throw new NotFoundException("Not found");
-    }
+        {$lookup: {
+            from: "Room",
+            localField: "items.roomId",
+            foreignField: "_id",
+            as: "BookedRoom"
+        }},
 
-    // Duyệt qua từng booking và lọc dựa trên roomId theo locationId
-    const filteredBookings = [];
-
-    for (const booking of bookings) {
-        const itemsWithRoomDetails = [];
-
-        // Lấy chi tiết từng phòng từ Room dựa trên roomId
-        for (const item of booking.items) {
-            const room = await Room.findById(item.roomId).lean();
-
-            // Kiểm tra locationId của room
-            if (room && room.locationId.toString() === locationId) {
-                itemsWithRoomDetails.push({
-                    roomId: item.roomId,
-                    quantity: item.quantity,
-                    roomDetails: {
-                        name: room.name,
-                        pricePerNight: room.pricePerNight,
+        { $unwind: "$BookedRoom"},
+            // Lọc các tài liệu chỉ chứa roomId tương ứng
+        { $match: { "BookedRoom.locationId": new mongoose.Types.ObjectId(locationId) } },
+        {
+            $group: {
+                _id: "$_id", // Group theo booking ID
+                userId: { $first: "$userId" },
+                dateBooking: { $first: "$dateBooking" },
+                checkinDate: { $first: "$checkinDate" },
+                checkoutDate: { $first: "$checkoutDate" },
+                totalPrice: { $first: "$totalPrice" },
+                status: { $first: "$status" },
+                items: {
+                    $push: {
+                        roomId: "$items.roomId",
+                        quantity: "$items.quantity",
+                        roomDetails: {
+                            name: "$BookedRoom.name",
+                            pricePerNight: "$BookedRoom.pricePerNight",
+                        },
                     },
-                });
-            }
-        }
-
-        // Nếu có bất kỳ items nào trong booking thỏa điều kiện, thêm booking vào kết quả
-        if (itemsWithRoomDetails.length > 0) {
-            filteredBookings.push({
-                _id: booking._id,
-                userId: booking.userId,
-                dateBooking: booking.dateBooking,
-                checkinDate: booking.checkinDate,
-                checkoutDate: booking.checkoutDate,
-                totalPrice: booking.totalPrice,
-                status: booking.status,
-                items: itemsWithRoomDetails,
-            });
-        }
-    }
-
-    if (filteredBookings.length > 0) {
-        return filteredBookings;
-    } else {
+                },
+            },
+        },
+    ]);
+    if(result.length !== 0)
+        return result
+    else {
         throw new NotFoundException("Not found");
     }
 };

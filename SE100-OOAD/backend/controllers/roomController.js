@@ -60,7 +60,8 @@ module.exports.createRoom = async (req, res, next) => {
     } = req.body
     
     try{
-        const savedRoom = await roomSvc.createRoom({locationId,
+        const roomData =  new Room({
+            locationId,
             name,
             quantity,
             rating,
@@ -68,10 +69,12 @@ module.exports.createRoom = async (req, res, next) => {
             description,
             facility,
             bed,
-            image, })
+            image, 
+        })
+        const savedRoom = await roomSvc.createRoom(roomData)
         res.status(201).json({
             isSuccess: true,
-            data: roomData,
+            data: savedRoom,
             error: null
         })
     }

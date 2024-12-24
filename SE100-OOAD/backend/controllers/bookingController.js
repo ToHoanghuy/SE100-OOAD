@@ -86,13 +86,16 @@ module.exports.createBooking = async (req, res, next) => {
     } = req.body
     
     try {
-        const result = await bookingSvc.createBooking({dateBooking,
+        const bookingData = new Booking({
+            dateBooking,
             checkinDate,
             checkoutDate,
             items,
             services,
-            status,
-            totalPrice})
+            totalPrice,
+            status,       
+        })
+        const result = await bookingSvc.createBooking(bookingData)
         res.status(201).json({
             isSuccess: true,
             data: result,

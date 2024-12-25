@@ -49,4 +49,5 @@ const MapComponent = ({ address }) => {
         </GoogleMap>
     );
 };
+
 export default MapComponent;

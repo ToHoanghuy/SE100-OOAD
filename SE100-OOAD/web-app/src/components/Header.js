@@ -63,5 +63,4 @@ const Header = ({ mainTitle,subTitle }) => {
       </div>
     );
   };
-
   export default Header;

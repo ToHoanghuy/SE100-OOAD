@@ -64,5 +64,5 @@ const MapBoxComponent = ({ latitude, longitude }) => {
       </div>
     );
   };
-  
+
   export default MapBoxComponent;

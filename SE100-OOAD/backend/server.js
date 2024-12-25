@@ -1,10 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const authRoute = require('./routes/authRoute')
+const roomRoute = require('./routes/roomRoute')
+const bookingRoute = require('./routes/bookingRoute')
+const userCollectionRoute = require('./routes/userCollectionRoute')
+const locationRoute = require('./routes/locationRoute')
 const cookieParser = require('cookie-parser')
 
 const app = express();
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 
 //Middleware
 app.use(express.json());
@@ -32,3 +36,7 @@ app.get('/signup', (req, res) => {res.render('signup')})
 app.get('/signin', (req, res) => {res.render('signin')})
 
 app.use(authRoute)
+app.use(locationRoute)
+app.use(roomRoute)
+app.use(bookingRoute)
+app.use(userCollectionRoute)

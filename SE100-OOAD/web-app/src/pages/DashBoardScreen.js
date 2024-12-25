@@ -14,7 +14,7 @@ const DashBoardScreen = () => {
   const [value, setValue] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const onChange = (newDate) => {
-    setValue(newDate);
+    setValue(newDate);  
     setSelectedDate(newDate); // Cập nhật ngày đã chọn
   };
 

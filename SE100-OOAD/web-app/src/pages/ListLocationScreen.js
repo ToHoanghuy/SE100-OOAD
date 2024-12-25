@@ -5,26 +5,60 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { locations } from "./BusinessData";
 import Pagination from "../components/Pagination";
+import { useDebounce } from "use-debounce";
 
 const ListLocationScreen = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 1000); // 2-second debounce
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [locations, setLocations] = useState([]);
 
   // fetch data from api
+  // useEffect(() => {
+  //   const fetchLocations = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await fetch("http://localhost:3000/alllocation");
+  //       const result = await response.json();
+  //       if (result.isSuccess) {
+  //         setLocations(result.data);
+  //       } else {
+  //         setError("Failed to fetch locations.");
+  //       }
+  //     } catch (err) {
+  //       setError("An error occurred while fetching locations.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchLocations();
+  // }, []);
+
   useEffect(() => {
     const fetchLocations = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/alllocation");
+        let response;
+        if (debouncedSearchTerm.trim() === "") {
+          response = await fetch(`http://localhost:3000/locationbyname`);
+        } else {
+          const formattedSearchTerm = debouncedSearchTerm
+            .trim()
+            .replace(/\s+/g, "-");
+
+          response = await fetch(
+            `http://localhost:3000/locationbyname?name=${formattedSearchTerm}`
+          );
+        }
+
         const result = await response.json();
         if (result.isSuccess) {
           setLocations(result.data);
         } else {
-          setError("Failed to fetch locations.");
+          setError("Không tìm thấy !");
         }
       } catch (err) {
         setError("An error occurred while fetching locations.");
@@ -32,20 +66,22 @@ const ListLocationScreen = () => {
         setIsLoading(false);
       }
     };
-    fetchLocations();
-  }, []);
 
-  const filteredLocations = locations.filter((location) => {
-    const searchTermLower = searchTerm.toLowerCase();
-    return (
-      location.name.toLowerCase().includes(searchTermLower) ||
-      location.type.toLowerCase().includes(searchTermLower) ||
-      location.address.toLowerCase().includes(searchTermLower)
-    );
-  });
+    // Always fetch data regardless of the search term
+    fetchLocations();
+  }, [debouncedSearchTerm]);
+
+  // const filteredLocations = locations.filter((location) => {
+  //   const searchTermLower = searchTerm.toLowerCase();
+  //   return (
+  //     location.name.toLowerCase().includes(searchTermLower) ||
+  //     location.type.toLowerCase().includes(searchTermLower) ||
+  //     location.address.toLowerCase().includes(searchTermLower)
+  //   );
+  // });
 
   const itemsPerPage = 10;
-  const currentData = filteredLocations.slice(
+  const currentData = locations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -54,7 +90,7 @@ const ListLocationScreen = () => {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  const totalItems = filteredLocations.length;
+  const totalItems = locations.length;
 
   const handleRowClick = (id) => {
     navigate(`/location/detail/${id}`);
@@ -64,9 +100,6 @@ const ListLocationScreen = () => {
     return <div>Loading locations...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
   return (
     <div class="container">
       <div class="containerformobile">
@@ -93,202 +126,45 @@ const ListLocationScreen = () => {
                 </tr>
               </thead>
 
-              {/* <tbody class="row-container">
-                  
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <button type="submit" class="icon-container iconview" onClick={() => navigate("/detaillocation")}>
-                            <FaEye />
-                          </button>
-                        </td>
-                  </tr>
-
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-                  
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-
-                  <tr >
-                        <td>1</td>
-                        <td>
-                          <div class="namefield">
-                            <img src="avatar.png" alt="User Avatar" class="user-avatar"></img>
-                            <p>Du lịch hồ cốc - vùng tàu</p>
-                          </div>
-                        
-                          
-                          </td>
-                        
-                        <td>Camping</td>
-                        <td>FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</td>
-                        <td>
-                          <div class="icon-container">
-                              <FaEye />
-                          </div>
-                        </td>
-                  </tr>
-                  
-                    
-                </tbody> */}
-              <tbody className="row-container">
-                {currentData.map((location, index) => (
-                  <tr
-                    key={location.id}
-                    className="clickable-row"
-                    onClick={() => handleRowClick(location._id)}
-                  >
-                    <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                    <td>
-                      <div className="namefield">
-                        {/* <img
+              {error ? (
+                <div>{error}</div>
+              ) : (
+                <tbody className="row-container">
+                  {currentData.map((location, index) => (
+                    <tr
+                      key={location.id}
+                      className="clickable-row"
+                      onClick={() => handleRowClick(location._id)}
+                    >
+                      <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                      <td>
+                        <div className="namefield">
+                          {/* <img
                           src={require(`../assets/images/${location.avatar}`)}
                           alt="User Avatar"
                           className="user-avatar"
                         /> */}
-                        <p>{location.name}</p>
-                      </div>
-                    </td>
-                    <td>
-                      {location.category && location.category.name
-                        ? location.category.name
-                        : location.category?.cateName}
-                    </td>
-                    <td>{location.address}</td>
-                    <td>
-                      <button type="button" className="icon-container iconview">
-                        <FaEye />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                          <p>{location.name}</p>
+                        </div>
+                      </td>
+                      <td>
+                        {location.category && location.category.name
+                          ? location.category.name
+                          : location.category?.cateName}
+                      </td>
+                      <td>{location.address}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="icon-container iconview"
+                        >
+                          <FaEye />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              )}
             </table>
           </div>
 

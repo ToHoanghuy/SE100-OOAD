@@ -6,103 +6,57 @@ import { FaAngleRight,FaBell } from 'react-icons/fa';
 import Calendar from 'react-calendar';
 import pagination from '../components/Pagination';
 import PercentageIndicator from '../components/PercentageIndicator';
-import { businesses, users } from './BusinessData';
+import { bookings,users } from '../pages/BusinessData';
 import { useNavigate } from 'react-router-dom';
 
 
-const DashBoardScreen = () => {
-  const [value, setValue] = useState(new Date());
+const DashBoardBusinessScreen = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
-  const onChange = (newDate) => {
-    setValue(newDate);  
-    setSelectedDate(newDate); // Cập nhật ngày đã chọn
+  const [value, setValue] = useState(new Date());
+
+  const onChange = (newdate) => {
+    setValue(newdate);
+    setSelectedDate(newdate);
   };
 
   const filteredUsers = selectedDate 
     ? users.filter(user => {
-        // Giả sử mỗi user có một thuộc tính date chứa ngày mà họ có dữ liệu
-        const userDate = new Date(user.time); // Thay đổi 'user.date' thành thuộc tính thực tế của bạn
+        
+        const userDate = new Date(user.time);
         return userDate.toDateString() === selectedDate.toDateString();
       })
     : [];
 
-  const navigate = useNavigate();
-
-  const handleRowClick = (id) => {
-    navigate(`/location/detail/${id}`);
-  };
+  const handleRowClick =(id) => {
+    navigate(`/booking/detail/${id}`);
+  }
 
   const handleBusinessDetailClick = (id) => {
-    navigate(`/business/detail/${id}`); // Điều hướng đến DetailLocationScreen với ID
+    navigate(`/booking/detail/${id}`);
   };
 
-  
-
-  
 
   return (
     
         <div class="dashboardbody">
           <div class="leftframe">
-          <div class="chart">
-            <div>
-              <div className="business-card">
-                <div className="card-header">
-                  <div class ="circle">
-                  </div>
-                  <p>Tổng nhà kinh doanh</p>
-                  <div className="frame">
-                    {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
-                        12%
-                    </p> */}
-                    <PercentageIndicator class="percentage" percentage={-12}/>
-                  </div>
+            <div class="welcomebusiness flex justify-between">
+                
+                <div class="align-center ml-2 mt-8" >
+                    <p class=" flex justify-center">Chào mừng trở lại</p>
+                    <p class="flex justify-center">Hồ Cốc</p>
                 </div>
-                <div className="card-body">
-                  <p className="number">1245676543223</p>
-                </div>
-                <div className="separator">
-                  <div></div>
-                </div>
-                <div className="card-footer">
-                  <p>Cập nhật lần cuối: 30/7/2024</p>
-                </div>
-              </div>
+                <img src={require('../assets/images/welcome.png')}></img>
             </div>
+          <div class="chart business-card-2">
             <div>
               <div className="business-card">
                 <div className="card-header">
                   <div class ="circle">
                   </div>
-                  <p>Doanh thu trong tháng 7</p>
+                  <p>Booking trong tháng</p>
                   <div className="frame">
-                    {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
-                        12%
-                    </p> */}
-                    <PercentageIndicator class="percentage" percentage={12}/>
-                  </div>
-                </div>
-                <div className="card-body">
-                  <p className="number">12</p>
-                </div>
-                <div className="separator">
-                  <div></div>
-                </div>
-                <div className="card-footer">
-                  <p>Cập nhật lần cuối: 30/7/2024</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="business-card">
-                <div className="card-header">
-                  <div class ="circle">
-                  </div>
-                  <p>Nhà kinh doanh mới</p>
-                  <div className="frame">
-                    {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
-                        12%
-                    </p> */}
                     <PercentageIndicator class="percentage" percentage={-12}/>
                   </div>
                 </div>
@@ -118,16 +72,13 @@ const DashBoardScreen = () => {
               </div>
             </div>
             <div>
-              <div className="business-card">
+              <div className="business-card ">
                 <div className="card-header">
                   <div class ="circle">
                   </div>
-                  <p>Số lượt booking trong tháng</p>
+                  <p>Doanh thu trong tháng</p>
                   <div className="frame">
-                    {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
-                        12%
-                    </p> */}
-                    <PercentageIndicator class="percentage" percentage={-12}/>
+                    <PercentageIndicator class="percentage" percentage={18}/>
                   </div>
                 </div>
                 <div className="card-body">
@@ -143,39 +94,41 @@ const DashBoardScreen = () => {
             </div>
           </div>
           <div class = "new-booking scroll-container mh-scroll">
-            <p class = "new-booking-text">Địa điểm mới</p>
+            <p class = "new-booking-text">Booking đang chờ xác nhận</p>
           <table class="custom-table ">
             <thead>
               <tr>
                 <th>   </th>
                 <th>Tên địa điểm</th>
                 <th>Tên nhà kinh doanh</th>
-                <th>Loại</th>
+                <th>Thời gian</th>
                 <th>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              {(businesses || []).map((business) => (
+              {(bookings || []).map((booking) => (
                 <tr
-                  key={business.id}
+                  key={booking.id}
                   className="cursor-pointer hover:bg-blue-100"
-                  onClick={() => handleRowClick(business.id)}
-                >
-                  <td>
+                  onClick={() => handleRowClick(booking.id)}>
+                    <td>
                     <div className="location-icon">
                       <img src="location-icon.png" alt="Location Icon" />
                     </div>
-                  </td>
-                  <td>{business.name}</td>
-                  <td>{business.owner}</td>
-                  <td>{business.type}</td>
-                  <td>
-                    <span className={business.status === 'đã duyệt' ? 'status-label-2' : 'status-label'}>
-                      {business.status}
-                    </span>
-                  </td>
+                    </td>
+                    <td>{booking.name}</td>
+                    <td>{booking.code}</td>
+                    <td>{booking.date}</td>
+                    <td>
+                      <span className={booking.status === 'đã duyệt' ? 'status-label-2' : 'status-label'}>
+                        {booking.status}
+                      </span>
+                    </td>
                 </tr>
+                
+
               ))}
+
             </tbody>
           </table>
           </div>
@@ -194,14 +147,14 @@ const DashBoardScreen = () => {
               />
               </div>
             <div class="scroll-container">
-              <p class="new-business mb-3">Nhà kinh doanh mới</p>
+              <p class="new-business mb-3">Booking trong ngày</p>
               <div>
                 {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
                   <div
                     className="user-info"
                     key={user.id}
-                    onClick={() => handleBusinessDetailClick(user.id)} // Bắt sự kiện click
+                    onClick={() => handleBusinessDetailClick(user.id)} 
                     style={{ cursor: 'pointer' }}
                   >
                     <img src="avatar.png" alt="User Avatar" className="user-avatar" />
@@ -218,13 +171,7 @@ const DashBoardScreen = () => {
                 <p>Không có nhà kinh doanh nào cho ngày đã chọn.</p> 
               )}
               </div>
-
-
- 
             </div>
-            
-            
-          
           </div>
         </div>
      
@@ -234,4 +181,4 @@ const DashBoardScreen = () => {
   );
 };
 
-export default DashBoardScreen;
+export default DashBoardBusinessScreen;

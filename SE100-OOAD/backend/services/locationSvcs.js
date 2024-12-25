@@ -1,6 +1,5 @@
 const Location = require('../models/Location');
-const NotFoundException = require('../errors/exception');
-const { findById } = require('../models/User');
+const NotFoundException = require('../errors/exception').NotFoundException;
 
 const createLocation = async (locationData) => {
     const savedLocation = await locationData.save();
@@ -44,11 +43,16 @@ const getLocationByUserId = async (userId) => {
     if(locations.length != 0)
         return locations;
     else
-        throw new NotFoundException('Not found this user location');
+        throw new Error('Not found this user location');
 }
 
 const getLocationByName = async (name) => {
-    const locations = await Location.find({ name: new RegExp(name, 'i') });
+    const locations = await Location.find({
+        $or: [
+            { name: new RegExp(name, 'i') },
+            { address: new RegExp(name, 'i') }
+        ]
+    });
     if(locations.length != 0)
         return locations;
     else

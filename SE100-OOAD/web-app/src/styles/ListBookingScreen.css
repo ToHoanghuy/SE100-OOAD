@@ -1,144 +1,161 @@
 @import url(../assets/styles/gradient-color.css);
 
 .containerlistbusiness {
-    background-image: var(--gradient-gray-background);
-    border-radius: 8px;
-    border: 1px solid rgb(230,230,230,0.5);
-    padding: 20px;
+  background-image: var(--gradient-gray-background);
+  border-radius: 8px;
+  border: 1px solid rgb(230, 230, 230, 0.5);
+  padding: 20px;
 }
 
-@media (min-width:1400px)  {
+@media (min-width: 1400px) {
+}
 
-  
-  }
-  
-  
-  @media (min-width:1200px)  {
+@media (min-width: 1200px) {
+}
 
-  
+@media (min-width: 978px) and (max-width: 1199px) {
+  .containerformobile {
+    width: 900px;
   }
-  
-  @media (min-width: 978px) and (max-width: 1199px) {
-    .containerformobile {
-        width: 900px;
-    }
-    .widthlistbusiness {
-        width: 900px;
-    }
+  .widthlistbusiness {
+    width: 900px;
   }
-  
-  @media (min-width: 768px) and (max-width:979px) {
+}
 
-    
-  }
-  
-  @media (min-width: 481px) and (max-width:767px) {
-    
-  }
+@media (min-width: 768px) and (max-width: 979px) {
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+}
 
 .widthlistbusiness {
-    width: 1100px;
-    height: 800px;
+  width: 1100px;
+  height: 800px;
 }
 
 .listbusinessbody {
-    height: 740px;
+  height: 740px;
 }
 
 .icon-search {
-    width: 1rem;
-    height: auto;
-    margin-right: 2px;
-    margin-left: 6px;
+  width: 1rem;
+  height: auto;
+  margin-right: 2px;
+  margin-left: 6px;
 }
 
 .input-text {
-    padding:10px
+  padding: 10px;
 }
 
 .input-text:focus {
-    outline: none;
-    transition: all;
-    animation-duration: 200;
+  outline: none;
+  transition: all;
+  animation-duration: 200;
 }
 
 .search {
-    display: flex;
-    width: 30%;
-    
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  display: flex;
+  width: 30%;
+
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-
-
-
-
 table {
-    width: 100%;
-    border-collapse: separate; 
-    border-spacing: 0 10px; 
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
 }
 
 thead th {
-    border-bottom: 2px solid #ccc;  
-    padding: 10px;  
-    color: #A2A1A8;
-    font-weight: 200;
-    font-size: 1rem;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+  color: #a2a1a8;
+  font-weight: 200;
+  font-size: 1rem;
 }
 
 tbody td {
-    padding: 10px;  
-    border-bottom: 1px solid #ddd;  
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 .namefield {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .namefield p {
-    margin-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 16px;
-  }
-
-.row-container {
-    border-radius: 10px;
-    border: 1px solid  rgb(230,230,230,0.5);
-    background-color:#ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 16px;
 }
 
-
-
+.row-container {
+  border-radius: 10px;
+  border: 1px solid rgb(230, 230, 230, 0.5);
+  background-color: #ffffff;
+}
 
 .pagination {
-    justify-content: center;
-    margin-top: 20px;
-    text-align: center;
+  justify-content: center;
+  margin-top: 20px;
+  text-align: center;
 }
 
 .page {
-    display: inline-block;
-    padding: 8px 12px;
-    margin: 0 5px;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    cursor: pointer;
-    background-color: white;
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: white;
 }
 
 .bg-blue-important {
-    background-color: var(--blue-color) !important;
-  }
+  background-color: var(--blue-color) !important;
+}
 
 .page:hover {
-    background-color: var(--blue-color);
+  background-color: var(--blue-color);
+}
+/* Default status */
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status-default {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #374151; /* gray-800 */
+}
+
+.status-waiting {
+  background-color: #fef3c7; /* yellow-100 */
+  color: #92400e; /* yellow-800 */
+}
+
+.status-cancelled {
+  background-color: #fee2e2; /* red-100 */
+  color: #991b1b; /* red-800 */
+}
+
+.status-approved {
+  background-color: #dbeafe; /* blue-100 */
+  color: #1e40af; /* blue-800 */
+}
+
+.status-completed {
+  background-color: #d1fae5; /* green-100 */
+  color: #065f46; /* green-800 */
 }

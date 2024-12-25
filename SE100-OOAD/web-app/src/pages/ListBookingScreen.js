@@ -5,6 +5,8 @@ import { FaAngleRight, FaBell, FaEye, FaSearch } from "react-icons/fa";
 import Pagination from "../components/Pagination";
 import { useEffect, useState } from "react";
 // import { businesses, bookings } from "./BusinessData";
+import { formatDate, formatDateTime } from "../utils/dateUtils";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const ListBookingScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,14 +87,7 @@ const ListBookingScreen = () => {
   const handleRowClick = (id) => {
     navigate(`/booking/detail/${id}`);
   };
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+
   const filteredData = bookings
     .filter((booking) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -101,26 +96,22 @@ const ListBookingScreen = () => {
     .map((booking) => ({
       ...booking,
       status: statusMapping[booking.status] || booking.status,
-      dateBooking: formatDate(booking.dateBooking),
+      dateBooking: formatDateTime(booking.dateBooking),
     }));
 
   const currentData = filteredData.slice(
     (currentPage - 1) * 10,
     currentPage * 10
   );
+
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Đang chờ":
-        return "bg-yellow-100 text-yellow-800";
-      case "Đã hủy":
-        return "bg-red-100 text-red-800";
-      case "Đã duyệt":
-        return "bg-blue-100 text-blue-800";
-      case "Hoàn thành":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+    const statusClasses = {
+      "Đang chờ": "status-waiting",
+      "Đã hủy": "status-cancelled",
+      "Đã duyệt": "status-approved",
+      "Hoàn thành": "status-completed",
+    };
+    return statusClasses[status] || "status-default";
   };
 
   useEffect(() => {
@@ -190,7 +181,7 @@ const ListBookingScreen = () => {
                         {booking.status}
                       </span>
                     </td>
-                    <td>{booking.totalPrice}</td>
+                    <td>{formatCurrency(Number(booking.totalPrice))}</td>
                     <td>
                       <button
                         type="button"

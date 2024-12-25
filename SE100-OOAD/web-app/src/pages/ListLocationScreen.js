@@ -1,16 +1,39 @@
-import React from 'react';
-import '../styles/ListLocationScreen.css'
-import { FaAngleRight,FaBell, FaEye, FaSearch } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { useState,useEffect } from 'react';
-import { locations } from './BusinessData';
-import Pagination from '../components/Pagination';
-
+import React from "react";
+import "../styles/ListLocationScreen.css";
+import { FaAngleRight, FaBell, FaEye, FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { locations } from "./BusinessData";
+import Pagination from "../components/Pagination";
 
 const ListLocationScreen = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [locations, setLocations] = useState([]);
+
+  // fetch data from api
+  useEffect(() => {
+    const fetchLocations = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("http://localhost:3000/alllocation");
+        const result = await response.json();
+        if (result.isSuccess) {
+          setLocations(result.data);
+        } else {
+          setError("Failed to fetch locations.");
+        }
+      } catch (err) {
+        setError("An error occurred while fetching locations.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchLocations();
+  }, []);
 
   const filteredLocations = locations.filter((location) => {
     const searchTermLower = searchTerm.toLowerCase();
@@ -20,7 +43,7 @@ const ListLocationScreen = () => {
       location.address.toLowerCase().includes(searchTermLower)
     );
   });
-  
+
   const itemsPerPage = 10;
   const currentData = filteredLocations.slice(
     (currentPage - 1) * itemsPerPage,
@@ -37,34 +60,40 @@ const ListLocationScreen = () => {
     navigate(`/location/detail/${id}`);
   };
 
+  if (isLoading) {
+    return <div>Loading locations...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
   return (
     <div class="container">
       <div class="containerformobile">
-        
         <div class="containerlistbusiness widthlistbusiness">
           <div class="listbusinessbody scroll-container mh-900">
-          <div class="search">
-              <FaSearch class="icon-search"/>
-              <input 
-                type="text" 
-                className="input-text" 
-                placeholder="Tìm kiếm địa điểm" 
-                value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)} 
+            <div class="search">
+              <FaSearch class="icon-search" />
+              <input
+                type="text"
+                className="input-text"
+                placeholder="Tìm kiếm địa điểm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên địa điểm</th>
-                        <th>Loại</th>
-                        <th>Địa chỉ</th>
-                        <th></th>
-                    </tr> 
-                </thead>
-              
-                {/* <tbody class="row-container">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên địa điểm</th>
+                  <th>Loại</th>
+                  <th>Địa chỉ</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              {/* <tbody class="row-container">
                   
                   <tr >
                         <td>1</td>
@@ -228,49 +257,48 @@ const ListLocationScreen = () => {
                   
                     
                 </tbody> */}
-                <tbody className="row-container">
+              <tbody className="row-container">
                 {currentData.map((location, index) => (
-                  <tr 
-                    key={location.id} 
+                  <tr
+                    key={location.id}
                     className="clickable-row"
-                    onClick={() => handleRowClick(location.id)}
+                    onClick={() => handleRowClick(location._id)}
                   >
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>
                       <div className="namefield">
-                        <img 
-                          src={require(`../assets/images/${location.avatar}`)} 
-                          alt="User Avatar" 
-                          className="user-avatar" 
-                        />
+                        {/* <img
+                          src={require(`../assets/images/${location.avatar}`)}
+                          alt="User Avatar"
+                          className="user-avatar"
+                        /> */}
                         <p>{location.name}</p>
                       </div>
                     </td>
-                    <td>{location.type}</td>
+                    <td>
+                      {location.category && location.category.name
+                        ? location.category.name
+                        : location.category?.cateName}
+                    </td>
                     <td>{location.address}</td>
                     <td>
-                      <button 
-                        type="button" 
-                        className="icon-container iconview"
-                      >
+                      <button type="button" className="icon-container iconview">
                         <FaEye />
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
-                
             </table>
           </div>
-          
+
           <Pagination
-              totalItems={totalItems}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setCurrentPage}
-            />
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
-      
     </div>
   );
 };

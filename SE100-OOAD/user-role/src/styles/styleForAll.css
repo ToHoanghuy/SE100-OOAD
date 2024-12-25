@@ -1,0 +1,128 @@
+/* @font-face {
+    font-family: 'Fira Sans';
+    src: url('fonts/FiraSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+} */
+
+
+.zoomEffect
+{
+    transform: scale(0.1);
+    opacity: 0; 
+    transition: transform 0.8s ease-out, opacity 0.5s ease-out;
+}
+
+.zoomEffect.visible
+{
+    transform: scale(1);
+    opacity: 1; 
+}
+
+a{
+    text-decoration: none!important;
+}
+
+/* html {
+    scrollbar-width: thin; 
+    scrollbar-color: #888 #f0f0f0;
+} */
+::-webkit-scrollbar {
+    width: 12px; /* Độ rộng của thanh cuộn dọc */
+    height: 12px; /* Độ rộng của thanh cuộn ngang */
+}
+
+/* Định dạng phần thanh cuộn (background của scrollbar) */
+::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Màu nền của thanh cuộn */
+}
+::-webkit-scrollbar-thumb {
+    /* background: linear-gradient(45deg, #7ba4ca, #2e699d); */
+    /* background: linear-gradient(45deg,#00dede, #00BABA);  */
+    background-color: #888; 
+    /* Màu của thanh kéo */
+    border-radius: 10px; /* Bo tròn góc của thanh kéo */
+    border: 2px solid #f0f0f0; /* Khoảng cách giữa thanh kéo và track */
+}
+
+/* Định dạng thanh cuộn khi hover */
+::-webkit-scrollbar-thumb:hover {
+    /* background-color: #555;  */
+    background: linear-gradient(45deg, #91caff, #5BA3E2);
+
+}
+
+
+.Water_Drop_Effect
+{
+    position: relative;
+    overflow: hidden;
+}
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+  }
+  
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+
+.back_to_top
+{
+    width: 50px;
+    height: 50px;
+    position: fixed; 
+    z-index: 100;
+    background-color: #5BA3E2;
+    border-radius: 30px;
+    right: 12.5px;
+    bottom: 15%;
+    /* display: none; */
+    display: flex;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    border: 2px solid #82BDF1;
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2);
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+
+    transform: translateX(130%); 
+    transition: transform 0.3s ease;
+}
+.back_to_top:hover
+{
+    background: linear-gradient(45deg,#25f0f0, #00BABA); 
+    border-color: #0bcfcf;
+}
+
+.custom_swal_button
+{
+    background: linear-gradient(45deg, #AAD6FF, #5BA3E2);
+}
+.custom_swal_button:hover
+{
+    background-color: #0bcfcf;
+}
+
+.OpacityEffect {
+    opacity: 0;
+    transition:  opacity  1s ease-out;
+  }
+  
+  .showOpacity {
+    opacity: 1;
+  }
+
+  .display_frame
+  {
+      width: 88%;
+  }

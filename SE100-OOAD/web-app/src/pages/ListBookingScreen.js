@@ -1,3 +1,4 @@
+
 import React from "react";
 import "../styles/ListBookingScreen.css";
 import { useNavigate } from "react-router-dom";
@@ -79,10 +80,12 @@ const ListBookingScreen = () => {
     fetchBookings();
   }, []);
 
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
   const handleRowClick = (id) => {
+
     navigate(`/booking/detail/${id}`);
   };
   const formatDate = (dateString) => {
@@ -122,6 +125,7 @@ const ListBookingScreen = () => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
 
   useEffect(() => {
     setCurrentPage(1);
@@ -196,6 +200,7 @@ const ListBookingScreen = () => {
                         type="button"
                         className="icon-container iconview"
                         onClick={() => handleRowClick(booking._id)}
+
                       >
                         <FaEye />
                       </button>
@@ -203,6 +208,7 @@ const ListBookingScreen = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
           <Pagination
@@ -212,6 +218,7 @@ const ListBookingScreen = () => {
           />
         </div>
       </div>
+
     </div>
   );
 };

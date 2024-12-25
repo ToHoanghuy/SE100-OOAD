@@ -51,5 +51,3 @@ const MapComponent = ({ address }) => {
 };
 
 export default MapComponent;
-
-

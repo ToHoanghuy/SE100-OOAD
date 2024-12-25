@@ -30,5 +30,4 @@ const PercentageIndicator = ({ percentage }) => {
       </div>
   );
 };
-
 export default PercentageIndicator;

@@ -111,5 +111,4 @@ const SideBar = ({role}) => {
     </div>
   );
 };
-
 export default SideBar;

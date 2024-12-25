@@ -30,7 +30,8 @@ import AddLocationScreen from "./pagesofbusiness/AddLocationScreen";
 import ChatBusinessScreen from "./pagesofbusiness/ChatBusinessScreen";
 import BusinessDetailBookingScreen from "./pagesofbusiness/BusinessDetailBookingScreen";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const link = document.createElement("link");
 link.href = "https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css";

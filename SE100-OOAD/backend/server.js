@@ -5,6 +5,8 @@ const roomRoute = require('./routes/roomRoute')
 const bookingRoute = require('./routes/bookingRoute')
 const userCollectionRoute = require('./routes/userCollectionRoute')
 const locationRoute = require('./routes/locationRoute')
+const serviceRoute = require('./routes/serviceRoute')
+const paymentRoute = require('./routes/paymentRoute')
 const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 
@@ -41,6 +43,7 @@ app.use(locationRoute)
 app.use(roomRoute)
 app.use(bookingRoute)
 app.use(userCollectionRoute)
-
+app.use(serviceRoute)
+app.use(paymentRoute)
 
 app.use(errorHandler)

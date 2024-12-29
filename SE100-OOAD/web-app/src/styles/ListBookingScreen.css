@@ -135,7 +135,7 @@ tbody td {
 /* Default status */
 .status {
   padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   font-weight: 500;
   display: inline-block;
 }
@@ -147,12 +147,12 @@ tbody td {
 
 .status-waiting {
   background-color: #fef3c7; /* yellow-100 */
-  color: #92400e; /* yellow-800 */
+  color: #a6a402; /* yellow-800 */
 }
 
 .status-cancelled {
-  background-color: #fee2e2; /* red-100 */
-  color: #991b1b; /* red-800 */
+  background-color: #ffd6d6;
+  color: #ff4d4f;
 }
 
 .status-approved {
@@ -161,6 +161,6 @@ tbody td {
 }
 
 .status-completed {
-  background-color: #d1fae5; /* green-100 */
-  color: #065f46; /* green-800 */
+  background-color: rgb(63, 194, 138, 0.1);
+  color: #3fc28a;
 }

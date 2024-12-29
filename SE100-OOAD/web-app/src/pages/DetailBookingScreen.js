@@ -112,11 +112,11 @@ const DetailBookingScreen = () => {
               />
               <div>
                 <h1 class="text-xl font-bold">{location.name}</h1>
-                <div class="flex items-center text-gray-600 mt-2">
+                {/* <div class="flex items-center text-gray-600 mt-2">
                   <FaCalendar class="mr-2" />
 
                   <span>04/08/2024</span>
-                </div>
+                </div> */}
                 <div class="flex items-center mt-2">
                   <FaMoneyBill class="mr-2 w-5" />
 
@@ -178,22 +178,22 @@ const DetailBookingScreen = () => {
                       <div class="mb-4">
                         {formatDate(customer.userDateOfBirth)}
                       </div>
-                      <div class="mb-2 text-gray-500">Tên liên hệ</div>
-                      <div class="mb-4">Lê Bảo Như</div>
-                      <div class="mb-2 text-gray-500">Giới tính</div>
-                      <div class="mb-4">Nữ</div>
+                      {/* <div class="mb-2 text-gray-500">Tên liên hệ</div>
+                      <div class="mb-4">Lê Bảo Như</div> */}
+                      {/* <div class="mb-2 text-gray-500">Giới tính</div>
+                      <div class="mb-4">Nữ</div> */}
                     </div>
                     <div>
                       <div class="mb-2 text-gray-500">Họ và tên</div>
                       <div class="mb-4">{customer.userName}</div>
                       <div class="mb-2 text-gray-500">Địa chỉ email</div>
                       <div class="mb-4">{customer.userEmail}</div>
-                      <div class="mb-2 text-gray-500">Số CMND/CCCD</div>
-                      <div class="mb-4">079303041653</div>
-                      <div class="mb-2 text-gray-500">
+                      {/* <div class="mb-2 text-gray-500">Số CMND/CCCD</div>
+                      <div class="mb-4">079303041653</div> */}
+                      {/* <div class="mb-2 text-gray-500">
                         Số điện thoại liên hệ
                       </div>
-                      <div class="mb-4">0386441295</div>
+                      <div class="mb-4">0386441295</div> */}
                       <div class="mb-2 text-gray-500">Địa chỉ</div>
                       <div class="mb-4">{customer.userAddress}</div>
                     </div>

@@ -28,6 +28,7 @@ import {
   faMapMarkerAlt,
   faMemo,
 } from "@fortawesome/free-solid-svg-icons";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const DetailLocationScreen = () => {
   const [currentTab, setCurrentTab] = useState("baseinfo");
@@ -360,7 +361,7 @@ const DetailLocationScreen = () => {
                               <div class="flex flex-col items-center">
                                 <p class="text-gray-600">Giá</p>
                                 <p class="text-red-600 font-bold text-lg">
-                                  {room.price} VND
+                                  {formatCurrency(room.price)}
                                 </p>
                               </div>
                             </div>

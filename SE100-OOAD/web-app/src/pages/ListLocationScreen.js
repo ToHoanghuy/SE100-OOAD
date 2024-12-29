@@ -16,34 +16,14 @@ const ListLocationScreen = () => {
   const [error, setError] = useState(null);
   const [locations, setLocations] = useState([]);
 
-  // fetch data from api
-  // useEffect(() => {
-  //   const fetchLocations = async () => {
-  //     setIsLoading(true);
-  //     try {
-  //       const response = await fetch("http://localhost:3000/alllocation");
-  //       const result = await response.json();
-  //       if (result.isSuccess) {
-  //         setLocations(result.data);
-  //       } else {
-  //         setError("Failed to fetch locations.");
-  //       }
-  //     } catch (err) {
-  //       setError("An error occurred while fetching locations.");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchLocations();
-  // }, []);
-
   useEffect(() => {
     const fetchLocations = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         let response;
         if (debouncedSearchTerm.trim() === "") {
-          response = await fetch(`http://localhost:3000/locationbyname`);
+          response = await fetch(`http://localhost:3000/locationbyname?name`);
         } else {
           const formattedSearchTerm = debouncedSearchTerm
             .trim()
@@ -87,7 +67,9 @@ const ListLocationScreen = () => {
   );
 
   useEffect(() => {
-    setCurrentPage(1);
+    if (currentPage !== 1) {
+      setCurrentPage(1); // Only reset if necessary
+    }
   }, [searchTerm]);
 
   const totalItems = locations.length;
@@ -131,11 +113,7 @@ const ListLocationScreen = () => {
               ) : (
                 <tbody className="row-container">
                   {currentData.map((location, index) => (
-                    <tr
-                      key={location.id}
-                      className="clickable-row"
-                      onClick={() => handleRowClick(location._id)}
-                    >
+                    <tr key={location.id} className="clickable-row">
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>
                         <div className="namefield">
@@ -157,6 +135,7 @@ const ListLocationScreen = () => {
                         <button
                           type="button"
                           className="icon-container iconview"
+                          onClick={() => handleRowClick(location._id)}
                         >
                           <FaEye />
                         </button>

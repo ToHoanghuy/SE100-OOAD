@@ -1,4 +1,3 @@
-
 import React from "react";
 import "../styles/ListBookingScreen.css";
 import { useNavigate } from "react-router-dom";
@@ -82,12 +81,10 @@ const ListBookingScreen = () => {
     fetchBookings();
   }, []);
 
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
   const handleRowClick = (id) => {
-
     navigate(`/booking/detail/${id}`);
   };
 
@@ -117,7 +114,6 @@ const ListBookingScreen = () => {
     return statusClasses[status] || "status-default";
   };
 
-
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -125,7 +121,7 @@ const ListBookingScreen = () => {
   const totalItems = filteredData.length;
 
   if (isLoading) {
-    return <div>Loading locations...</div>;
+    return <div>Loading bookings...</div>;
   }
 
   if (error) {
@@ -191,7 +187,6 @@ const ListBookingScreen = () => {
                         type="button"
                         className="icon-container iconview"
                         onClick={() => handleRowClick(booking._id)}
-
                       >
                         <FaEye />
                       </button>
@@ -199,7 +194,6 @@ const ListBookingScreen = () => {
                   </tr>
                 ))}
               </tbody>
-
             </table>
           </div>
           <Pagination
@@ -209,7 +203,6 @@ const ListBookingScreen = () => {
           />
         </div>
       </div>
-
     </div>
   );
 };

@@ -44,7 +44,6 @@ module.exports.createLocation = async (req, res, next) => {
     const {
         name,
         description,
-        rating,
         address,
         category,
     } = req.body;
@@ -57,7 +56,6 @@ module.exports.createLocation = async (req, res, next) => {
         const locationData = new Location({
             name,
             description,
-            rating,
             address,
             category,
             ownerId: res.locals.user._id,
@@ -70,10 +68,19 @@ module.exports.createLocation = async (req, res, next) => {
             error: null,
         });
     } catch (error) {
-        for (let image of images) {
-            await cloudinary.uploader.destroy(image.url)
-        }
-        next(error)
+        req.files.map(async file => {
+            try {
+                await cloudinary.uploader.destroy(file.filename);
+                console.log(`Deleted: ${file.filename}`);
+                res.status(404).json({
+                isSuccess: true,
+                data: 'upload fail',
+                error: null,
+            });
+            } catch (err) {
+                console.error(`Failed to delete ${file.filename}:`, err.message);
+            }
+        })
     }
 
 }

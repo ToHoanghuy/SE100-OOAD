@@ -104,7 +104,7 @@ const calculateTotalServicePrice = (services) => {
 };
   
 //Hook
-BookingSchema.pre('save', async function (next) {
+BookingSchema.pre('validate', async function (next) {
     const totalRoomPrice = calculateTotalRoomPrice(this.items);
     const totalServicePrice = calculateTotalServicePrice(this.services);
     this.totalPrice = totalRoomPrice + totalServicePrice

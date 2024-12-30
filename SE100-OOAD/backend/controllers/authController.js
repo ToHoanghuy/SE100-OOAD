@@ -110,6 +110,42 @@ module.exports.updateUser = async (req, res, next) => {
         next(error)
     }
 }
+
+module.exports.updateAvata = async (req, res, next) => {
+    const userId = req.params.id
+    try {
+        if(!req.file) {
+            console.log('No file uploaded')
+        }
+        const image = ({
+            url: req.file.path,
+            publicId: req.file.filename
+        })
+        console.log(image)
+        const result = await authServices.updateAvata(userId, image)
+        res.status(201).json({
+            isSuccess: true,
+            data: result,
+            error: null
+        })
+    }
+    catch (error) {
+        try {
+            console.log('No file')
+            await cloudinary.uploader.destroy(req.file.filename);
+            console.log('deleted');
+            res.status(404).json({
+                isSuccess: true,
+                data: 'upload fail',
+                error: null,
+            });
+        } 
+        catch (err) {
+            next(err)
+        }
+    }
+}
+
 module.exports.deleteUser = async (req, res, next) => {
     const userId = req.params.id
     try {

@@ -91,6 +91,16 @@ const getBookingByLocationId = async (locationId) => {
 };
 
 const createBooking = async (bookingData) => {
+    for (let item of bookingData.items) {
+        const room = await Room.findById(item.roomId, 'pricePerNight');
+        console.log('room: ', room);
+        item.price = room.pricePerNight;
+    }
+    
+    for (let service of bookingData.services) {
+        const service = await Service.findById(service.serviceId);
+        service.price = service.price;
+    }
     const result = bookingData.save()
     if(result)
         return result

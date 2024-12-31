@@ -53,14 +53,17 @@ module.exports.createLocation = async (req, res, next) => {
         publicId: file.filename
     }))
     try {
+        const parseredCategory = JSON.parse(category)
+        console.log(parseredCategory)
         const locationData = new Location({
             name,
             description,
             address,
-            category,
+            category: parseredCategory,
             ownerId: res.locals.user._id,
             image: images
         });
+        
         const savedLocation = await locationSvc.createLocationWithImage(locationData); // Lưu địa điểm mới vào cơ sở dữ liệu
         res.status(201).json({
             isSuccess: true,

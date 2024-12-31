@@ -98,9 +98,10 @@ const createBooking = async (bookingData) => {
     }
     
     for (let service of bookingData.services) {
-        const service = await Service.findById(service.serviceId);
-        service.price = service.price;
+        const svc = await Service.findById(service.serviceId);
+        svc.price = service.price;
     }
+    
     const result = bookingData.save()
     if(result)
         return result

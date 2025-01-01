@@ -58,6 +58,7 @@ module.exports.createLocation = async (req, res, next) => {
         const locationData = new Location({
             name,
             description,
+            slug: '',
             address,
             category: parseredCategory,
             ownerId: res.locals.user._id,

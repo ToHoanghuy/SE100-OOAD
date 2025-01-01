@@ -10,6 +10,8 @@ const createLocation = async (locationData) => {
 }
 
 const createLocationWithImage = async (locationData) => {
+    const slug = createSlug(locationData.name, locationData.address);
+    locationData.slug = slug
     const savedLocation = await locationData.save();
     if(savedLocation)
         return savedLocation;
@@ -18,20 +20,20 @@ const createLocationWithImage = async (locationData) => {
     }
 }
 
-// const createSlug = (name, address) => {
-//     const removeDiacritics = (str) => {
-//         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-//     };
+const createSlug = (name, address) => {
+    const removeDiacritics = (str) => {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
 
-//     const normalize = (str) => {
-//         return removeDiacritics(str)
-//             .toLowerCase()
-//             .replace(/\s+/g, '-') // Thay khoảng trắng bằng dấu "-"
-//             .replace(/[^a-z0-9-]/g, ''); // Loại bỏ ký tự không hợp lệ
-//     };
+    const normalize = (str) => {
+        return removeDiacritics(str)
+            .toLowerCase()
+            .replace(/\s+/g, '-') // Thay khoảng trắng bằng dấu "-"
+            .replace(/[^a-z0-9-]/g, ''); // Loại bỏ ký tự không hợp lệ
+    };
 
-//     return `${normalize(name)}-${normalize(address)}`;
-// };
+    return `${normalize(name)}-${normalize(address)}`;
+};
 
 const getAllLocation = async () => {
     const allLocation = await Location.find();

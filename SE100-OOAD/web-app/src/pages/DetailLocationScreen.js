@@ -28,6 +28,7 @@ import {
   faMapMarkerAlt,
   faMemo,
 } from "@fortawesome/free-solid-svg-icons";
+import { formatCurrency } from "../utils/formatCurrency";
 
 const DetailLocationScreen = () => {
   const [currentTab, setCurrentTab] = useState("baseinfo");
@@ -324,12 +325,12 @@ const DetailLocationScreen = () => {
                     <p class="text-gray-900">{location.description}</p>
                   </div>
                 </div>
-                <div class="flex justify-end">
+                {/* <div class="flex justify-end">
                   <button class="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center">
                     <FaEdit class="mr-2" />
                     Chỉnh sửa
                   </button>
-                </div>
+                </div> */}
               </div>
             )}
 
@@ -360,7 +361,7 @@ const DetailLocationScreen = () => {
                               <div class="flex flex-col items-center">
                                 <p class="text-gray-600">Giá</p>
                                 <p class="text-red-600 font-bold text-lg">
-                                  {room.price} VND
+                                  {formatCurrency(room.price)}
                                 </p>
                               </div>
                             </div>
@@ -411,10 +412,10 @@ const DetailLocationScreen = () => {
                           </div>
                         </div> */}
 
-                        <div class="bg-gray-200 w-420 p-4 rounded-lg shadow-md flex items-center justify-center">
+                        {/* <div class="bg-gray-200 w-420 p-4 rounded-lg shadow-md flex items-center justify-center">
                           <button class="text-2xl text-gray-600">+</button>
                           <p class="ml-2">Thêm phòng mới</p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 

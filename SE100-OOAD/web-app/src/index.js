@@ -15,7 +15,7 @@ import Layout from "./pages/Layout";
 // import ListBusinessScreen from "./pages/ListBusinessScreen";
 import ListLocationScreen from "./pages/ListLocationScreen";
 import ListBookingScreen from "./pages/ListBookingScreen";
-// import StatisticScreen from "./pages/StatisticScreen";
+import StatisticScreen from "./pages/StatisticScreen";
 // import DetailBusinessScreen from "./pages/DetailbusinessScreen";
 import DetailLocationScreen from "./pages/DetailLocationScreen";
 import DetailBookingScreen from "./pages/DetailBookingScreen";
@@ -106,8 +106,8 @@ const AppWrapper = () => {
               element={<DetailLocationBusinessScreen mapLoaded={mapLoaded} />}
             />
             <Route path="/location/add" element={<AddLocationScreen />} />
-            {/* Thống kê */}
-            {/* <Route path="/statistic" element={<StatisticScreen />} /> */}
+            Thống kê
+            <Route path="/statistic" element={<StatisticScreen />} />
           </Route>
         </Routes>
       </Router>

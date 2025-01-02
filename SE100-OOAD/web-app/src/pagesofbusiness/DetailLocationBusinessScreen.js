@@ -28,6 +28,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     const [longitude] = useState(106.6297); // Thay bằng tọa độ mong muốn
     const [reviews, setReviews] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const [selectedFacilities, setSelectedFacilities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -53,12 +54,74 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     };
 
     const services = [
-        { id: 1, name: "Hủy miễn phí trong 24h", icon: <FaTimesCircle className="mr-2 w-4" /> },
-        { id: 2, name: "Bồn tắm", icon: <FaHotTub className="mr-2 w-4" /> },
-        { id: 3, name: "Wifi miễn phí", icon: <FaWifi className="mr-2 w-4" /> },
-        { id: 4, name: "Hệ thống chống tiếng ồn", icon: <FaVolumeOff className="mr-2 w-4" /> },
-        { id: 5, name: "Máy lạnh", icon: <FaSnowflake className="mr-2 w-4" /> },
+        { id: "cancelable", name: "Hủy miễn phí trong 24h", icon: <FaTimesCircle className="mr-2 w-4" /> },
+        { id: "tub", name: "Bồn tắm", icon: <FaHotTub className="mr-2 w-4" /> },
+        { id: "wifi", name: "Wifi miễn phí", icon: <FaWifi className="mr-2 w-4" /> },
+        { id: "volumeoff", name: "Hệ thống chống tiếng ồn", icon: <FaVolumeOff className="mr-2 w-4" /> },
+        { id: "ac", name: "Máy lạnh", icon: <FaSnowflake className="mr-2 w-4" /> },
     ];
+
+    const handleCheckboxChange = (service) => {
+        if (selectedFacilities.includes(service.id)) {
+            setSelectedFacilities(selectedFacilities.filter((id) => id !== service.id));
+        } else {
+            setSelectedFacilities([...selectedFacilities, service.id]);
+        }
+    };
+
+    const handleInputAddChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const [formData, setFormData] = useState({
+        name: "",
+        quantity: 1,
+        pricePerNight: 0,
+        area: 0,
+        beds: [],
+        facilities: [],
+    });
+
+    const handleSubmit = async () => {
+        const facilityList = selectedFacilities.map((id) => {
+            const service = services.find((service) => service.id === id);
+            return { id: id.toString(), name: service.name, quantity: 1, description: "" };
+        });
+
+        const roomData = {
+            ...formData,
+            locationId: id,
+            facilities: facilityList,
+            capacity: formData.quantity,
+            beds: [
+                { category: "single", quantity: parseInt(formData.singleBeds || 0) },
+                { category: "double", quantity: parseInt(formData.doubleBeds || 0) },
+            ],
+        };
+
+        try {
+            const response = await fetch("http://localhost:3000/room/newroom", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(roomData),
+            });
+
+            const result = await response.json();
+
+            if (result.isSuccess) {
+                alert("Phòng được tạo thành công!");
+            } else {
+                alert("Lỗi khi tạo phòng: " + result.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra!");
+        }
+    };
 
 
 
@@ -529,7 +592,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                             <div className="flex flex-col items-center">
                                                                 <p className="text-gray-600">Giá</p>
                                                                 <p className="text-red-600 font-bold text-lg">
-                                                                    {room.price.toLocaleString()} VND
+                                                                    {room?. pricePerNight?.toLocaleString()} VND
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -645,24 +708,42 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                             <a class="text-xl font-bold mb-4 text-black">Phòng</a>&gt;<span>Thêm phòng</span>
                                             {/* <a href="#" class="hover:underline">Phòng</a> */}
                                         </div>
-                                        <input type="text" placeholder="Tên phòng" className=" p-3 mb-4 border border-gray-300 rounded-lg w-room"/>
+                                        <input 
+                                            value={formData.name}
+                                            onChange={handleInputAddChange} 
+                                            name="name"
+                                            type="text" placeholder="Tên phòng" 
+                                            className=" p-3 mb-4 border border-gray-300 rounded-lg w-room"
+                                        />
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div className="grid">
+                                            <div className="grid">
                                                 <p>Giường đôi</p>
-                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                                <input 
+                                                    name="doubleBeds"
+                                                    value={formData.doubleBeds || ""}
+                                                    onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                             <div className="grid">
                                                 <p>Giường đơn</p>
-                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                                <input 
+                                                    name="singleBeds"
+                                                    value={formData.singleBeds || ""}
+                                                    onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                             <div className="grid">
                                                 <p>Diện tích</p>
-                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                                <input 
+                                                    name="area"
+                                                    value={formData.area || ""}
+                                                    onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                             
                                             <div className="grid">
                                                 <p>Số lượng phòng</p>
-                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                                <input 
+                                                    name="quantity"
+                                                    value={formData.quantity || ""}
+                                                    onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                         </div>
                                         <h2 class="font-bold mb-2">Dịch vụ:</h2>
@@ -675,6 +756,8 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                     <input
                                                         type="checkbox"
                                                         className="mr-2"
+                                                        checked={selectedFacilities.includes(service.id)}
+                                                        onChange={() => handleCheckboxChange(service)}
                                                         value={service.name}
                                                         name={`service-${service.id}`}
                                                     />
@@ -688,12 +771,15 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                         <div class="flex items-center justify-between">
                                             <div className="flex items-center justify-center mt-2">
                                                 <h2 class="text-black font-bold mr-2">Giá</h2>
-                                                <input type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input>
+                                                <input 
+                                                    name="pricePerNight"
+                                                    value={formData.pricePerNight || ""}
+                                                    onChange={handleInputAddChange}  type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                             
                                             <div class="flex">
-                                                <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Hủy</button>
-                                                <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Tạo</button>
+                                                <button class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Hủy</button>
+                                                <button onClick={handleSubmit} class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Tạo</button>
                                             </div>
                                         </div>
                                     </div>

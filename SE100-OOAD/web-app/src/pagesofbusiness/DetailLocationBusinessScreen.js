@@ -24,6 +24,10 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     const { id } = useParams();
     const [latitude] = useState(10.8231);  // Thay bằng tọa độ mong muốn
     const [longitude] = useState(106.6297); // Thay bằng tọa độ mong muốn
+    const [reviews, setReviews] = useState([]);
+    const [rooms, setRooms] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const handleBaseInfoClick = () => {
         setCurrentTab('baseinfo');
@@ -42,6 +46,12 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
         setCurrentTab2('roomDetails');
     };
 
+    const handleViewExitRoomDetail = () => {
+        setCurrentTab2('viewratingservice');
+    };
+
+
+
     //Nơi này để chỉnh sửa dữ liệu của base-ìno//
     const [locationInfo, setLocationInfo] = useState(locations);
     const [isEditing, setIsEditing] = useState(false);
@@ -50,7 +60,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
 
     useEffect(() => {
         const fetchLocationInfo = async () => {
-            try {
+            try {   
                 const response = await fetch(`http://localhost:3000/locationbyid/${id}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -66,6 +76,63 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
         if (id) {
             fetchLocationInfo();
         }
+    }, [id]);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/review/location/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch reviews');
+                }
+                const data = await response.json();
+
+                const updatedReviews = await Promise.all(
+                    data.data.map(async (review) => {
+                        console.log('review: ',review.senderId)
+                        try {
+                            const userResponse = await fetch(`http://localhost:3000/user/getbyid/${review.senderId}`);
+                            if (userResponse.ok) {
+                                const userData = await userResponse.json();
+                                return { ...review, userName: userData.data.userName }; // Thêm userName vào review
+                            }
+                        } catch (error) {
+                            console.error(`Error fetching user data for userId ${review.userId}:`, error);
+                        }
+                        return { ...review, userName: 'Unknown' }; // Trường hợp không lấy được tên
+                    })
+                );
+
+                setReviews(updatedReviews);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReviews();
+    }, [id]);
+
+    useEffect(() => {
+        const fetchRooms = async () => {
+            console.log('id:d ', id);
+            try {
+                const response = await fetch(`http://localhost:3000/room/getbylocationid/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch rooms');
+                }
+                const data = await response.json();
+                console.log('data of rooms: ', data.data);
+                setRooms(data.data); // Giả định API trả về một object chứa danh sách phòng trong `data.data`
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRooms();
     }, [id]);
 
     const handleEditClick = () => {
@@ -123,6 +190,20 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     }, [id]);
 
 
+    function getCategoryName(id) {
+        switch (id) {
+            case 'hotel':
+                return 'Khách sạn';
+            case 'homestay':
+                return 'Homestay';
+            case 'guest home':
+                return 'Nhà nghỉ';
+            default:
+                return 'Không xác định'; // Giá trị mặc định nếu id không khớp
+        }
+    }
+
+
     return (
         <div class="container">
             <div class="containerformobile">
@@ -134,7 +215,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                             <img alt="Profile picture of a person" class="w-20 h-20 rounded-full mr-4" height="80" src="https://storage.googleapis.com/a1aa/image/0FPVWfLJ1m0nJS9YfULFrbvezZsDHus5bXhqxVDA6tO9UMKnA.jpg" width="80" />
                             <div>
                                 <h1 class="text-xl font-bold">
-                                    {userData.userName}
+                                    {userData?.userName}
                                 </h1>
                                 <div class="flex items-center text-gray-600 mt-2">
                                     <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
@@ -244,7 +325,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                 className="border p-2 rounded"
                                             />
                                         ) : (
-                                            <p class="font-semibold">{locationInfo?.category?.name || 'Khách sạn'}</p>
+                                            <p class="font-semibold">{getCategoryName(locationInfo.category?.id)}</p>
                                         )}
                                     </div>
                                     <div>
@@ -318,7 +399,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                 className="w-full p-2 border rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">Du lịch Hồ Cốc - Vũng Tàu</p>
+                                            <p className="text-gray-900">{locationInfo.name}</p>
                                         )}
                                     </div>
 
@@ -333,7 +414,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                 className="w-full p-2 border rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">FFXQ+X94, Bưng Riềng, Xuyên Mộc, Bà Rịa - Vũng Tàu, Vietnam</p>
+                                            <p className="text-gray-900">{locationInfo.address}</p>
                                         )}
                                     </div>
 
@@ -347,7 +428,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                 className="w-full p-2 border rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">Khu cắm trại Hồ Cốc là khu cắm trại gần biển, dịch vụ giá rẻ phù hợp với mọi người muốn trải nghiệm các hoạt động ngoài trời cùng gia đình, người thân.</p>
+                                            <p className="text-gray-900">{locationInfo.description}</p>
                                         )}
                                     </div>
                                 </div>
@@ -370,7 +451,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                 {currentTab2 === 'viewratingservice' && (
                                     <div class="border border-gray-200 rounded-b-lg p-4">
                                         <h2 class="text-xl font-bold mb-4">Phòng</h2>
-                                        <div class="scroll-container-x">
+                                        {/* <div class="scroll-container-x">
                                             <div class="flex gap-4 mb-8 min-w-[800px]">
                                                 <div class="bg-white w-420 rounded-lg shadow-md p-2 flex flex-col space-y-4 bg-room" >
                                                     <div class="border-l-4 border-blue-500 pl-4 w-full">
@@ -416,45 +497,75 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                     <p class="ml-2">Thêm phòng mới</p>
                                                 </div>
                                             </div>
+                                        </div> */}
+                                        <div className="scroll-container-x">
+                                            <div className="flex gap-4 mb-8 min-w-[800px]">
+                                                {rooms.map((room) => (
+                                                    <div
+                                                        key={room._id}
+                                                        className="bg-white w-420 rounded-lg shadow-md p-2 flex flex-col space-y-4 bg-room"
+                                                    >
+                                                        <div className="border-l-4 border-blue-500 pl-4 w-full">
+                                                            <p className="text-lg font-semibold text-gray-800">{room.name}</p>
+                                                            <p className="text-gray-600">Số lượng: {room.quantity}</p>
+                                                        </div>
+                                                        <div className="flex justify-between items-center w-full">
+                                                            <button
+                                                                onClick={() => handleViewDetails(room.id)}
+                                                                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                                                            >
+                                                                Xem chi tiết
+                                                            </button>
+                                                            <div className="flex flex-col items-center">
+                                                                <p className="text-gray-600">Giá</p>
+                                                                <p className="text-red-600 font-bold text-lg">
+                                                                    {room.price.toLocaleString()} VND
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <div className="bg-gray-200 w-420 p-4 rounded-lg shadow-md flex items-center justify-center">
+                                                    <button className="text-2xl text-gray-600">+</button>
+                                                    <p className="ml-2">Thêm phòng mới</p>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="scroll-container mh-200">
+                                            <h2 class="text-xl font-bold mb-4">Đánh giá từ khách hàng</h2>
                                             <div>
-                                                <h2 class="text-xl font-bold mb-4">Đánh giá từ khách hàng</h2>
-                                                <div class="flex items-center mb-4">
-                                                    <img alt="Profile picture of Hoang Huy" class="w-12 h-12 rounded-full mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg" width="50" />
+                                                {reviews ? (
                                                     <div>
-                                                        <p class="font-semibold">To Hoang Huy</p>
-                                                        <div class="flex items-center">
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStarHalfAlt class="text-yellow-500" />
-                                                            <span class="ml-2 text-gray-600">4.6</span>
+                                                    {reviews.map((review) => (
+                                                        <div key={review.id}>
+                                                            <div class="flex items-center mb-4">   
+                                                                <img alt="Profile picture of Hoang Huy" class="w-12 h-12 rounded-full mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg" width="50" />                                                                                                              
+                                                                <div>
+                                                                    <p class="font-semibold">{review.userName}</p>
+                                                                    <div className="flex items-center">
+                                                                        {/* Render rating stars */}
+                                                                        {Array.from({ length: Math.floor(review.rating) }).map((_, index) => (
+                                                                        <FaStar key={index} className="text-yellow-500" />
+                                                                        ))}
+                                                                        {review.rating % 1 !== 0 && <FaStarHalfAlt className="text-yellow-500" />}
+                                                                        <span className="ml-2 text-gray-600">{review.rating.toFixed(1)}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <p class="text-gray-700">{review.review}</p>
                                                         </div>
+                                                        
+                                                        
+                                                        
+                                                    ))}
                                                     </div>
-                                                </div>
-                                                <p class="text-gray-700">“The location was perfect. The staff was friendly. Our bed was comfy. The pool was fresh with a great view. The breakfast was delicious! We had a hot tub on our balcony which was awesome.”</p>
+                                                ) : (
+                                                    <p>No reviews available for this location.</p>
+                                                )}
+                                               
                                             </div>
-                                            <div>
-                                                <h2 class="text-xl font-bold mb-4">Đánh giá từ khách hàng</h2>
-                                                <div class="flex items-center mb-4">
-                                                    <img alt="Profile picture of Hoang Huy" class="w-12 h-12 rounded-full mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg" width="50" />
-                                                    <div>
-                                                        <p class="font-semibold">To Hoang Huy</p>
-                                                        <div class="flex items-center">
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStar class="text-yellow-500" />
-                                                            <FaStarHalfAlt class="text-yellow-500" />
-                                                            <span class="ml-2 text-gray-600">4.6</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p class="text-gray-700">“The location was perfect. The staff was friendly. Our bed was comfy. The pool was fresh with a great view. The breakfast was delicious! We had a hot tub on our balcony which was awesome.”</p>
-                                            </div>
+                                           
 
                                         </div>
 
@@ -511,7 +622,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                         <div class="flex items-center justify-between">
                                             <div class="text-green-500 text-2xl font-bold">$50</div>
                                             <div class="flex">
-                                                <button class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Thoát</button>
+                                                <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Thoát</button>
                                                 <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Chỉnh sửa</button>
                                             </div>
                                         </div>

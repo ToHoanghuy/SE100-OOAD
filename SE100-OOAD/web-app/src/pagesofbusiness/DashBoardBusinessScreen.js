@@ -120,7 +120,7 @@ const DashBoardBusinessScreen = () => {
 
           <div class="align-center ml-2 mt-8" >
             <p class=" flex justify-center">Chào mừng trở lại</p>
-            <p class="flex justify-center">Hồ Cốc</p>
+            <p class="flex justify-center"></p>
           </div>
           <img src={require('../assets/images/welcome.png')}></img>
         </div>

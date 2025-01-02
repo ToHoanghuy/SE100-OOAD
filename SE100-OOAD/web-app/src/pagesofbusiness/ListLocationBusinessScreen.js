@@ -63,6 +63,19 @@ const ListLocationBusinessScreen = () => {
     navigate(`/business/location/detail/${id}`);
   };
 
+  function getCategoryName(id) {
+    switch (id) {
+      case 'hotel':
+        return 'Khách sạn';
+      case 'homestay':
+        return 'Homestay';
+      case 'guest home':
+        return 'Nhà nghỉ';
+      default:
+        return 'Không xác định'; // Giá trị mặc định nếu id không khớp
+    }
+  }
+
   return (
     <div class="container">
       <div class="containerformobile">
@@ -101,14 +114,14 @@ const ListLocationBusinessScreen = () => {
                     <td>
                       <div className="namefield">
                         <img
-                          src={location.avatar ? require(`../assets/images/${location.avatar}`) : require('../assets/images/avt.png')}
+                          src={location.image ? require(`../assets/images/${location.avatar}`) : require('../assets/images/avt.png')}
                           alt="User Avatar"
                           className="user-avatar"
                         />
                         <p>{location.name}</p>
                       </div>
                     </td>
-                    <td>{location.category.name}</td>
+                    <td>{getCategoryName(location.category.id)}</td>
                     <td>{location.address}</td>
                     <td>
                       <button

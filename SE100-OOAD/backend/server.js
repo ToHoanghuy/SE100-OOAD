@@ -5,10 +5,15 @@ const roomRoute = require('./routes/roomRoute')
 const bookingRoute = require('./routes/bookingRoute')
 const userCollectionRoute = require('./routes/userCollectionRoute')
 const locationRoute = require('./routes/locationRoute')
+const serviceRoute = require('./routes/serviceRoute')
+const paymentRoute = require('./routes/paymentRoute')
+const reviewRoute = require('./routes/reviewRoute')
+const invoiceRoute = require('./routes/invoiceRoute')
+const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 
 const app = express();
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3000
 
 //Middleware
 app.use(express.json());
@@ -40,3 +45,9 @@ app.use(locationRoute)
 app.use(roomRoute)
 app.use(bookingRoute)
 app.use(userCollectionRoute)
+app.use(serviceRoute)
+app.use(paymentRoute)
+app.use(reviewRoute)
+app.use(invoiceRoute)
+
+app.use(errorHandler)

@@ -1,14 +1,30 @@
-// const {CloudinaryStorage} = require("multer-storage-cloudinary")  
-// const cloudianry = require('../config/cloudinaryConfig')  
-// const multer = require('multer')  
+const {CloudinaryStorage} = require("multer-storage-cloudinary")  
+const cloudianry = require('../config/cloudinaryConfig')  
+const path = require('path');
+const multer = require('multer')  
 
-// const storage = new CloudinaryStorage({
-//     cloudinary: cloudianry,
-//     params: {
-//         folder: "travel-social",
-//         format: "jpg",
-//     }
-// })
+function uploadMiddleware(folderName) {
+const storage = new CloudinaryStorage({
+    cloudinary: cloudianry,
+    params: (req, file) => {
+        const folderPath = `${folderName.trim()}`; // Update the folder path here
+        const fileExtension = path.extname(file.originalname).substring(1);
+        const publicId = `file-${Date.now()}-${file.originalname}`;
+        
+        return {
+          folder: folderPath,
+          public_id: publicId,
+          format: fileExtension,
+        };
+    }
+})
 
-// const upload = multer({storage: storage})
-// module.exports = upload
+return multer({
+    storage: storage,
+    limits: {
+      fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
+    },
+  });
+}
+
+module.exports = uploadMiddleware

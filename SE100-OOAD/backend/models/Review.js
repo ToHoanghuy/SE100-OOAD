@@ -35,5 +35,18 @@ const ReviewSchema = new Schema({
     }
 }, {collection: 'Review'})
 
+const reCaculateRating = async (oldRating, numberOfRating, newRating) => {
+    return (oldRating * numberOfRating + newRating)  / (numberOfRating + 1);
+}
+
+ReviewSchema.pre('save', async function(next) {
+    const location = await Location.findById(this.locationId)
+    const rate = await reCaculateRating(location.rating, location.numberOfRating, this.rating)
+    location.rating = rate
+    location.numberOfRating += 1
+    await location.save()
+    next()
+})
+
 const Review = mongoose.model('Review', ReviewSchema)
 module.exports = Review

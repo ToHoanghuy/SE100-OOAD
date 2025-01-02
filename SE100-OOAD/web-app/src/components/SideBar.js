@@ -55,15 +55,6 @@ const SideBar = ({role}) => {
     }
   }, [role]);
 
-  // const [activeItems, setActiveItems] = useState([
-  //   true,
-  //   false,
-  //   false,
-  //   false,
-  //   false,
-  // ]);
-
-  // const [activeIndex, setActiveIndex] = useState(0);
 
   const [activeItems, setActiveItems] = useState(Array(iconSources.length).fill(false));
   const [activeIndex, setActiveIndex] = useState(0);
@@ -83,13 +74,6 @@ const SideBar = ({role}) => {
       <div className="sidebar-menu">
         <ul>
           {iconSources.map((icon, index) => (
-            // <li
-            //   key={index}
-            //   className={`menu-item ${activeIndex === index ? 'active' : ''}`}
-            //   onClick={() => handleClick(index)}
-            // >
-            //   <img src={isActive ? iconSources[index].active : iconSources[index].inactive} alt={`Menu Item ${index}`} />
-            // </li>
 
             <li
               key={index}

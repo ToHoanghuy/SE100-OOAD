@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { FaAngleRight, FaBell, FaEye } from "react-icons/fa";
 import Chart from "react-apexcharts";
@@ -77,12 +78,14 @@ const StatisticScreen = () => {
       },
       responsive: [
         {
+
           breakpoint: 480,
           options: {
             chart: {
               width: 300,
             },
             legend: {
+
               position: "bottom",
             },
           },
@@ -188,3 +191,4 @@ const StatisticScreen = () => {
 };
 
 export default StatisticScreen;
+

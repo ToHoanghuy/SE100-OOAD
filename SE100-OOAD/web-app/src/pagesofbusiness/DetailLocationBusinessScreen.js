@@ -13,6 +13,7 @@ import { locations } from '../pages/BusinessData';
 import MapComponent from "../components/MapComponent";
 import MapBoxComponent from "../components/MapBoxComponent";
 import { useSelector } from 'react-redux';
+import '../styles/DetailLocationScreen.css';
 import moment from 'moment';
 
 const DetailLocationBusinessScreen = ({ mapLoaded }) => {
@@ -21,6 +22,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     console.log('userdata: ', userData);
     const [currentTab, setCurrentTab] = useState('baseinfo');
     const [currentTab2, setCurrentTab2] = useState('viewratingservice');
+    const [currentTab3, setCurrentTab3] = useState('addRoom');
     const { id } = useParams();
     const [latitude] = useState(10.8231);  // Thay bằng tọa độ mong muốn
     const [longitude] = useState(106.6297); // Thay bằng tọa độ mong muốn
@@ -49,6 +51,14 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     const handleViewExitRoomDetail = () => {
         setCurrentTab2('viewratingservice');
     };
+
+    const services = [
+        { id: 1, name: "Hủy miễn phí trong 24h", icon: <FaTimesCircle className="mr-2 w-4" /> },
+        { id: 2, name: "Bồn tắm", icon: <FaHotTub className="mr-2 w-4" /> },
+        { id: 3, name: "Wifi miễn phí", icon: <FaWifi className="mr-2 w-4" /> },
+        { id: 4, name: "Hệ thống chống tiếng ồn", icon: <FaVolumeOff className="mr-2 w-4" /> },
+        { id: 5, name: "Máy lạnh", icon: <FaSnowflake className="mr-2 w-4" /> },
+    ];
 
 
 
@@ -624,6 +634,66 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                             <div class="flex">
                                                 <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Thoát</button>
                                                 <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Chỉnh sửa</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {currentTab3 === 'addRoom' && (
+                                    <div class="border border-gray-200 rounded-b-lg p-4">
+                                        <div class="text-gray-500 text-sm mb-4">
+                                            <a class="text-xl font-bold mb-4 text-black">Phòng</a>&gt;<span>Thêm phòng</span>
+                                            {/* <a href="#" class="hover:underline">Phòng</a> */}
+                                        </div>
+                                        <input type="text" placeholder="Tên phòng" className=" p-3 mb-4 border border-gray-300 rounded-lg w-room"/>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div className="grid">
+                                                <p>Giường đôi</p>
+                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                            </div>
+                                            <div className="grid">
+                                                <p>Giường đơn</p>
+                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                            </div>
+                                            <div className="grid">
+                                                <p>Diện tích</p>
+                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                            </div>
+                                            
+                                            <div className="grid">
+                                                <p>Số lượng phòng</p>
+                                                <input type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
+                                            </div>
+                                        </div>
+                                        <h2 class="font-bold mb-2">Dịch vụ:</h2>
+                                        <div className="flex flex-wrap gap-4">
+                                            {services.map((service) => (
+                                                <label
+                                                    key={service.id}
+                                                    className="flex items-center bg-gray-200 rounded-full px-3 py-1 cursor-pointer"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mr-2"
+                                                        value={service.name}
+                                                        name={`service-${service.id}`}
+                                                    />
+                                                    {service.icon}
+                                                    <span>{service.name}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                        
+                                        
+                                        <div class="flex items-center justify-between">
+                                            <div className="flex items-center justify-center mt-2">
+                                                <h2 class="text-black font-bold mr-2">Giá</h2>
+                                                <input type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Hủy</button>
+                                                <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Tạo</button>
                                             </div>
                                         </div>
                                     </div>

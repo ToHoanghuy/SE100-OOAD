@@ -177,13 +177,14 @@
 }
 
 .admin-avatar {
-  width: 20%;
-  height: 100%;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   margin-right: 0px;
 }
 
 .admin-name {
+  
   font-size: 0.8rem;
   font-weight: bold;
   margin-bottom: 1px;

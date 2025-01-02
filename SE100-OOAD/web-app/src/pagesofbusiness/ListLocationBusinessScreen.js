@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/ListLocationScreen.css';
-import { useState,useEffect } from 'react';
-import { FaAngleRight,FaBell, FaEye, FaSearch } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { FaAngleRight, FaBell, FaEye, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { locations } from '../pages/BusinessData';
 import Pagination from '../components/Pagination';
@@ -11,6 +11,28 @@ const ListLocationBusinessScreen = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      // Hiển thị trạng thái loading
+      try {
+        const response = await fetch(`http://localhost:3000/locationbyuserid/${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch locations');
+        }
+        const data = await response.json();
+        setLocations(data.data || []);
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+
+    fetchLocations();
+  }, [userId]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -24,7 +46,7 @@ const ListLocationBusinessScreen = () => {
       location.address.toLowerCase().includes(searchTermLower)
     );
   });
-  
+
   const itemsPerPage = 10;
   const currentData = filteredLocations.slice(
     (currentPage - 1) * itemsPerPage,
@@ -41,56 +63,69 @@ const ListLocationBusinessScreen = () => {
     navigate(`/business/location/detail/${id}`);
   };
 
+  function getCategoryName(id) {
+    switch (id) {
+      case 'hotel':
+        return 'Khách sạn';
+      case 'homestay':
+        return 'Homestay';
+      case 'guest home':
+        return 'Nhà nghỉ';
+      default:
+        return 'Không xác định'; // Giá trị mặc định nếu id không khớp
+    }
+  }
+
   return (
     <div class="container">
       <div class="containerformobile">
-        
+
         <div class="containerlistbusiness widthlistbusiness">
           <div class="listbusinessbody scroll-container mh-900">
-          <div class="search">
-              <FaSearch class="icon-search"/>
-              <input 
-                type="text" 
-                className="input-text" 
-                placeholder="Tìm kiếm địa điểm" 
-                value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)} 
+            <div class="search">
+              <FaSearch class="icon-search" />
+              <input
+                type="text"
+                className="input-text"
+                placeholder="Tìm kiếm địa điểm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên nhà kinh doanh</th>
-                        <th>Loại</th>
-                        <th>Số điện thoại</th>
-                        <th></th>
-                    </tr> 
-                </thead>
-            
-                <tbody className="row-container">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên nhà kinh doanh</th>
+                  <th>Loại</th>
+                  <th>địa chỉ</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody className="row-container">
                 {currentData.map((location, index) => (
-                  <tr 
-                    key={location.id} 
+                  <tr
+                    key={location.id}
                     className="clickable-row"
-                    onClick={() => handleRowClick(location.id)}
+                    onClick={() => handleRowClick(location._id)}
                   >
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>
                       <div className="namefield">
-                        <img 
-                          src={require(`../assets/images/${location.avatar}`)} 
-                          alt="User Avatar" 
-                          className="user-avatar" 
+                        <img
+                          src={location.image ? require(`../assets/images/${location.avatar}`) : require('../assets/images/avt.png')}
+                          alt="User Avatar"
+                          className="user-avatar"
                         />
                         <p>{location.name}</p>
                       </div>
                     </td>
-                    <td>{location.type}</td>
+                    <td>{getCategoryName(location.category.id)}</td>
                     <td>{location.address}</td>
                     <td>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="icon-container iconview"
                       >
                         <FaEye />
@@ -98,10 +133,10 @@ const ListLocationBusinessScreen = () => {
                     </td>
                   </tr>
                 ))}
-                </tbody>
+              </tbody>
             </table>
           </div>
-          
+
           <Pagination
             totalItems={totalItems}
             itemsPerPage={10}
@@ -109,7 +144,7 @@ const ListLocationBusinessScreen = () => {
           />
         </div>
       </div>
-      
+
     </div>
   );
 };

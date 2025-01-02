@@ -12,11 +12,11 @@ import LoginScreen from "./pages/LoginScreen";
 import DashBoardScreen from "./pages/DashBoardScreen";
 import SideBar from "./components/SideBar";
 import Layout from "./pages/Layout";
-// import ListBusinessScreen from "./pages/ListBusinessScreen";
+import ListBusinessScreen from "./pages/ListBusinessScreen";
 import ListLocationScreen from "./pages/ListLocationScreen";
 import ListBookingScreen from "./pages/ListBookingScreen";
 import StatisticScreen from "./pages/StatisticScreen";
-// import DetailBusinessScreen from "./pages/DetailbusinessScreen";
+import DetailBusinessScreen from "./pages/DetailbusinessScreen";
 import DetailLocationScreen from "./pages/DetailLocationScreen";
 import DetailBookingScreen from "./pages/DetailBookingScreen";
 import RegistryScreen from "./pagesofbusiness/RegistryScreen";
@@ -67,7 +67,7 @@ const AppWrapper = () => {
               element={<DashBoardBusinessScreen />}
             />
             {/* Doanh nghiệp */}
-            {/* <Route path="/business/list" element={<ListBusinessScreen />} />
+            <Route path="/business/list" element={<ListBusinessScreen />} />
             <Route
               path="/business/detail/:id"
               element={<DetailBusinessScreen />}
@@ -75,7 +75,7 @@ const AppWrapper = () => {
             <Route
               path="/business/statistic"
               element={<StatisticBusinessScreen />}
-            /> */}
+            />
             <Route path="/business/chat" element={<ChatBusinessScreen />} />
             {/* Booking */}
             <Route path="/booking/list" element={<ListBookingScreen />} />

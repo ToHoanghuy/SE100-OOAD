@@ -69,7 +69,7 @@ const SideBar = ({role}) => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <img src={require("../assets/images/logo.png")} alt="Travel Social" />
+        <img src={require("../assets/images/logoblue.png")} alt="Travel Social" />
       </div>
       <div className="sidebar-menu">
         <ul>

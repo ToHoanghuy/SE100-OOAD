@@ -22,13 +22,14 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     console.log('userdata: ', userData);
     const [currentTab, setCurrentTab] = useState('baseinfo');
     const [currentTab2, setCurrentTab2] = useState('viewratingservice');
-    const [currentTab3, setCurrentTab3] = useState('addRoom');
     const { id } = useParams();
     const [latitude] = useState(10.8231);  // Thay bằng tọa độ mong muốn
     const [longitude] = useState(106.6297); // Thay bằng tọa độ mong muốn
     const [reviews, setReviews] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [selectedFacilities, setSelectedFacilities] = useState([]);
+    const [selectedRoomId, setSelectedRoomId] = useState(null);
+    const [roomData, setRoomData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -45,13 +46,22 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
         setCurrentTab2('viewratingservice');
     };
 
-    const handleViewDetails = () => {
+    const handleViewDetails = (roomId) => {
+        setSelectedRoomId(roomId);
         setCurrentTab2('roomDetails');
     };
 
     const handleViewExitRoomDetail = () => {
         setCurrentTab2('viewratingservice');
     };
+
+    const handleAddRoom = () => {
+        setCurrentTab2('addRoom');
+    }
+
+    const handleCancelAddRoom = () => {
+        setCurrentTab2('viewratingservice')
+    } 
 
     const services = [
         { id: "cancelable", name: "Hủy miễn phí trong 24h", icon: <FaTimesCircle className="mr-2 w-4" /> },
@@ -61,12 +71,30 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
         { id: "ac", name: "Máy lạnh", icon: <FaSnowflake className="mr-2 w-4" /> },
     ];
 
+    const getFacilityIcon = (id) => {
+        switch (id) {
+            case "cancelable":
+                return <FaTimesCircle className="mr-2 w-4 p-0" />;
+            case "tub":
+                return <FaHotTub className="mr-2 w-4" />;
+            case 'wifi':
+                return <FaWifi className="mr-2 w-4" />;
+            case 'volumeoff':
+                return <FaVolumeOff className="mr-2 w-4" />;
+            case 'ac':
+                return <FaSnowflake className="mr-2 w-4" />;
+            default:
+                return <FaSnowflake className="mr-2 w-4" />; // Nếu không có dịch vụ nào khớp, trả về null
+        }
+    };
+
     const handleCheckboxChange = (service) => {
         if (selectedFacilities.includes(service.id)) {
             setSelectedFacilities(selectedFacilities.filter((id) => id !== service.id));
         } else {
             setSelectedFacilities([...selectedFacilities, service.id]);
         }
+        console.log(selectedFacilities);
     };
 
     const handleInputAddChange = (e) => {
@@ -82,22 +110,24 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
         quantity: 1,
         pricePerNight: 0,
         area: 0,
-        beds: [],
+        singleBeds: 0,
+        doubleBeds: 0,
+        // beds: [],
         facilities: [],
     });
 
     const handleSubmit = async () => {
         const facilityList = selectedFacilities.map((id) => {
             const service = services.find((service) => service.id === id);
-            return { id: id.toString(), name: service.name, quantity: 1, description: "" };
+            return { id: service.id, name: service.name, quantity: 1, description: "" };
         });
 
         const roomData = {
             ...formData,
             locationId: id,
-            facilities: facilityList,
+            facility: facilityList,
             capacity: formData.quantity,
-            beds: [
+            bed: [
                 { category: "single", quantity: parseInt(formData.singleBeds || 0) },
                 { category: "double", quantity: parseInt(formData.doubleBeds || 0) },
             ],
@@ -140,6 +170,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                 }
                 const data = await response.json();
                 setLocationInfo(data.data);
+                setImages(data.data.image);
                 console.log('id: ', id);
                 console.log('location infor: ', locationInfo);
             } catch (error) {
@@ -208,6 +239,30 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
         fetchRooms();
     }, [id]);
 
+    useEffect(() => {
+        if (!selectedRoomId) return; 
+    
+        const fetchRoomDetails = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`http://localhost:3000/room/getbyid/${selectedRoomId}`); 
+                const data = await response.json();
+                console.log(data.data);
+                if (response.ok) {
+                    setRoomData(data.data); 
+                } else {
+                    console.error("Lỗi khi lấy thông tin phòng:", data);
+                }
+            } catch (error) {
+                console.error("Lỗi khi gọi API:", error);
+            } finally {
+                setLoading(false); 
+            }
+        };
+    
+        fetchRoomDetails(); 
+    }, [selectedRoomId]);
+
     const handleEditClick = () => {
         setIsEditing(!isEditing);
     };
@@ -247,8 +302,9 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     const handleAddImage = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setImages([...images, imageUrl]);
+            const tempUrl = URL.createObjectURL(file); // Tạo URL tạm thời
+            const newImage = { url: tempUrl, file }; // Lưu cả file và URL
+            setImages([...images, newImage]); // Thêm vào danh sách ảnh
         }
     };
 
@@ -440,7 +496,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                 <div className="flex space-x-4 scroll-container-x overflow-x-auto pb-4 whitespace-nowrap">
                                     {images.map((image, index) => (
                                         <div key={index} className="relative w-24 h-24 inline-block">
-                                            <img alt="Location" className="w-full h-full object-cover rounded-lg" src={image} />
+                                            <img alt="Location" className="w-full h-full object-cover rounded-lg" src={image?.url} />
                                             {editMode && (
                                                 <button
                                                     onClick={() => handleDeleteImage(index)}
@@ -584,7 +640,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                         </div>
                                                         <div className="flex justify-between items-center w-full">
                                                             <button
-                                                                onClick={() => handleViewDetails(room.id)}
+                                                                onClick={() => handleViewDetails(room._id)}
                                                                 className="bg-blue-500 text-white px-4 py-2 rounded-md"
                                                             >
                                                                 Xem chi tiết
@@ -598,10 +654,10 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                         </div>
                                                     </div>
                                                 ))}
-                                                <div className="bg-gray-200 w-420 p-4 rounded-lg shadow-md flex items-center justify-center">
+                                                <button onClick={handleAddRoom} className="bg-gray-200 w-420 p-4 rounded-lg shadow-md flex items-center justify-center">
                                                     <button className="text-2xl text-gray-600">+</button>
                                                     <p className="ml-2">Thêm phòng mới</p>
-                                                </div>
+                                                </button>
                                             </div>
                                         </div>
 
@@ -651,49 +707,44 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                             <a class="text-xl font-bold mb-4 text-black">Phòng</a>&gt;<span>Chi tiết phòng</span>
                                             {/* <a href="#" class="hover:underline">Phòng</a> */}
                                         </div>
-                                        <h1 class="text-2xl font-bold mb-4">Phòng 2 người</h1>
-                                        <div class="flex items-center mb-4">
+                                        <h1 class="text-2xl font-bold mb-4">{roomData?.name}</h1>
+                                        {/* <div class="flex items-center mb-4">
                                             <FaBed class="mr-2 w-6" />
                                             <span>1 giường đôi</span>
+                                        </div> */}
+                                        <div className="flex flex-col space-y-2">
+                                            {roomData?.bed?.map((bed, index) => (
+                                                <div key={index} className="flex items-center mb-4">
+                                                    {bed?.category === "single" ? (
+                                                        <FaBed className="mr-2 w-6" />
+                                                    ) : (
+                                                        <FaBed className="mr-2 w-6" />
+                                                    )}
+                                                    <span>{bed?.quantity} {bed?.category === "single" ? "Giường đơn" : "Giường đôi"}</span>
+                                                </div>
+                                            ))}
                                         </div>
                                         <div class="mb-4">
-                                            <span>diện tích: 16m2</span>
+                                            <span>diện tích: {roomData?.area}m2</span>
                                         </div>
                                         <div class="mb-4">
                                             <h2 class="font-bold mb-2">Dịch vụ:</h2>
-                                            <div class="flex flex-wrap gap-2">
-                                                <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                                                    <FaTimesCircle class=" mr-2 w-4 p-0" />
-
-                                                    <span>hủy miễn phí trong 24h</span>
-                                                </div>
-                                                <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                                                    <FaHotTub class="mr-2 w-4" />
-
-                                                    <span>Bồn tắm</span>
-                                                </div>
-                                                <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                                                    <FaWifi class="mr-2 w-4" />
-                                                    <span>wifi miễn phí</span>
-                                                </div>
-                                                <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-
-                                                    <FaVolumeOff class="mr-2 w-4" />
-                                                    <span>Hệ thống chống tiếng ồn</span>
-                                                </div>
-                                                <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-
-                                                    <FaSnowflake class="mr-2 w-4" />
-                                                    <span>Máy lạnh</span>
-                                                </div>
+                                            
+                                            <div className="flex flex-wrap gap-2">
+                                                {roomData?.facility.map((facility, index) => (
+                                                    <div key={index} className="flex items-center bg-gray-200 rounded-full px-3 py-1">
+                                                        {getFacilityIcon(facility.id)}
+                                                        <span>{facility?.name}</span>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                         <div class="mb-4">
                                             <span class="font-bold">Trạng thái:</span>
-                                            <span class="text-blue-500 status-room">còn 5 phòng</span>
+                                            <span class="text-blue-500 status-room"> Còn {roomData?.capacity} phòng</span>
                                         </div>
                                         <div class="flex items-center justify-between">
-                                            <div class="text-green-500 text-2xl font-bold">$50</div>
+                                            <div class="text-green-500 text-2xl font-bold">{roomData?.pricePerNight} VND</div>
                                             <div class="flex">
                                                 <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Thoát</button>
                                                 <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Chỉnh sửa</button>
@@ -702,7 +753,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                     </div>
                                 )}
 
-                                {currentTab3 === 'addRoom' && (
+                                {currentTab2 === 'addRoom' && (
                                     <div class="border border-gray-200 rounded-b-lg p-4">
                                         <div class="text-gray-500 text-sm mb-4">
                                             <a class="text-xl font-bold mb-4 text-black">Phòng</a>&gt;<span>Thêm phòng</span>
@@ -778,15 +829,13 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                             </div>
                                             
                                             <div class="flex">
-                                                <button class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Hủy</button>
+                                                <button onClick={handleCancelAddRoom} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Hủy</button>
                                                 <button onClick={handleSubmit} class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Tạo</button>
                                             </div>
                                         </div>
                                     </div>
                                 )}
                             </div>
-
-
                         )}
                     </div>
 

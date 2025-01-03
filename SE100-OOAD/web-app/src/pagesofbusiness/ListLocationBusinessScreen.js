@@ -3,7 +3,7 @@ import '../styles/ListLocationScreen.css';
 import { useState, useEffect } from 'react';
 import { FaAngleRight, FaBell, FaEye, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { locations } from '../pages/BusinessData';
+// import { locations } from '../pages/BusinessData';
 import Pagination from '../components/Pagination';
 
 
@@ -104,25 +104,25 @@ const ListLocationBusinessScreen = () => {
               </thead>
 
               <tbody className="row-container">
-                {currentData.map((location, index) => (
+                {currentData?.map((location, index) => (
                   <tr
                     key={location.id}
                     className="clickable-row"
-                    onClick={() => handleRowClick(location._id)}
+                    onClick={() => handleRowClick(location?._id)}
                   >
                     <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                     <td>
                       <div className="namefield">
                         <img
-                          src={location.image ? require(`../assets/images/${location.avatar}`) : require('../assets/images/avt.png')}
+                          src={location?.image ? require('../assets/images/avt.png') : require('../assets/images/avt.png')}
                           alt="User Avatar"
                           className="user-avatar"
                         />
-                        <p>{location.name}</p>
+                        <p>{location?.name}</p>
                       </div>
                     </td>
-                    <td>{getCategoryName(location.category.id)}</td>
-                    <td>{location.address}</td>
+                    <td>{getCategoryName(location?.category?.id)}</td>
+                    <td>{location?.address}</td>
                     <td>
                       <button
                         type="button"

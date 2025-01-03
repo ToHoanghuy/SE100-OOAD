@@ -16,7 +16,7 @@ const titleMap = [
 
   { path: /^\/dashboard\/business$/, main: 'Bảng Điều Khiển', sub: null },
   { path: /^\/business\/booking\/list$/, main: 'Danh Sách Đặt Chỗ', sub: null },
-  { path: /^\/business\/detail\/[a-zA-Z0-9]+$/, main: 'Danh Sách Đặt Chỗ', sub: 'Chi Tiết Đặt Chỗ' },
+  { path: /^\/business\/booking\/detail\/[a-zA-Z0-9]+$/, main: 'Danh Sách Đặt Chỗ', sub: 'Chi Tiết Đặt Chỗ' },
   { path: /^\/business\/location\/list$/, main: 'Danh Sách Địa Điểm', sub: null },
   { path: /^\/business\/location\/detail\/[a-zA-Z0-9]+$/, main: 'Danh Sách Địa Điểm', sub: 'Chi Tiết Địa Điểm' },
 

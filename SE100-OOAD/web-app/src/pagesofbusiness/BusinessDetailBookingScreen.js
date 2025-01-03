@@ -10,7 +10,7 @@ import moment from 'moment';
 
 
 const BusinessDetailBookingScreen = () => {
-    
+
     const { id: bookingId } = useParams();
     const [currentTab, setCurrentTab] = useState('customerinfo');
     const [userData, setUserData] = useState(null);
@@ -33,7 +33,9 @@ const BusinessDetailBookingScreen = () => {
     }
     const handleBookingInfoClick = () => {
         setCurrentTab('bookinginfo')
-    } 
+
+    }
+
 
     const fetchUserData = async () => {
         try {
@@ -122,8 +124,10 @@ const BusinessDetailBookingScreen = () => {
                                         <FaMoneyBill class="mr-2 w-5"/>
                                         
                                         <span class="text-green-500 ml-2">{booking?.totalPriceAfterTax} VND</span>
-                                        {/*<span class="text-green-500 ml-2">34,000,000 đ</span>
-                                        <span class="text-green-500 ml-2 status-label-2">- 50%</span>*/}
+
+                                        {/* <span class="text-green-500 ml-2">34,000,000 đ</span>
+                                        <span class="text-green-500 ml-2 status-label-2">- 50%</span> */}
+
                                     </div>
                                 <div class="flex items-center text-gray-500 mt-1 ">
                                     <FaEnvelope class="mr-2"/>
@@ -143,8 +147,10 @@ const BusinessDetailBookingScreen = () => {
                                         <FontAwesomeIcon icon={faUser} className="mr-2" />
                                         Thông tin booking
                                     </span>
-                                </button>           
-                                <button onClick={handleCustomerInfoClick} className={`flex items-center px-4 py-2 ${currentTab === 'customerinfo' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-t-lg`}>
+
+                                </button>
+                                <button onClick={handleCustomerInfoClick} className={`flex items-center px-4 py-2 ${currentTab === 'customerinfo' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-t-lg ml-2`}>
+
                                     <i class="fas fa-user mr-2">
                                     </i>
                                     <span>
@@ -236,7 +242,9 @@ const BusinessDetailBookingScreen = () => {
                                             <div class="mb-2 text-gray-500">Giới tính</div>
                                             <div className="mb-4">
                                                 {userData?.gender === 'male' ? 'Nam' : 'Nữ'}
-                                        </div>
+
+                                            </div>
+
                                         </div>
                                         <div>
                                             <div class="mb-2 text-gray-500">Họ và tên</div>

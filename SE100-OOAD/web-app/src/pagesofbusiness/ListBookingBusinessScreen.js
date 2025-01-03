@@ -24,6 +24,7 @@ const ListBookingBusinessScreen = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log('list booking: ',data.data)
 
         const bookingsWithDetails = await Promise.all(data.data.map(async (booking) => {
 
@@ -31,7 +32,7 @@ const ListBookingBusinessScreen = () => {
           const userData = await userResponse.json();
           const userName = userData.data.userName;
 
-          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.roomId}`);
+          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`);
           const roomData = await roomResponse.json();
           const locationId = roomData.data.locationId;
           console.log('location: ', locationId)
@@ -42,6 +43,7 @@ const ListBookingBusinessScreen = () => {
           return {
             ...booking,
             userName,
+            locationId,
             locationName,
           };
         }));
@@ -59,7 +61,10 @@ const ListBookingBusinessScreen = () => {
     setCurrentPage(page);
   };
 
-  const handleRowClick = (id) => {
+  const handleRowClick = (id, booking, userId) => {
+    console.log('choosed booking: ',JSON.stringify(booking) );
+    localStorage.setItem('selectedBooking', JSON.stringify(booking));
+    localStorage.setItem('userOfBookingId', userId);
     navigate(`/business/booking/detail/${id}`);
   };
 
@@ -117,7 +122,7 @@ const ListBookingBusinessScreen = () => {
                   <tr
                     key={booking.id}
                     className="clickable-row"
-                    onClick={() => handleRowClick(booking.id)}
+                    onClick={() => handleRowClick(booking._id, booking, booking.userId)}
                   >
                     <td>{index + 1}</td>
                     <td>
@@ -137,7 +142,7 @@ const ListBookingBusinessScreen = () => {
                         {booking.status === 'pending' ? 'Chờ duyệt' : booking.status}
                       </span>
                     </td>
-                    <td>{booking.amount}</td>
+                    <td>{booking.totalPriceAfterTax}</td>
                     <td>
                       <button
                         type="button"

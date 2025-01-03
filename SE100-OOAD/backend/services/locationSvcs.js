@@ -37,15 +37,6 @@ const createSlug = (name, address) => {
 
 const getAllLocation = async () => {
     const allLocation = await Location.find();
-    // for (const location of allLocation) {
-    //     const slug = createSlug(location.name, location.address); // Tạo slug
-
-    //     // Cập nhật trường slug cho tài liệu hiện tại
-    //     await Location.updateOne(
-    //         { _id: location._id }, // Điều kiện: tài liệu theo _id
-    //         { $set: { slug } } // Cập nhật trường slug
-    //     );
-    // }
     if(allLocation.length !== 0)
         return allLocation;
     else
@@ -86,9 +77,6 @@ const getLocationByName = async (name) => {
         return locations;
     else
         throw new NotFoundException('Not found this location');
-    //Thêm chức năng tìm kiếm không dấu: thêm một trường tên không dấu trong database.
-    //Tìm kiếm không theo thứ tự: tìm hiểu TFIDF
-    //VN core nlp
 }
 
 const getLocationById = async (locationId) => {

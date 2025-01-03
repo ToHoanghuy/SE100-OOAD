@@ -81,21 +81,7 @@ module.exports.createCollectionItem = async (req, res, next) => {
         next(error)
     }
 }
-// module.exports.updateUserCollectionItem = async (req, res, next) => {
-//     const id = req.params.id
-//     const data = req.body
-//     try {
-//         const result = await UserCollectionSvc.updateCollectionItem(id, data)
-//         res.status(200).json({
-//             isSuccess: true,
-//             data: result,
-//             error: null
-//         })
-//     }
-//     catch(error) {
-//         next(error)
-//     }
-// }
+
 module.exports.deleteCollectionItem = async (req, res, next) => {
     const {collectionId, itemId} = req.params
     try {

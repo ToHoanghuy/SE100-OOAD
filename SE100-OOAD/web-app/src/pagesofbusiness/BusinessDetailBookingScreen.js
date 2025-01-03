@@ -31,6 +31,10 @@ const BusinessDetailBookingScreen = () => {
     const handleLocationInfoClick = () => {
         setCurrentTab('locationinfo')
     }
+    const handleBookingInfoClick = () => {
+        setCurrentTab('bookinginfo')
+    } 
+
     const fetchUserData = async () => {
         try {
             setLoading(true); 
@@ -132,6 +136,14 @@ const BusinessDetailBookingScreen = () => {
                         </div>
                         <div class="mt-6">
                             <div class="flex">
+                                <button onClick={handleBookingInfoClick} className={`flex items-center px-4 py-2 ${currentTab === 'bookinginfo' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-t-lg`}>
+                                    <i class="fas fa-user mr-2">
+                                    </i>
+                                    <span>
+                                        <FontAwesomeIcon icon={faUser} className="mr-2" />
+                                        Thông tin booking
+                                    </span>
+                                </button>           
                                 <button onClick={handleCustomerInfoClick} className={`flex items-center px-4 py-2 ${currentTab === 'customerinfo' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-t-lg`}>
                                     <i class="fas fa-user mr-2">
                                     </i>
@@ -149,6 +161,66 @@ const BusinessDetailBookingScreen = () => {
                                     </span>
                                 </button>
                             </div>
+                            {currentTab === 'bookinginfo' && (
+                                <div class="border border-gray-200 rounded-b-lg p-4">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <div class="mb-2 text-gray-500">Mã Booking</div>
+                                            <div class="mb-4">{booking?._id}</div>
+                                            <div class="mb-2 text-gray-500">Ngày checkin</div>
+                                            <div class="mb-4">{moment(booking?.checkinDate).format('DD/MM/YYYY HH:mm:ss')}</div>
+                                            <div class="mb-2 text-gray-500">Tổng tiền</div>
+                                            <div class="mb-4">{booking?.totalPriceAfterTax}</div>
+                                            {/* <div class="mb-2 text-gray-500">Tên liên hệ</div>
+                                            <div class="mb-4">{userData?.userName}</div>
+                                            <div class="mb-2 text-gray-500">Giới tính</div>
+                                            <div className="mb-4">
+                                                {userData?.gender === 'male' ? 'Nam' : 'Nữ'}
+                                            </div> */}
+                                        </div>
+                                        <div>
+                                            <div class="mb-2 text-gray-500">Ngày đặt</div>
+                                            <div class="mb-4">{moment(booking?.dateBooking).format('DD/MM/YYYY HH:mm:ss')}</div>
+                                            <div class="mb-2 text-gray-500">Ngày checkout</div>
+                                            <div class="mb-4">{moment(booking?.checkoutDate).format('DD/MM/YYYY HH:mm:ss')}</div>
+                                            {/* <div class="mb-2 text-gray-500">Số CMND/CCCD</div>
+                                            <div class="mb-4">079303041653</div> */}
+                                            <div class="mb-2 text-gray-500">Số tiền đã trả</div>
+                                            <div class="mb-4">{booking?.amountPaid}</div>
+                                            {/* <div class="mb-2 text-gray-500">Địa chỉ</div>
+                                            <div class="mb-4">{userData?.userPhoneNumber}</div> */}
+                                        </div>
+                                        <div class="mb-4">
+                                            <h2 class="font-bold mb-2">Phòng:</h2>
+                                            
+                                            <div className="flex flex-wrap gap-2">
+                                                {booking?.items.map((item, index) => (
+                                                    <div key={index} className="flex items-center bg-gray-200 rounded-full px-3 py-1">
+                                                        {/* {getFacilityIcon(item.roomId)} */}
+                                                        <span class="mr-2">Số lượng: </span>
+                                                        <span class="font-bold">{item.quantity}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                            <div className="flex items-center justify-center mt-2">
+                                                <h2 class="text-black font-bold mr-2">Trạng thái</h2>
+                                                <span> {booking.status}</span>
+                                                {/* <input 
+                                                    name="pricePerNight"
+                                            
+                                                     type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input> */}
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <button  class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Xác nhận Booking</button>
+                                            </div>
+                                        </div>
+                                </div>
+                            )}
                             {currentTab === 'customerinfo' && (
                                 <div class="border border-gray-200 rounded-b-lg p-4">
                                     <div class="grid grid-cols-2 gap-4">

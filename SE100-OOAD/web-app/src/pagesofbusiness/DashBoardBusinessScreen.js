@@ -38,7 +38,7 @@ const DashBoardBusinessScreen = () => {
           const userData = await userResponse.json();
           const userName = userData.data.userName;
 
-          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.roomId}`);
+          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`);
           const roomData = await roomResponse.json();
           const locationId = roomData.data.locationId;
 
@@ -80,16 +80,16 @@ const DashBoardBusinessScreen = () => {
         // Lấy tháng và năm hiện tại
         const currentMonth = new Date().getMonth() + 1; // JavaScript getMonth() trả từ 0-11
         const currentYear = new Date().getFullYear();
-
+        console.log('userId: ', userId);
         // Gọi API với query params
-        const response = await fetch(`http://localhost:3000/booking/revenuebymonth/${userId}?month=${currentMonth}&year=${currentYear}`);
+        const response = await fetch(`http://localhost:3000/bookings/revenue/${userId}?month=${currentMonth}&year=${currentYear}`);
         if (!response.ok) {
           throw new Error("Failed to fetch monthly stats");
         }
         const data = await response.json();
 
-        setMonthlyBookings(data.totalBookings);
-        setMonthlyRevenue(data.totalRevenue);
+        setMonthlyBookings(data.data.totalBookings);
+        setMonthlyRevenue(data.data.totalRevenue);
       } catch (error) {
         console.error("Error fetching monthly stats:", error);
       }
@@ -105,11 +105,11 @@ const DashBoardBusinessScreen = () => {
     : bookings;
 
   const handleRowClick = (id) => {
-    navigate(`/booking/detail/${id}`);
+    navigate(`/business/booking/detail/${id}`);
   }
 
   const handleBusinessDetailClick = (id) => {
-    navigate(`/booking/detail/${id}`);
+    navigate(`/business/booking/detail/${id}`);
   };
 
   return (
@@ -157,7 +157,7 @@ const DashBoardBusinessScreen = () => {
                 </div>
               </div>
               <div className="card-body">
-                <p className="number">{monthlyRevenue.toLocaleString()} VND</p>
+                <p className="number">{monthlyRevenue?.toLocaleString()} VND</p>
               </div>
               <div className="separator">
                 <div></div>
@@ -185,7 +185,7 @@ const DashBoardBusinessScreen = () => {
                 <tr
                   key={booking.id}
                   className="cursor-pointer hover:bg-blue-100"
-                  onClick={() => handleRowClick(booking.id)}>
+                  onClick={() => handleRowClick(booking._id)}>
                   <td>
                     <div className="location-icon">
                       <img src="location-icon.png" alt="Location Icon" />
@@ -229,7 +229,7 @@ const DashBoardBusinessScreen = () => {
                 <div
                   className="user-info"
                   key={booking.id}
-                  onClick={() => handleBusinessDetailClick(booking.id)}
+                  onClick={() => handleBusinessDetailClick(booking._id)}
                   style={{ cursor: 'pointer' }}
                 >
                   <img src="avatar.png" alt="User Avatar" className="user-avatar" />

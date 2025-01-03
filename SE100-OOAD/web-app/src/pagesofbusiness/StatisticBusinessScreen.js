@@ -128,7 +128,7 @@ const StatisticBusinessScreen = () => {
   useEffect(() => {
     const fetchYearlyRevenue = async () => {
       try {
-        const year = new Date().getFullYear(); // Lấy năm hiện tại
+        const year = new Date().getFullYear() - 1; // Lấy năm hiện tại
         const monthlyData = [];
 
         // Gọi API cho từng tháng (1 -> 12)

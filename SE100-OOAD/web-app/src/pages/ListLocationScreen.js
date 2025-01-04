@@ -24,6 +24,7 @@ const ListLocationScreen = () => {
         let response;
         if (debouncedSearchTerm.trim() === "") {
           response = await fetch(`http://localhost:3000/locationbyname?name`);
+          console.log(response.json);
         } else {
           const formattedSearchTerm = debouncedSearchTerm
             .trim()
@@ -104,6 +105,7 @@ const ListLocationScreen = () => {
                   <th>Tên địa điểm</th>
                   <th>Loại</th>
                   <th>Địa chỉ</th>
+                  <th>Trạng thái</th>
                   <th></th>
                 </tr>
               </thead>
@@ -131,6 +133,28 @@ const ListLocationScreen = () => {
                           : location.category?.cateName}
                       </td>
                       <td>{location.address}</td>
+                      <td>
+                        {/* Hiển thị trạng thái */}
+                        <span>
+                          {" "}
+                          {location.status === "inactive" ? (
+                            <span className="status-label status-waiting">
+                              Chờ phê duyệt
+                            </span>
+                          ) : location.status === "active" ? (
+                            <span className="status-label status-completed">
+                              Đã phê duyệt
+                            </span>
+                          ) : location.status === "rejected" ? (
+                            <span className="status-label status-cancelled">
+                              Bị từ chối
+                            </span>
+                          ) : (
+                            <span>Chưa xác định</span>
+                          )}
+                        </span>
+                      </td>
+
                       <td>
                         <button
                           type="button"

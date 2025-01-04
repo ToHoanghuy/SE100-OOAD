@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 // import { businesses, bookings } from "./BusinessData";
 import { formatDate, formatDateTime } from "../utils/dateUtils";
 import { formatCurrency } from "../utils/formatCurrency";
+import { useDebounce } from "use-debounce";
 
 const ListBookingScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +17,8 @@ const ListBookingScreen = () => {
   const [error, setError] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [user, setUser] = useState([]);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 1000); // 2-second debounce
+
   const statusMapping = {
     confirmed: "Đã duyệt",
     pending: "Đang chờ",
@@ -27,12 +30,21 @@ const ListBookingScreen = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        const bookingResponse = await fetch(
-          "http://localhost:3000/booking/getall"
-        );
-        const bookingResult = await bookingResponse.json();
+        let bookingResponse;
+        if (debouncedSearchTerm.trim() === "") {
+          bookingResponse = await fetch(
+            `http://localhost:3000/booking/getbyusername?name=`
+          );
+        } else {
+          bookingResponse = await fetch(
+            `http://localhost:3000/booking/getbyusername?name=${searchTerm}`
+          );
+        }
 
+        const bookingResult = await bookingResponse.json();
+        console.log(bookingResult.data);
         if (bookingResult.isSuccess) {
           const bookingsData = bookingResult.data;
           setBookings(bookingsData);
@@ -69,7 +81,7 @@ const ListBookingScreen = () => {
 
           setBookings(enrichedBookings);
         } else {
-          setError("Failed to fetch bookings.");
+          setError("Không tìm thấy !");
         }
       } catch (err) {
         setError("An error occurred while fetching bookings.");
@@ -79,8 +91,13 @@ const ListBookingScreen = () => {
     };
 
     fetchBookings();
-  }, []);
+  }, [debouncedSearchTerm]);
 
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1); // Only reset if necessary
+    }
+  }, [searchTerm]);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -89,10 +106,10 @@ const ListBookingScreen = () => {
   };
 
   const filteredData = bookings
-    .filter((booking) => {
-      const searchTermLower = searchTerm.toLowerCase();
-      return booking.status.toLowerCase().includes(searchTermLower);
-    })
+    // .filter((booking) => {
+    //   const searchTermLower = searchTerm.toLowerCase();
+    //   return booking.status.toLowerCase().includes(searchTermLower);
+    // })
     .map((booking) => ({
       ...booking,
       status: statusMapping[booking.status] || booking.status,
@@ -155,45 +172,48 @@ const ListBookingScreen = () => {
                   <th></th>
                 </tr>
               </thead>
-
-              <tbody className="row-container">
-                {currentData.map((booking, index) => (
-                  <tr key={booking._id} className="clickable-row">
-                    <td>{index + 1 + (currentPage - 1) * 10}</td>
-                    <td>
-                      <div className="namefield">
-                        {/* <img
+              {error ? (
+                <div>{error}</div>
+              ) : (
+                <tbody className="row-container">
+                  {currentData.map((booking, index) => (
+                    <tr key={booking._id} className="clickable-row">
+                      <td>{index + 1 + (currentPage - 1) * 10}</td>
+                      <td>
+                        <div className="namefield">
+                          {/* <img
                           src={require(`../assets/images/${booking.avatar}`)}
                           alt="User Avatar"
                           className="user-avatar"
                         /> */}
-                        <p>{booking.user?.userName || "Unknown User"}</p>
-                      </div>
-                    </td>
-                    <td>{booking._id}</td>
-                    <td>{booking.dateBooking}</td>
-                    <td>
-                      <span
-                        className={`status-label ${getStatusColor(
-                          booking.status
-                        )}`}
-                      >
-                        {booking.status}
-                      </span>
-                    </td>
-                    <td>{formatCurrency(Number(booking.totalPrice))}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="icon-container iconview"
-                        onClick={() => handleRowClick(booking._id)}
-                      >
-                        <FaEye />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                          <p>{booking.user?.userName || "Unknown User"}</p>
+                        </div>
+                      </td>
+                      <td>{booking._id}</td>
+                      <td>{booking.dateBooking}</td>
+                      <td>
+                        <span
+                          className={`status-label ${getStatusColor(
+                            booking.status
+                          )}`}
+                        >
+                          {booking.status}
+                        </span>
+                      </td>
+                      <td>{formatCurrency(Number(booking.totalPrice))}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="icon-container iconview"
+                          onClick={() => handleRowClick(booking._id)}
+                        >
+                          <FaEye />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              )}
             </table>
           </div>
           <Pagination

@@ -184,6 +184,22 @@ module.exports.updateLocation = async (req, res, next) => {
     }
 }
 
+module.exports.changeStatusLocation = async (req, res, next) => {
+    try {
+        const locationId = req.params.locationId;
+        const newStatus = req.body.status;
+        const updatedLocation = await locationSvc.changeStatusLocation(locationId, newStatus);
+        res.status(200).json({
+            isSuccess: true,
+            data: updatedLocation,
+            error: null,
+        });
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
 module.exports.deleteLocation = async (req, res, next) => {
     const { locationId } = req.params;
     try {

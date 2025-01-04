@@ -74,6 +74,21 @@ module.exports.getBookingByBusinessId = async (req, res, next) => {
     }
 }
 
+module.exports.getBookingByUserName = async (req, res, next) => {
+    try {
+        const name = req.query.name
+        const result = await bookingSvc.getBookingByUserName(name)
+        res.status(201).json({
+            isSuccess: true,
+            data: result,
+            error: null
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
 module.exports.createBooking = async (req, res, next) => {
     const {
         dateBooking,

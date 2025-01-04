@@ -95,6 +95,20 @@ const updateLocation = async(locationId, updateData) => {
         throw new NotFoundException('Not found location to update')
 }
 
+const changeStatusLocation = async(locationId, status) => {
+    const updatedLocation = await Location.findByIdAndUpdate(locationId, {status: status}, {new: true, runValidators: true})
+
+    if(status === 'active')
+        console.log('Send approve email to owner')
+    if(status === 'inactive')
+        console.log('Send reject email to owner')
+
+    if(updatedLocation)
+        return updatedLocation
+    else
+        throw new NotFoundException('Not found location to change status')
+}
+
 const deleteLocation = async(locationId) => {
     const deletedLocation = await Location.findByIdAndDelete(locationId)
     if(deletedLocation)
@@ -112,5 +126,6 @@ module.exports = {
     getLocationByName,
     getLocationById,
     updateLocation,
+    changeStatusLocation,
     deleteLocation
 }

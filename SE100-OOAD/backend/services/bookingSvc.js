@@ -89,6 +89,59 @@ const getBookingByLocationId = async (locationId) => {
         throw new NotFoundException("Not found");
     }
 };
+function removeVietnameseTones(str) {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
+      .replace(/đ/g, 'd') // Chuyển đ -> d
+      .replace(/Đ/g, 'D') // Chuyển Đ -> D
+      .toLowerCase(); // Chuyển thành chữ thường
+}
+
+const getBookingByUserName = async (userName) => {
+    normalizedPartialName = removeVietnameseTones(userName);
+    const bookings = await Booking.aggregate([
+        {
+          $lookup: {
+            from: 'User', 
+            localField: 'userId',
+            foreignField: '_id', 
+            as: 'userDetails', 
+          },
+        },
+        {
+            $unwind: '$userDetails',
+        },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            dateBooking: 1,
+            checkinDate: 1,
+            checkoutDate: 1,
+            items: 1,
+            services: 1,
+            totalPrice: 1,
+            tax: 1,
+            totalPriceAfterTax: 1,
+            amountPaid: 1,
+            status: 1,
+            userName: '$userDetails.userName',
+          },
+        },
+      ]);
+
+      const filteredBookings = bookings.filter(booking => {
+        const normalizedUserName = removeVietnameseTones(booking.userName); // Chuẩn hóa tên người dùng
+        return normalizedUserName.includes(normalizedPartialName); // Tìm kiếm phần chuỗi (không phân biệt hoa/thường và dấu)
+      });
+    
+    
+    if(filteredBookings.length !== 0)
+        return filteredBookings
+    else
+        throw new NotFoundException('Not found booking of this customer')
+}
 
 const createBooking = async (bookingData) => {
     for (let item of bookingData.items) {
@@ -256,6 +309,7 @@ module.exports = {
     getBookingByUserId,
     getBookingByLocationId,
     getBookingByBusinessId,
+    getBookingByUserName,
     createBooking,
     updateBooking,
     addServices,

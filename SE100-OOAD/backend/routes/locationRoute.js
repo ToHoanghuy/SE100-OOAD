@@ -18,6 +18,7 @@ router.get('/locationbyname', locationController.getLocationByName);
 router.get('/locationbyid/:locationId', locationController.getLocationById);
 //update
 router.put('/updatelocation/:locationId', checkLocationOwner, locationController.updateLocation);
+router.patch('/location/:locationId', locationController.changeStatusLocation);
 //delete
 router.delete('/detelelocation/:locationId', checkLocationOwner, locationController.deleteLocation);
 

@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 const StatisticBusinessScreen = () => {
   const userId = localStorage.getItem('userId');
   const [seriesData, setSeriesData] = useState([{ name: 'Doanh thu', data: [] }]);
+  const [years, setYears ] = useState(new Date().getFullYear() - 1);
 
   const chartOptions = {
     chart: {
@@ -22,15 +23,95 @@ const StatisticBusinessScreen = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchSuccessRate = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch bookings data.");
+            }
+
+            const result = await response.json();
+            const bookings = result.data || []; // Danh sách các booking
+            console.log('chart:', bookings);
+
+            // Lọc booking theo năm được chọn
+            const filteredBookings = bookings.filter(booking => {
+                const bookingYear = new Date(booking.dateBooking).getFullYear();
+                return bookingYear === parseInt(years);
+            });
+
+            // Tính toán số lượng trạng thái
+            const totalBookings = filteredBookings.length;
+            const completedBookings = filteredBookings.filter(booking => booking.status === "complete").length;
+            const canceledBookings = totalBookings - completedBookings;
+
+            // Cập nhật tỷ lệ thành công
+            const successRate2 = totalBookings > 0 ? (completedBookings / totalBookings) * 100 : 0;
+            setSuccessRate(successRate2);
+
+            setChartData({
+                ...chartData,
+                series: [successRate2, 100 - successRate2],
+            });
+        } catch (error) {
+            console.error("Error fetching bookings data:", error);
+        }
+    };
+
+    fetchSuccessRate();
+}, [userId, years]);
+
+useEffect(() => {
+  const fetchLocationData = async () => {
+      try {
+          const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
+          if (!response.ok) {
+              throw new Error("Failed to fetch bookings data.");
+          }
+
+          const result = await response.json();
+          const bookings = result.data || []; // Danh sách các booking
+
+          // Nhóm dữ liệu theo location
+          const locationMap = {};
+          bookings.forEach(booking => {
+              if (booking.location && booking.location.category) {
+                  const locationName = booking.location.category.name;
+                  locationMap[locationName] = (locationMap[locationName] || 0) + 1;
+              }
+          });
+
+          // Chuyển đổi dữ liệu thành chuỗi và phần trăm
+          const totalBookings = bookings.length;
+          const labels = Object.keys(locationMap);
+          const series = labels.map(label => ((locationMap[label] / totalBookings) * 100).toFixed(2));
+
+          setChartData2({
+              ...chartData2,
+              series: series.map(Number),
+              options: {
+                  ...chartData2.options,
+                  labels: labels,
+              },
+          });
+      } catch (error) {
+          console.error("Error fetching bookings data:", error);
+      }
+  };
+
+  fetchLocationData();
+}, [userId, years]);
+
   // const seriesData = [{
   //     name: 'Doanh thu',
   //     data: [30, 40, 35, 50, 49, 60, 70, 1, 60, 45, 35, 30]
   // }];
 
-  const successRate = 60;
+  const [successRate, setSuccessRate] = useState(0);
   const failureRate = 100 - successRate;
 
-  const [chartData] = useState({
+  const [chartData, setChartData] = useState({
     series: [successRate, failureRate],
     options: {
       chart: {
@@ -128,12 +209,12 @@ const StatisticBusinessScreen = () => {
   useEffect(() => {
     const fetchYearlyRevenue = async () => {
       try {
-        const year = new Date().getFullYear() - 1; // Lấy năm hiện tại
+         // Lấy năm hiện tại
         const monthlyData = [];
 
         // Gọi API cho từng tháng (1 -> 12)
         for (let month = 1; month <= 12; month++) {
-          const response = await fetch(`http://localhost:3000/bookings/revenue/${userId}?month=${month}&year=${year}`);
+          const response = await fetch(`http://localhost:3000/bookings/revenue/${userId}?month=${month}&year=${years}`);
           if (!response.ok) {
             throw new Error(`Failed to fetch revenue for month ${month}`);
           }
@@ -148,13 +229,120 @@ const StatisticBusinessScreen = () => {
       }
     };
 
+  
+
+    // const fetchBookingSuccessRate = async () => {
+    //   try {
+    //     const response = await fetch(`http://localhost:3000/bookings/success-rate/${userId}?year=${years}`);
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch booking success rate');
+    //     }
+    //     const result = await response.json();
+    //     const completed = result.data.completed || 0;
+    //     const canceled = result.data.canceled || 0;
+    //     const totalBookings = completed + canceled;
+    //     const successRate = totalBookings > 0 ? (completed / totalBookings) * 100 : 0;
+    //     const failureRate = 100 - successRate;
+
+    //     setChartData({
+    //       series: [successRate, failureRate],
+    //       options: {
+    //         chart: { type: 'donut' },
+    //         labels: ['Thành công', 'Thất bại'],
+    //         colors: ['#69c0ff', 'rgba(244,91,105,0.6)'],
+    //         plotOptions: {
+    //           pie: {
+    //             donut: {
+    //               size: '70%',
+    //               labels: {
+    //                 show: true,
+    //                 total: {
+    //                   show: true,
+    //                   label: 'Thành công',
+    //                   formatter: () => `${successRate.toFixed(2)}%`,
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         },
+    //         dataLabels: { enabled: false },
+    //         legend: { position: 'bottom', horizontalAlign: 'center' },
+    //       }
+    //     });
+    //   } catch (error) {
+    //     console.error('Error fetching booking success rate:', error);
+    //   }
+    // };
+
+    // const fetchServiceBookingRates = async () => {
+    //   try {
+    //     const response = await fetch(`http://localhost:3000/bookings/service-rates/${userId}?year=${years}`);
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch service booking rates');
+    //     }
+    //     const result = await response.json();
+    //     const serviceData = result.data || [];
+    //     const totalBookings = serviceData.reduce((sum, service) => sum + service.bookings, 0);
+        
+    //     const formattedData = serviceData.map(service => ({
+    //       name: service.name,
+    //       bookingsPercentage: totalBookings > 0 ? (service.bookings / totalBookings) * 100 : 0,
+    //     }));
+        
+    //     setChartData2({
+    //       series: formattedData.map(service => service.bookingsPercentage),
+    //       options: {
+    //         chart: { type: 'donut' },
+    //         labels: formattedData.map(service => service.name),
+    //         colors: ['#69c0ff', '#00E396', '#FEB019', 'rgba(244,91,105,0.6)'],
+    //         plotOptions: {
+    //           pie: {
+    //             donut: {
+    //               size: '70%',
+    //               labels: {
+    //                 show: true,
+    //                 total: {
+    //                   show: true,
+    //                   label: 'Tổng số',
+    //                   formatter: () => '100%',
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         },
+    //         dataLabels: { enabled: true, formatter: val => `${val.toFixed(2)}%` },
+    //         legend: { position: 'bottom', horizontalAlign: 'center' },
+    //       }
+    //     });
+    //   } catch (error) {
+    //     console.error('Error fetching service booking rates:', error);
+    //   }
+    // };
+
     fetchYearlyRevenue();
-  }, [userId]);
+    // fetchBookingSuccessRate();
+    // fetchServiceBookingRates();
+  }, [userId, years]);
+
+  const handleYearChange = (event) => {
+    setYears(event.target.value); // Cập nhật năm
+  };
+
+
 
 
   return (
     <div class="container">
       <div class="containerformobile">
+          <div style={{ marginBottom: '20px' }}>
+            <label htmlFor="yearSelect">Chọn năm: </label>
+            <select id="yearSelect" value={years} onChange={handleYearChange}>
+              {/* Thêm các năm vào đây, ví dụ từ 2020 đến năm hiện tại */}
+              {[2020, 2021, 2022, 2023, 2024,2025].map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
         <div class="containerlistbusiness widthlistbusiness">
           <Chart
             options={chartOptions}

@@ -6,12 +6,15 @@ import Pagination from '../components/Pagination';
 import { bookings } from '../pages/BusinessData';
 import axios from 'axios';
 import moment from 'moment';
+import '../styles/ListBookingScreen.css';
+import { useDebounce } from "use-debounce";
 
 const ListBookingBusinessScreen = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [bookings, setBookings] = useState([]);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 1000);
 
   const userId = localStorage.getItem('userId');
   console.log('businessid ', userId);
@@ -19,6 +22,17 @@ const ListBookingBusinessScreen = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
+        // let bookingResponse;
+
+        // if (debouncedSearchTerm.trim() === "") {
+        //   bookingResponse = await fetch(
+        //     `http://localhost:3000/booking/getbyusername?name=`
+        //   );
+        // } else {
+        //   bookingResponse = await fetch(
+        //     `http://localhost:3000/booking/getbyusername?name=${searchTerm}`
+        //   );
+        // }
         const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -71,8 +85,9 @@ const ListBookingBusinessScreen = () => {
   const filteredData = bookings.filter((booking) => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
+      booking.locationName.toLowerCase().includes(searchTermLower) ||
       booking._id.toLowerCase().includes(searchTermLower) ||
-      booking.roomId.toLowerCase().includes(searchTermLower) ||
+      // booking.roomId.toLowerCase().includes(searchTermLower) ||
       booking.dateBooking.toLowerCase().includes(searchTermLower)
     );
   });
@@ -97,7 +112,7 @@ const ListBookingBusinessScreen = () => {
               <FaSearch className="icon-search" />
               <input
                 type="text"
-                className="input-text"
+                className="input-text border-search"
                 placeholder="Tìm kiếm lượt đặt chỗ"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -138,9 +153,25 @@ const ListBookingBusinessScreen = () => {
                     <td>{booking.userName}</td>
                     <td>{moment(booking.dateBooking).format('DD-MM-YYYY')}</td>
                     <td>
-                      <span className={`status-label${booking.status === 'đã duyệt' ? '-2' : ''}`}>
-                        {booking.status === 'pending' ? 'Chờ duyệt' : booking.status}
-                      </span>
+                    <span
+                      className={`status-label${
+                        booking.status === 'canceled' 
+                          ? '' 
+                          : booking.status === 'complete' 
+                          ? '-2' 
+                          : '-1'
+                      }`}
+                    >
+                      {booking.status === 'pending' && 'Chờ duyệt'}
+                      {booking.status === 'confirm' && 'Đã xác nhận'}
+                      {booking.status === 'canceled' && 'Đã hủy'}
+                      {booking.status === 'complete' && 'Hoàn thành'}
+                      {booking.status !== 'pending' && 
+                      booking.status !== 'confirm' && 
+                      booking.status !== 'canceled' && 
+                      booking.status !== 'complete' && 
+                      booking.status}
+                    </span>
                     </td>
                     <td>{booking.totalPriceAfterTax}</td>
                     <td>

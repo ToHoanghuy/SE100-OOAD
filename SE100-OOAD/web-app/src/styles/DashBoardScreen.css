@@ -401,6 +401,13 @@
     border-radius: 4px;
   }
 
+  .status-label-1 {
+    background-color: rgb(244,199,38,0.1);
+    color: #F4C726;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
   .status-label-2 {
     background-color: rgb(63,194,138,0.1);
     color: #3FC28A;

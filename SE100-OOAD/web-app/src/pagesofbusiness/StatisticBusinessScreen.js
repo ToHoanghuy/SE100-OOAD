@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 const StatisticBusinessScreen = () => {
   const userId = localStorage.getItem('userId');
+  const [bookings, setBookings] = useState([]);
   const [seriesData, setSeriesData] = useState([{ name: 'Doanh thu', data: [] }]);
   const [years, setYears ] = useState(new Date().getFullYear() - 1);
 
@@ -62,46 +63,68 @@ const StatisticBusinessScreen = () => {
     fetchSuccessRate();
 }, [userId, years]);
 
-useEffect(() => {
-  const fetchLocationData = async () => {
+  useEffect(() => {
+    const fetchBookings = async () => {
       try {
-          const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
-          if (!response.ok) {
-              throw new Error("Failed to fetch bookings data.");
-          }
+        const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        console.log('list booking: ',data.data)
 
-          const result = await response.json();
-          const bookings = result.data || []; // Danh sách các booking
+        const bookingsWithDetails = await Promise.all(data.data.map(async (booking) => {
 
-          // Nhóm dữ liệu theo location
-          const locationMap = {};
-          bookings.forEach(booking => {
-              if (booking.location && booking.location.category) {
-                  const locationName = booking.location.category.name;
+          const userResponse = await fetch(`http://localhost:3000/user/getbyid/${booking.userId}`);
+          const userData = await userResponse.json();
+          const userName = userData.data.userName;
+
+          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`);
+          const roomData = await roomResponse.json();
+          const locationId = roomData.data.locationId;
+          console.log('location: ', locationId)
+
+          const locationResponse = await fetch(`http://localhost:3000/locationbyid/${locationId}`);
+          const locationData = await locationResponse.json();
+          const locationName = locationData.data.name;
+          return {
+            ...booking,
+            userName,
+            locationId,
+            locationName,
+          };
+        }));
+
+        const locationMap = {};
+          bookingsWithDetails.forEach(booking => {
+              if (booking.locationName ) {
+                  const locationName = booking.locationName;
                   locationMap[locationName] = (locationMap[locationName] || 0) + 1;
               }
           });
 
-          // Chuyển đổi dữ liệu thành chuỗi và phần trăm
-          const totalBookings = bookings.length;
+          const totalBookings = bookingsWithDetails.length;
           const labels = Object.keys(locationMap);
           const series = labels.map(label => ((locationMap[label] / totalBookings) * 100).toFixed(2));
 
           setChartData2({
-              ...chartData2,
-              series: series.map(Number),
-              options: {
-                  ...chartData2.options,
-                  labels: labels,
-              },
-          });
-      } catch (error) {
-          console.error("Error fetching bookings data:", error);
-      }
-  };
+            ...chartData2,
+            series: series.map(Number),
+            options: {
+                ...chartData2.options,
+                labels: labels,
+            },
+        });
 
-  fetchLocationData();
-}, [userId, years]);
+        setBookings(bookingsWithDetails);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+
+    fetchBookings();
+  }, [userId, years]);
+
 
   // const seriesData = [{
   //     name: 'Doanh thu',
@@ -159,13 +182,13 @@ useEffect(() => {
     },
   });
 
-  const [chartData2] = useState({
-    series: [40, 30, 20, 10],
+  const [chartData2, setChartData2] = useState({
+    series: [40, 30, 20],
     options: {
       chart: {
         type: 'donut',
       },
-      labels: ['Khách sạn', 'Nhà hàng', 'Tour du lịch', 'Phương tiện di chuyển'],
+      labels: ['Khách sạn Hương Việt', 'Nhà hàng', 'Tour du lịch'],
       colors: ['#69c0ff', '#00E396', '#FEB019', 'rgba(244,91,105,0.6)'],
       plotOptions: {
         pie: {

@@ -9,6 +9,7 @@ import { faPhoneAlt, faEnvelope, faUser, faMapMarkerAlt, faMemo, faLocation } fr
 import moment from 'moment';
 
 
+
 const BusinessDetailBookingScreen = () => {
 
     const { id: bookingId } = useParams();
@@ -19,6 +20,12 @@ const BusinessDetailBookingScreen = () => {
     const [booking, setBooking] = useState(null);
     const [loading, setLoading] = useState(true); 
     const [error, setError] = useState(null);
+
+    // const onCancel = () => {
+    //     if (window.confirm('Bạn có chắc muốn hủy?')) {
+    //       console.log('Đã hủy');
+    //     }
+    // };
 
     const formattedDate = booking?.dateBooking
     ? moment(booking?.dateBooking).format('DD/MM/YYYY HH:mm:ss')
@@ -86,7 +93,39 @@ const BusinessDetailBookingScreen = () => {
             console.log('get booking from localstorage: ', JSON.parse(storedBooking));
             setBooking(JSON.parse(storedBooking));
         }
-    }, [bookingId]);
+    }, [bookingId, booking?.status]);
+
+    const handleUpdateBooking = async () => {
+        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xác nhận đơn đặt này?');
+        
+        if (userConfirmed) {
+          console.log('log toi day');
+          try {
+            const response = await fetch(`http://localhost:3000/booking/update/${bookingId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ status: 'confirm' }),
+            });
+      
+            const result = await response.json();
+      
+            if (result.isSuccess) {
+              window.alert('Booking đã được xác nhận.');
+              await fetchLocationData();
+              //onCancel(); // Cập nhật danh sách sau khi hủy
+            } else {
+              window.alert(result.message || 'Không thể cập nhật booking.');
+            }
+          } catch (error) {
+            console.error('Error update booking:', error);
+            window.alert('Không thể kết nối với máy chủ.');
+          }
+        }
+      };
+      
+      
 
     // useEffect(() => {
     //     if (bookingId) {
@@ -101,7 +140,7 @@ const BusinessDetailBookingScreen = () => {
         if (booking) {
             fetchLocationData();
         }
-    }, [userOfBookingId], [booking]);
+    }, [userOfBookingId], [booking, booking?.status]);
     
     return (
         <div class="container">
@@ -214,7 +253,25 @@ const BusinessDetailBookingScreen = () => {
                                     <div class="flex items-center justify-between">
                                             <div className="flex items-center justify-center mt-2">
                                                 <h2 class="text-black font-bold mr-2">Trạng thái</h2>
-                                                <span> {booking.status}</span>
+                                                <span
+                                                className={`status-label${
+                                                    booking.status === 'canceled' 
+                                                    ? '' 
+                                                    : booking.status === 'complete' 
+                                                    ? '-2' 
+                                                    : '-1'
+                                                }`}
+                                                >
+                                                {booking.status === 'pending' && 'Chờ duyệt'}
+                                                {booking.status === 'confirm' && 'Đã xác nhận'}
+                                                {booking.status === 'canceled' && 'Đã hủy'}
+                                                {booking.status === 'complete' && 'Hoàn thành'}
+                                                {booking.status !== 'pending' && 
+                                                booking.status !== 'confirm' && 
+                                                booking.status !== 'canceled' && 
+                                                booking.status !== 'complete' && 
+                                                booking.status}
+                                                </span>
                                                 {/* <input 
                                                     name="pricePerNight"
                                             
@@ -222,7 +279,7 @@ const BusinessDetailBookingScreen = () => {
                                             </div>
                                             
                                             <div class="flex">
-                                                <button  class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Xác nhận Booking</button>
+                                                <button onClick={handleUpdateBooking} class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Xác nhận Booking</button>
                                             </div>
                                         </div>
                                 </div>

@@ -21,7 +21,7 @@ const titleMap = [
   { path: /^\/business\/location\/detail\/[a-zA-Z0-9]+$/, main: 'Danh Sách Địa Điểm', sub: 'Chi Tiết Địa Điểm' },
 
   { path: /^\/business\/chat$/, main: 'Chăm sóc khách hàng', sub: null },
-  { path: /^\/statistic$/, main: 'Thống Kê', sub: null },
+  { path: /^\/business\/statistic$/, main: 'Thống Kê', sub: null },
 ];
 
 

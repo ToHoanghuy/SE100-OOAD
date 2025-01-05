@@ -41,7 +41,7 @@ const ListLocationBusinessScreen = () => {
   const filteredLocations = locations.filter((location) => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
-      location.name.toLowerCase().includes(searchTermLower) ||
+      location.locationName.toLowerCase().includes(searchTermLower) ||
       location.type.toLowerCase().includes(searchTermLower) ||
       location.address.toLowerCase().includes(searchTermLower)
     );
@@ -86,7 +86,7 @@ const ListLocationBusinessScreen = () => {
               <FaSearch class="icon-search" />
               <input
                 type="text"
-                className="input-text"
+                className="input-text border-search"
                 placeholder="Tìm kiếm địa điểm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

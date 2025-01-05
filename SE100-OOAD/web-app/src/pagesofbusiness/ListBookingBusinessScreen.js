@@ -6,6 +6,7 @@ import Pagination from '../components/Pagination';
 import { bookings } from '../pages/BusinessData';
 import axios from 'axios';
 import moment from 'moment';
+import '../styles/ListBookingScreen.css';
 
 const ListBookingBusinessScreen = () => {
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ const ListBookingBusinessScreen = () => {
               <FaSearch className="icon-search" />
               <input
                 type="text"
-                className="input-text"
+                className="input-text border-search"
                 placeholder="Tìm kiếm lượt đặt chỗ"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -138,9 +139,25 @@ const ListBookingBusinessScreen = () => {
                     <td>{booking.userName}</td>
                     <td>{moment(booking.dateBooking).format('DD-MM-YYYY')}</td>
                     <td>
-                      <span className={`status-label${booking.status === 'đã duyệt' ? '-2' : ''}`}>
-                        {booking.status === 'pending' ? 'Chờ duyệt' : booking.status}
-                      </span>
+                    <span
+                      className={`status-label${
+                        booking.status === 'canceled' 
+                          ? '' 
+                          : booking.status === 'complete' 
+                          ? '-2' 
+                          : '-1'
+                      }`}
+                    >
+                      {booking.status === 'pending' && 'Chờ duyệt'}
+                      {booking.status === 'confirm' && 'Đã xác nhận'}
+                      {booking.status === 'canceled' && 'Đã hủy'}
+                      {booking.status === 'complete' && 'Hoàn thành'}
+                      {booking.status !== 'pending' && 
+                      booking.status !== 'confirm' && 
+                      booking.status !== 'canceled' && 
+                      booking.status !== 'complete' && 
+                      booking.status}
+                    </span>
                     </td>
                     <td>{booking.totalPriceAfterTax}</td>
                     <td>

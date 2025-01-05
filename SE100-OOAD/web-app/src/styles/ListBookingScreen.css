@@ -48,6 +48,10 @@
   padding: 10px;
 }
 
+.border-search {
+  border: 0px !important;
+}
+
 .input-text:focus {
   outline: none;
   transition: all;

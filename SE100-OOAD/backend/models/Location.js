@@ -58,6 +58,11 @@ const locationSchema = new Schema({
     },
     latitude: Number,
     longtitude: Number,
+    status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'inactive'
+    }
 },  
 { collection: 'Location' }
 );

@@ -29,6 +29,7 @@ import {
   faMemo,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatCurrency } from "../utils/formatCurrency";
+import { formatDate, formatDateTime } from "../utils/dateUtils";
 
 const DetailLocationScreen = () => {
   const [currentTab, setCurrentTab] = useState("baseinfo");
@@ -39,7 +40,8 @@ const DetailLocationScreen = () => {
   const [owner, setOwner] = useState([]);
   const [rooms, setRoom] = useState([]);
   const { id } = useParams();
-
+  const [reviews, setReviews] = useState([]);
+  const [senders, setSenders] = useState({});
   useEffect(() => {
     const fetchLocations = async () => {
       setIsLoading(true);
@@ -79,6 +81,72 @@ const DetailLocationScreen = () => {
     fetchLocations();
   }, [id]);
 
+  useEffect(() => {
+    // Gọi API để reviews
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/review/location/6704f3650722c4f99305dc5d"
+        );
+        const data = await response.json();
+        if (data.isSuccess) {
+          setReviews(data.data);
+
+          // Gọi API để lấy tên người đánh giá
+          const senderPromises = data.data.map((review) =>
+            fetch(`http://localhost:3000/user/getbyid/${review.senderId}`)
+              .then((res) => res.json())
+              .then((userData) => ({
+                senderId: review.senderId,
+                name: userData.data?.userName || "Người dùng ẩn danh",
+                senderAvatar:
+                  userData.data?.userAvatar || "https://via.placeholder.com/50", // Thêm avatar (hoặc URL mặc định)
+              }))
+          );
+
+          const senderResults = await Promise.all(senderPromises);
+          const senderMap = senderResults.reduce((acc, sender) => {
+            // Lưu cả name và senderAvatar vào senderMap
+            acc[sender.senderId] = {
+              name: sender.name,
+              avatar: sender.senderAvatar,
+            };
+            return acc;
+          }, {});
+          setSenders(senderMap);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
+  const handleLocationStatusChange = async (status) => {
+    try {
+      const response = await fetch(`http://localhost:3000/location/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: status }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update location status");
+      }
+
+      const data = await response.json();
+      console.log("Location status updated:", data);
+      // Cập nhật lại trạng thái của location nếu location là đối tượng
+      setLocation(data.data);
+    } catch (error) {
+      console.error("Error updating location status:", error);
+      // Optionally show an error message
+    }
+  };
+
   const handleBaseInfoClick = () => {
     setCurrentTab("baseinfo");
   };
@@ -110,24 +178,58 @@ const DetailLocationScreen = () => {
       <div class="containerformobile">
         <div class="containerlistbusiness widthlistbusiness">
           <div class="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-              <img
-                alt="Profile picture of a person"
-                class="w-20 h-20 rounded-full mr-4"
-                height="80"
-                src="https://storage.googleapis.com/a1aa/image/0FPVWfLJ1m0nJS9YfULFrbvezZsDHus5bXhqxVDA6tO9UMKnA.jpg"
-                width="80"
-              />
-              <div>
-                <h1 class="text-xl font-bold">{location.name}</h1>
-                <div class="flex items-center text-gray-600 mt-2">
-                  <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
-                  <span>{owner.userPhoneNumber}</span>
+            <div className="flex justify-between">
+              <div class="flex items-center">
+                <img
+                  alt="Profile picture of a person"
+                  class="w-20 h-20 rounded-full mr-4"
+                  height="80"
+                  src="https://storage.googleapis.com/a1aa/image/0FPVWfLJ1m0nJS9YfULFrbvezZsDHus5bXhqxVDA6tO9UMKnA.jpg"
+                  width="80"
+                />
+                <div>
+                  <h1 class="text-xl font-bold">{location.name}</h1>
+                  <div class="flex items-center text-gray-600 mt-2">
+                    <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
+                    <span>{owner.userPhoneNumber}</span>
+                  </div>
+                  <div class="flex items-center text-gray-600 mt-1">
+                    <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+                    <span>{owner.userEmail}</span>
+                  </div>
                 </div>
-                <div class="flex items-center text-gray-600 mt-1">
-                  <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
-                  <span>{owner.userEmail}</span>
-                </div>
+              </div>
+              <div className="flex space-x-2 items-start">
+                {/* Check if location is approved */}
+                {location.status === "active" ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-green-500 font-semibold">
+                      Đã duyệt
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleLocationStatusChange("rejected")}
+                        className="bg-gray-500 text-white text-sm px-3 py-1.5 rounded-lg"
+                        title="Click để từ chối địa điểm"
+                      >
+                        Từ chối
+                      </button>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleLocationStatusChange("active")}
+                        className="bg-red-500 text-white text-sm px-3 py-1.5 rounded-lg"
+                        title="Click để xét duyệt địa điểm"
+                      >
+                        Xét duyệt địa điểm
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div class="mt-6">
@@ -199,7 +301,10 @@ const DetailLocationScreen = () => {
                   </div>
                   <div>
                     <p class="text-gray-600">Ngày đăng ký kinh doanh</p>
-                    <p class="font-semibold"> 12/10/2023 </p>
+                    <p class="font-semibold">
+                      {" "}
+                      {formatDateTime(location.dateCreated)}{" "}
+                    </p>
                   </div>
                 </div>
                 <div>
@@ -300,10 +405,11 @@ const DetailLocationScreen = () => {
                       </button>
                     </div>
                   ))}
-
+                  {/* ẩn đi nút thêm ảnh địa điểm ở admin */}
+                  {/* 
                   <div class="w-24 h-24 flex items-center justify-center bg-gray-200 rounded-lg">
                     <FaPlus class="text-gray-500 text-2xl" />
-                  </div>
+                  </div> */}
                 </div>
                 <div class="mt-6">
                   <div class="mb-4">
@@ -353,7 +459,7 @@ const DetailLocationScreen = () => {
                             </div>
                             <div class="flex justify-between items-center w-full">
                               <button
-                                onClick={() => navigate("/dashboard")}
+                                onClick={handleViewDetails}
                                 class="bg-blue-500 text-white px-4 py-2 rounded-md"
                               >
                                 Xem chi tiết
@@ -361,7 +467,7 @@ const DetailLocationScreen = () => {
                               <div class="flex flex-col items-center">
                                 <p class="text-gray-600">Giá</p>
                                 <p class="text-red-600 font-bold text-lg">
-                                  {formatCurrency(room.price)}
+                                  {formatCurrency(room.pricePerNight)}
                                 </p>
                               </div>
                             </div>
@@ -419,66 +525,54 @@ const DetailLocationScreen = () => {
                       </div>
                     </div>
 
-                    <div class="scroll-container mh-200">
-                      <h2 class="text-xl font-bold mb-4">
+                    <div className="scroll-container mh-200">
+                      <h2 className="text-xl font-bold mb-4">
                         Đánh giá từ khách hàng
                       </h2>
-                      <div>
-                        <div class="flex items-center mb-4">
-                          <img
-                            alt="Profile picture of Hoang Huy"
-                            class="w-12 h-12 rounded-full mr-4"
-                            height="50"
-                            src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg"
-                            width="50"
-                          />
-                          <div>
-                            <p class="font-semibold">To Hoang Huy</p>
-                            <div class="flex items-center">
-                              <FaStar class="text-yellow-500" />
-                              <FaStar class="text-yellow-500" />
-                              <FaStar class="text-yellow-500" />
-                              <FaStar class="text-yellow-500" />
-                              <FaStarHalfAlt class="text-yellow-500" />
-                              <span class="ml-2 text-gray-600">4.6</span>
+                      {reviews.map((review) => (
+                        <div key={review._id} className="mt-3">
+                          <div className="flex items-center mb-4">
+                            <img
+                              alt={`Profile picture of ${
+                                senders[review.senderId]?.name || "Unknown"
+                              }`}
+                              className="w-12 h-12 rounded-full mr-4"
+                              height="50"
+                              src={
+                                senders[review.senderId]?.avatar ||
+                                "default-avatar-url"
+                              } // Đảm bảo URL avatar là chính xác
+                              width="50"
+                            />
+                            <div>
+                              <p className="font-semibold">
+                                {senders[review.senderId]?.name ||
+                                  "Người dùng ẩn danh"}
+                              </p>
+                              <div className="flex items-center">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                  <React.Fragment key={index}>
+                                    {review.rating > index ? (
+                                      review.rating > index + 0.5 ? (
+                                        <FaStar className="text-yellow-500" />
+                                      ) : (
+                                        <FaStarHalfAlt className="text-yellow-500" />
+                                      )
+                                    ) : null}
+                                  </React.Fragment>
+                                ))}
+                                <span className="ml-2 text-gray-600">
+                                  {review.rating.toFixed(1)}
+                                </span>
+                              </div>
                             </div>
                           </div>
+                          <p className="text-gray-700">{review.review}</p>
+                          <p className="text-sm text-gray-500">
+                            Ngày đánh giá: {formatDateTime(review.date)}
+                          </p>
                         </div>
-                        <p class="text-gray-700">
-                          “The location was perfect. The staff was friendly. Our
-                          bed was comfy. The pool was fresh with a great view.
-                          The breakfast was delicious! We had a hot tub on our
-                          balcony which was awesome.”
-                        </p>
-                      </div>
-                      <div class="mt-3">
-                        <div class="flex items-center mb-4">
-                          <img
-                            alt="Profile picture of Hoang Huy"
-                            class="w-12 h-12 rounded-full mr-4"
-                            height="50"
-                            src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg"
-                            width="50"
-                          />
-                          <div>
-                            <p class="font-semibold">To Hoang Huy</p>
-                            <div class="flex items-center">
-                              <FaStar class="text-yellow-500" />
-                              <FaStar class="text-yellow-500" />
-                              <FaStar class="text-yellow-500" />
-                              <FaStar class="text-yellow-500" />
-                              <FaStarHalfAlt class="text-yellow-500" />
-                              <span class="ml-2 text-gray-600">4.6</span>
-                            </div>
-                          </div>
-                        </div>
-                        <p class="text-gray-700">
-                          “The location was perfect. The staff was friendly. Our
-                          bed was comfy. The pool was fresh with a great view.
-                          The breakfast was delicious! We had a hot tub on our
-                          balcony which was awesome.”
-                        </p>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 )}

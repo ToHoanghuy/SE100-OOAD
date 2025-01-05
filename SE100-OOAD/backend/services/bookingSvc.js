@@ -89,6 +89,7 @@ const getBookingByLocationId = async (locationId) => {
         throw new NotFoundException("Not found");
     }
 };
+
 function removeVietnameseTones(str) {
     return str
       .normalize('NFD')

@@ -9,6 +9,7 @@ const serviceRoute = require('./routes/serviceRoute')
 const paymentRoute = require('./routes/paymentRoute')
 const reviewRoute = require('./routes/reviewRoute')
 const invoiceRoute = require('./routes/invoiceRoute')
+const cors = require('cors')
 const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 
@@ -18,6 +19,15 @@ const PORT = process.env.PORT || 3000
 //Middleware
 app.use(express.json());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+    res.header("Access-Control-Allow-Origin", "http://localhost:3002");
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
 
 //View engine
 app.set('view engine', 'ejs')
@@ -36,6 +46,7 @@ app.listen(PORT, () => {
 
 //Route
 //app.get('*', checkUser)
+app.use(cors())
 app.get('/', (req, res) => res.render('home'))
 app.get('/signup', (req, res) => {res.render('signup')})
 app.get('/signin', (req, res) => {res.render('signin')})

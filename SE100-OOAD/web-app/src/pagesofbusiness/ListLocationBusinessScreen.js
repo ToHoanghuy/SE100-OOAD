@@ -41,8 +41,8 @@ const ListLocationBusinessScreen = () => {
   const filteredLocations = locations.filter((location) => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
-      location.locationName.toLowerCase().includes(searchTermLower) ||
-      location.type.toLowerCase().includes(searchTermLower) ||
+      location.name.toLowerCase().includes(searchTermLower) ||
+      location?.category?.name?.toLowerCase().includes(searchTermLower) ||
       location.address.toLowerCase().includes(searchTermLower)
     );
   });
@@ -61,6 +61,10 @@ const ListLocationBusinessScreen = () => {
 
   const handleRowClick = (id) => {
     navigate(`/business/location/detail/${id}`);
+  };
+
+  const handleAddLocationClick = () => {
+    navigate(`/location/add`);
   };
 
   function getCategoryName(id) {
@@ -82,16 +86,30 @@ const ListLocationBusinessScreen = () => {
 
         <div class="containerlistbusiness widthlistbusiness">
           <div class="listbusinessbody scroll-container mh-900">
-            <div class="search">
-              <FaSearch class="icon-search" />
-              <input
-                type="text"
-                className="input-text border-search"
-                placeholder="Tìm kiếm địa điểm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div className="flex justify-between">
+              <div class="search">
+                <FaSearch class="icon-search" />
+                <input
+                  type="text"
+                  className="input-text border-search"
+                  placeholder="Tìm kiếm địa điểm"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+                <div className="search-1">
+                  <button
+                    className="bg-blue-500 text-white text-sm px-3 py-1.5 rounded-lg"
+                    title="Click để thêm"
+                    onClick={() => handleAddLocationClick()}
+                  >
+                    Thêm địa điểm mới
+                  </button>
+                </div>
+              
             </div>
+
+
             <table>
               <thead>
                 <tr>

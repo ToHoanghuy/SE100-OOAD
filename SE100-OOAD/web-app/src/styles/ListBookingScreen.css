@@ -66,6 +66,20 @@
   border-radius: 4px;
 }
 
+.search-1 {
+  margin-top: 20px;
+  display: flex;
+  /* width: 30%; */
+  margin-bottom: 20px;
+  
+  border-radius: 4px;
+}
+
+
+.w-none {
+  width: none !important;
+}
+
 table {
   width: 100%;
   border-collapse: separate;

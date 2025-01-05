@@ -7,12 +7,14 @@ import { bookings } from '../pages/BusinessData';
 import axios from 'axios';
 import moment from 'moment';
 import '../styles/ListBookingScreen.css';
+import { useDebounce } from "use-debounce";
 
 const ListBookingBusinessScreen = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [bookings, setBookings] = useState([]);
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 1000);
 
   const userId = localStorage.getItem('userId');
   console.log('businessid ', userId);
@@ -20,6 +22,17 @@ const ListBookingBusinessScreen = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
+        // let bookingResponse;
+
+        // if (debouncedSearchTerm.trim() === "") {
+        //   bookingResponse = await fetch(
+        //     `http://localhost:3000/booking/getbyusername?name=`
+        //   );
+        // } else {
+        //   bookingResponse = await fetch(
+        //     `http://localhost:3000/booking/getbyusername?name=${searchTerm}`
+        //   );
+        // }
         const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -72,8 +85,9 @@ const ListBookingBusinessScreen = () => {
   const filteredData = bookings.filter((booking) => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
+      booking.locationName.toLowerCase().includes(searchTermLower) ||
       booking._id.toLowerCase().includes(searchTermLower) ||
-      booking.roomId.toLowerCase().includes(searchTermLower) ||
+      // booking.roomId.toLowerCase().includes(searchTermLower) ||
       booking.dateBooking.toLowerCase().includes(searchTermLower)
     );
   });

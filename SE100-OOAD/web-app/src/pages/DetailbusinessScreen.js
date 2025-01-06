@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaAngleRight,FaBell, FaEye } from 'react-icons/fa';
 import '../styles/DetailBusinessScreen.css';
@@ -10,8 +10,9 @@ import { businesses } from './BusinessData';
 const DetailBusinessScreen = () => {
     const { id } = useParams(); // Lấy id từ URL
     const business = businesses.find((b) => b.id === parseInt(id));
-  
-
+    const [owner, setOwner] = useState([]);
+    const [locations, setLocations] = useState([]);
+    const navigate = useNavigate();
     const [currentTab, setCurrentTab] = useState('profile'); 
 
     const handleProfileClick = () => {
@@ -20,6 +21,61 @@ const DetailBusinessScreen = () => {
 
     const handleLocationClick = () => {
         setCurrentTab('businessLocation'); 
+    };
+
+        useEffect(() => {
+          const fetchDetailOwner = async () => {
+            
+            try {
+              const response = await fetch(`http://localhost:3000/user/getbyid/${id}`);
+              if (!response.ok) {
+                throw new Error('Failed to fetch locations');
+              }
+              const data = await response.json();
+              console.log(data.data);
+              setOwner(data.data || []);
+            } catch (error) {
+              console.error('Error fetching locations Owner:', error);
+            }
+          };
+      
+          fetchDetailOwner();
+        },[id]);
+
+      useEffect(() => {
+        const fetchLocations = async () => {
+          // Hiển thị trạng thái loading
+          try {
+            const response = await fetch(`http://localhost:3000/locationbyuserid/${id}`);
+            if (!response.ok) {
+              throw new Error('Failed to fetch locations');
+            }
+            const data = await response.json();
+            setLocations(data.data);
+            console.log(data.data);
+          } catch (error) {
+            console.error('Error fetching locations:', error);
+          }
+        };
+    
+        fetchLocations();
+    }, [id]);
+
+    function getCategoryName(id) {
+        switch (id) {
+          case 'hotel':
+            return 'Khách sạn';
+          case 'homestay':
+            return 'Homestay';
+          case 'guest home':
+            return 'Nhà nghỉ';
+          default:
+            return 'Không xác định'; // Giá trị mặc định nếu id không khớp
+        }
+    }
+
+    const handleRowClick = (id) => {
+        navigate(`/location/detail/${id}`);
     };
 
     return (
@@ -33,21 +89,21 @@ const DetailBusinessScreen = () => {
                             <div>
                                 <h1 class="text-xl font-bold">
 
-                                    Du lịch Hồ Cốc - Vũng Tàu
+                                    {owner?.userName}
                                 </h1>
                                 <div class="flex items-center text-gray-600 mt-2">
                                     <i class="fas fa-phone-alt mr-2"></i>
                                     <span>
                                         <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
 
-                                        0987654321
+                                        {owner?.userPhoneNumber}
                                     </span>
                                 </div>
                                 <div class="flex items-center text-gray-600 mt-1">
                                     <i class="fas fa-envelope mr-2"></i>
                                     <span>
                                         <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
-                                        hc.vt@example.com
+                                        {owner.userEmail}
 
                                     </span>
                                 </div>
@@ -76,7 +132,7 @@ const DetailBusinessScreen = () => {
                                                 Mã nhà kinh doanh
                                             </div>
                                             <div class="font-semibold">
-                                                124335111
+                                                {owner?._id}
                                             </div>
                                         </div>
                                         <div>
@@ -84,7 +140,7 @@ const DetailBusinessScreen = () => {
                                                 Họ và tên
                                             </div>
                                             <div class="font-semibold">
-                                                Du lịch Hồ Cốc - Vũng Tàu
+                                                {owner?.userName}
                                             </div>
                                         </div>
                                         <div>
@@ -92,7 +148,7 @@ const DetailBusinessScreen = () => {
                                             Số điện thoại
                                         </div>
                                         <div class="font-semibold">
-                                            0987654321
+                                            {owner?.userPhoneNumber}
                                         </div>
                                         </div>
                                         <div>
@@ -100,7 +156,7 @@ const DetailBusinessScreen = () => {
                                                 Địa chỉ email
                                             </div>
                                             <div class="font-semibold">
-                                                hc.vt@example.com
+                                                {owner?.userEmail}
                                             </div>
                                         </div>
                                         <div>
@@ -108,7 +164,7 @@ const DetailBusinessScreen = () => {
                                                 Ngày sinh
                                             </div>
                                             <div class="font-semibold">
-                                                12/10/2000
+                                                {owner?.userDateOfBirth}
                                             </div>
                                         </div>
                                         <div>
@@ -140,7 +196,7 @@ const DetailBusinessScreen = () => {
                                             Địa chỉ
                                         </div>
                                         <div class="font-semibold">
-                                            23 Cây Keo, Tam Phú, TP Thủ Đức, TP HCM
+                                            {owner?.userAddress}
                                         </div>
                                     </div>
                                     </div>
@@ -159,20 +215,43 @@ const DetailBusinessScreen = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td class="py-2 px-4 border-b text-center">1</td>
+                                            {locations.map((location, index) => (
+                                                <tr key={location._id}
+                                                    onClick={() => handleRowClick(location._id)} // Thêm sự kiện click
+                                                    className="cursor-pointer hover:bg-gray-100"
+                                                >
+                                                    <td class="py-2 px-4 border-b ">{index + 1}</td>
                                                     <td class="py-2 px-4 border-b flex items-center">
                                                         <img alt="Image of a camping site" class="w-10 h-10 rounded-full mr-2" height="40" src="https://storage.googleapis.com/a1aa/image/DMI3DZ3pR8qVKJ19uApteCrfCf8Na2RYQTEPRH47JxKKniKnA.jpg" width="40"/>
-                                                        Cắm trại du lịch Hồ Cốc - Vũng Tàu
+                                                        {location?.name}
                                                     </td>
-                                                    <td class="py-2 px-4 border-b text-center">Camping</td>
-                                                    <td class="py-2 px-4 border-b text-center">
+                                                    <td class="py-2 px-4 border-b ">{getCategoryName(location?.category?.id)}</td>
+                                                    <td class="py-2 px-4 border-b ">
+                                                        {/* <span class="bg-yellow-100 text-yellow-600 py-1 px-3 rounded-full text-xs">
+                                                            {location.tatus}
+                                                        </span> */}
                                                         <span class="bg-yellow-100 text-yellow-600 py-1 px-3 rounded-full text-xs">
-                                                            Tạm dừng
+                                                        {" "}
+                                                        {location.status === "inactive" ? (
+                                                            <span className="status-label status-waiting">
+                                                            Chờ phê duyệt
+                                                            </span>
+                                                        ) : location.status === "active" ? (
+                                                            <span className="status-label status-completed">
+                                                            Đã phê duyệt
+                                                            </span>
+                                                        ) : location.status === "rejected" ? (
+                                                            <span className="status-label status-cancelled">
+                                                            Bị từ chối
+                                                            </span>
+                                                        ) : (
+                                                            <span>Chưa xác định</span>
+                                                        )}
                                                         </span>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                            ))}
+                                                {/* <tr>
                                                     <td class="py-2 px-4 border-b text-center">2
                                                     </td>
                                                     <td class="py-2 px-4 border-b flex items-center">
@@ -263,7 +342,8 @@ const DetailBusinessScreen = () => {
                                                             Tạm dừng
                                                         </span>
                                                     </td>
-                                                </tr>
+                                                </tr> */}
+                                                
                                             </tbody>
                                         </table>
                                     </div>

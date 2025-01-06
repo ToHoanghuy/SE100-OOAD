@@ -29,7 +29,8 @@ const titleMap = [
 
 
 const Layout = ({ children }) => {
-const userRole = 'business';
+const userRole = localStorage.getItem('userRole');
+
 
 const location =useLocation();
 const { pathname } = location;

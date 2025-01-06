@@ -22,17 +22,6 @@ const ListBookingBusinessScreen = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        // let bookingResponse;
-
-        // if (debouncedSearchTerm.trim() === "") {
-        //   bookingResponse = await fetch(
-        //     `http://localhost:3000/booking/getbyusername?name=`
-        //   );
-        // } else {
-        //   bookingResponse = await fetch(
-        //     `http://localhost:3000/booking/getbyusername?name=${searchTerm}`
-        //   );
-        // }
         const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");

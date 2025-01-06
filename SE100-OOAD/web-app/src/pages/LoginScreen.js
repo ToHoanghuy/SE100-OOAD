@@ -34,11 +34,7 @@ function LoginScreen() {
       }
 
       // Điều hướng dựa trên role
-      // if (data.userRole === 'admin') {
-      //   navigate('/dashboard/admin');
-      // } else if (data.userRole === 'location-owner') {
-      //   navigate('/dashboard/admin');
-      // }
+      
       if (response.ok) {
         let user_id = data;  // Giả sử API trả về userId trong đối tượng data
         setUserId(data.data);
@@ -47,7 +43,13 @@ function LoginScreen() {
         localStorage.setItem('isAuthenticated', 'true');
         // Sau khi login thành công, lưu id vào localStorage
         localStorage.setItem('userId', data.data);
-        navigate('/dashboard/business');
+        localStorage.setItem('userRole', data.data.userRole);
+        // navigate('/dashboard/business');
+        if (data.data.userRole === 'admin') {
+          navigate('/dashboard/admin');
+        } else if (data.data.userRole === 'location-owner') {
+          navigate('/dashboard/business');
+        }
       } else {
 
         alert('Login Failed', data.error || 'Please try again.');

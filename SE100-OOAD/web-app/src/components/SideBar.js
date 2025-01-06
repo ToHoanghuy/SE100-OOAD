@@ -50,7 +50,7 @@ const SideBar = ({role}) => {
   useEffect(() => {
     if (role === 'admin') {
       setIconSources(adminIconSources);
-    } else if (role === 'business') {
+    } else if (role === 'location-owner') {
       setIconSources(businessIconSources);
     }
   }, [role]);

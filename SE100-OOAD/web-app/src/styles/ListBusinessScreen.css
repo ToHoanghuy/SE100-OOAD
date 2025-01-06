@@ -150,3 +150,22 @@ tbody td {
 .page:hover {
     background-color: var(--blue-color);
 }
+
+.business-table th.stt-col {
+    width: 5%;
+  }
+  .business-table th.name-col {
+    width: 25%;
+  }
+  .business-table th.id-col {
+    width: 20%;
+  }
+  .business-table th.email-col {
+    width: 25%;
+  }
+  .business-table th.phone-col {
+    width: 15%;
+  }
+  .business-table th.action-col {
+    width: 10%;
+  }

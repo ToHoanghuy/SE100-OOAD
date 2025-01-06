@@ -112,7 +112,7 @@ const ListLocationBusinessScreen = () => {
 
             <table>
               <thead>
-                <tr>
+                <tr className="listlocation">
                   <th>STT</th>
                   <th>Tên nhà kinh doanh</th>
                   <th>Loại</th>

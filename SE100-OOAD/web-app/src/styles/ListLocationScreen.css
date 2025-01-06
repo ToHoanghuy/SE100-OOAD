@@ -112,3 +112,44 @@ tbody td {
 .page:hover {
   background-color: var(--blue-color);
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+.lislocation   th:nth-child(1),
+.clickable-row td:nth-child(1) {
+  width: 5%; /* Set width cho cột STT */
+}
+
+.lislocation   th:nth-child(2),
+.clickable-row td:nth-child(2) {
+  width: 25%; /* Set width cho cột Tên địa điểm */
+}
+
+.lislocation   th:nth-child(3),
+.clickable-row td:nth-child(3) {
+  width: 10%; /* Set width cho cột Loại */
+}
+
+.lislocation   th:nth-child(4),
+.clickable-row td:nth-child(4) {
+  width: 45%; /* Set width cho cột Địa chỉ */
+}
+
+ .lislocation   th:nth-child(5),
+ .clickable-row td:nth-child(5) {
+  width: 15%; /* Set width cho cột Trạng thái */
+}
+
+.lislocation   th:nth-child(6),
+.clickable-row td:nth-child(6) {
+  width: 10%; /* Set width cho cột nút hành động */
+}
+

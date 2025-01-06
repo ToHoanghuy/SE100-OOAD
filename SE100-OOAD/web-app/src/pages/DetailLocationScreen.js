@@ -42,6 +42,9 @@ const DetailLocationScreen = () => {
   const { id } = useParams();
   const [reviews, setReviews] = useState([]);
   const [senders, setSenders] = useState({});
+  const [roomData, setRoomData] = useState(null);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+
   useEffect(() => {
     const fetchLocations = async () => {
       setIsLoading(true);
@@ -147,6 +150,30 @@ const DetailLocationScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (!selectedRoomId) return;
+
+    const fetchRoomDetails = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://localhost:3000/room/getbyid/${selectedRoomId}`);
+        const data = await response.json();
+        console.log(data.data);
+        if (response.ok) {
+          setRoomData(data.data);
+        } else {
+          console.error("Lỗi khi lấy thông tin phòng:", data);
+        }
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRoomDetails();
+  }, [selectedRoomId]);
+
   const handleBaseInfoClick = () => {
     setCurrentTab("baseinfo");
   };
@@ -160,8 +187,30 @@ const DetailLocationScreen = () => {
     setCurrentTab2("viewratingservice");
   };
 
-  const handleViewDetails = () => {
-    setCurrentTab2("roomDetails");
+  const handleViewDetails = (roomId) => {
+    setSelectedRoomId(roomId);
+    setCurrentTab2('roomDetails');
+  };
+
+  const getFacilityIcon = (id) => {
+    switch (id) {
+      case "cancelable":
+        return <FaTimesCircle className="mr-2 w-4 p-0" />;
+      case "tub":
+        return <FaHotTub className="mr-2 w-4" />;
+      case 'wifi':
+        return <FaWifi className="mr-2 w-4" />;
+      case 'volumeoff':
+        return <FaVolumeOff className="mr-2 w-4" />;
+      case 'ac':
+        return <FaSnowflake className="mr-2 w-4" />;
+      default:
+        return <FaSnowflake className="mr-2 w-4" />; // Nếu không có dịch vụ nào khớp, trả về null
+    }
+  };
+
+  const handleViewExitRoomDetail = () => {
+    setCurrentTab2('viewratingservice');
   };
 
   const navigate = useNavigate();
@@ -236,11 +285,10 @@ const DetailLocationScreen = () => {
               <div class="flex">
                 <button
                   onClick={handleBaseInfoClick}
-                  className={`flex items-center px-4 py-2 ${
-                    currentTab === "baseinfo"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-600"
-                  } rounded-t-lg`}
+                  className={`flex items-center px-4 py-2 ${currentTab === "baseinfo"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-600"
+                    } rounded-t-lg`}
                 >
                   {/* <FontAwesomeIcon icon={faUser} className="mr-2" /> */}
                   <FaSearchLocation className="mr-2 text-2xl" />
@@ -248,11 +296,10 @@ const DetailLocationScreen = () => {
                 </button>
                 <button
                   onClick={handleSpecificInfoClick}
-                  class={`flex items-center px-4 py-2 ${
-                    currentTab === "specificinfo"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-600"
-                  } rounded-t-lg ml-2`}
+                  class={`flex items-center px-4 py-2 ${currentTab === "specificinfo"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-600"
+                    } rounded-t-lg ml-2`}
                 >
                   {/* <FontAwesomeIcon icon={faUser} className="mr-2" /> */}
                   <MdEventNote className="mr-2 text-2xl" />
@@ -260,11 +307,10 @@ const DetailLocationScreen = () => {
                 </button>
                 <button
                   onClick={handleRatingServiceClick}
-                  class={`flex items-center px-4 py-2 ${
-                    currentTab === "ratingservice"
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-600"
-                  } rounded-t-lg ml-2`}
+                  class={`flex items-center px-4 py-2 ${currentTab === "ratingservice"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-600"
+                    } rounded-t-lg ml-2`}
                 >
                   <FaRankingStar className="mr-2 text-2xl" />
                   <span>Dịch vụ và đánh giá</span>
@@ -454,12 +500,12 @@ const DetailLocationScreen = () => {
                                 {room.name}
                               </p>
                               <p class="text-gray-600">
-                                Số lượng: {room.facility.quantity}
+                                Số lượng: {room.quantity}
                               </p>
                             </div>
                             <div class="flex justify-between items-center w-full">
                               <button
-                                onClick={handleViewDetails}
+                                onClick={() => handleViewDetails(room._id)}
                                 class="bg-blue-500 text-white px-4 py-2 rounded-md"
                               >
                                 Xem chi tiết
@@ -533,9 +579,8 @@ const DetailLocationScreen = () => {
                         <div key={review._id} className="mt-3">
                           <div className="flex items-center mb-4">
                             <img
-                              alt={`Profile picture of ${
-                                senders[review.senderId]?.name || "Unknown"
-                              }`}
+                              alt={`Profile picture of ${senders[review.senderId]?.name || "Unknown"
+                                }`}
                               className="w-12 h-12 rounded-full mr-4"
                               height="50"
                               src={
@@ -584,54 +629,47 @@ const DetailLocationScreen = () => {
                       <span>Chi tiết phòng</span>
                       {/* <a href="#" class="hover:underline">Phòng</a> */}
                     </div>
-                    <h1 class="text-2xl font-bold mb-4">Phòng 2 người</h1>
-                    <div class="flex items-center mb-4">
-                      <FaBed class="mr-2 w-6" />
-                      <span>1 giường đôi</span>
+                    <h1 class="text-2xl font-bold mb-4">{roomData?.name}</h1>
+                    <div className="flex flex-col space-y-2">
+                      {roomData?.bed?.map((bed, index) => (
+                        <div key={index} className="flex items-center mb-4">
+                          {bed?.category === "single" ? (
+                            <FaBed className="mr-2 w-6" />
+                          ) : (
+                            <FaBed className="mr-2 w-6" />
+                          )}
+                          <span>{bed?.quantity} {bed?.category === "single" ? "Giường đơn" : "Giường đôi"}</span>
+                        </div>
+                      ))}
                     </div>
                     <div class="mb-4">
-                      <span>diện tích: 16m2</span>
+                      <span>diện tích: {roomData?.area}m2</span>
                     </div>
                     <div class="mb-4">
                       <h2 class="font-bold mb-2">Dịch vụ:</h2>
-                      <div class="flex flex-wrap gap-2">
-                        <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                          <FaTimesCircle class=" mr-2 w-4 p-0" />
 
-                          <span>hủy miễn phí trong 24h</span>
-                        </div>
-                        <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                          <FaHotTub class="mr-2 w-4" />
-
-                          <span>Bồn tắm</span>
-                        </div>
-                        <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                          <FaWifi class="mr-2 w-4" />
-                          <span>wifi miễn phí</span>
-                        </div>
-                        <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                          <FaVolumeOff class="mr-2 w-4" />
-                          <span>Hệ thống chống tiếng ồn</span>
-                        </div>
-                        <div class="flex items-center bg-gray-200 rounded-full px-3 py-1">
-                          <FaSnowflake class="mr-2 w-4" />
-                          <span>Máy lạnh</span>
-                        </div>
+                      <div className="flex flex-wrap gap-2">
+                        {roomData?.facility.map((facility, index) => (
+                          <div key={index} className="flex items-center bg-gray-200 rounded-full px-3 py-1">
+                            {getFacilityIcon(facility.id)}
+                            <span>{facility?.name}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                     <div class="mb-4">
                       <span class="font-bold">Trạng thái:</span>
-                      <span class="text-blue-500 status-room">còn 5 phòng</span>
+                      <span class="text-blue-500 status-room">Còn {roomData?.capacity} phòng</span>
                     </div>
                     <div class="flex items-center justify-between">
-                      <div class="text-green-500 text-2xl font-bold">$50</div>
+                      <div class="text-green-500 text-2xl font-bold">{roomData?.pricePerNight} VND</div>
                       <div class="flex">
-                        <button class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">
+                        <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">
                           Thoát
                         </button>
-                        <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">
+                        {/* <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">
                           Chỉnh sửa
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

@@ -20,9 +20,9 @@ const ListBookingScreen = () => {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 1000); // 2-second debounce
 
   const statusMapping = {
-    confirmed: "Đã duyệt",
+    confirm: "Đã duyệt",
     pending: "Đang chờ",
-    cancelled: "Đã hủy",
+    canceled: "Đã hủy",
     complete: "Hoàn thành",
   };
 
@@ -35,11 +35,13 @@ const ListBookingScreen = () => {
         let bookingResponse;
         if (debouncedSearchTerm.trim() === "") {
           bookingResponse = await fetch(
-            `http://localhost:3000/booking/getbyusername?name=`
+            // `http://localhost:3000/booking/getbyusername?name=`
+            `http://localhost:3000/booking/getall`
           );
         } else {
           bookingResponse = await fetch(
-            `http://localhost:3000/booking/getbyusername?name=${searchTerm}`
+            // `http://localhost:3000/booking/getbyusername?name=${searchTerm}`
+            `http://localhost:3000/booking/getall`
           );
         }
 
@@ -127,6 +129,8 @@ const ListBookingScreen = () => {
       "Đã hủy": "status-cancelled",
       "Đã duyệt": "status-approved",
       "Hoàn thành": "status-completed",
+      "canceled": "status-cancelled",
+      "confirm": "status-approved",
     };
     return statusClasses[status] || "status-default";
   };

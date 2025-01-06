@@ -8,20 +8,29 @@ import pagination from '../components/Pagination';
 import PercentageIndicator from '../components/PercentageIndicator';
 import { businesses, users } from './BusinessData';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import moment from 'moment';
 
 
 const DashBoardScreen = () => {
+  const userId = localStorage.getItem('userId');
   const [value, setValue] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
+  const [monthlyBookings, setMonthlyBookings] = useState(0); // Số booking trong tháng
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0); 
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [ownerCount, setOwnerCount] = useState(0);
   const onChange = (newDate) => {
     setValue(newDate);  
     setSelectedDate(newDate); // Cập nhật ngày đã chọn
   };
 
   const filteredUsers = selectedDate 
-    ? users.filter(user => {
+    ? locations.filter(user => {
         // Giả sử mỗi user có một thuộc tính date chứa ngày mà họ có dữ liệu
-        const userDate = new Date(user.time); // Thay đổi 'user.date' thành thuộc tính thực tế của bạn
+        const userDate = new Date(user.dateCreated); // Thay đổi 'user.date' thành thuộc tính thực tế của bạn
         return userDate.toDateString() === selectedDate.toDateString();
       })
     : [];
@@ -33,13 +42,92 @@ const DashBoardScreen = () => {
   };
 
   const handleBusinessDetailClick = (id) => {
-    navigate(`/business/detail/${id}`); // Điều hướng đến DetailLocationScreen với ID
+    navigate(`/location/detail/${id}`); // Điều hướng đến DetailLocationScreen với ID
   };
 
+    useEffect(() => {
+      const fetchMonthlyStats = async () => {
+        try {
+          // Lấy tháng và năm hiện tại
+          const currentMonth = new Date().getMonth() + 1; // JavaScript getMonth() trả từ 0-11
+          const currentYear = new Date().getFullYear();
+          console.log('userId: ', userId);
+          // Gọi API với query params
+          const response = await fetch(`http://localhost:3000/bookings/revenue/?month=${currentMonth}&year=${currentYear}`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch monthly stats");
+          }
+          const data = await response.json();
   
-
+          setMonthlyBookings(data.data.totalBookings);
+          setMonthlyRevenue(data.data.totalRevenue);
+        } catch (error) {
+          console.error("Error fetching monthly stats:", error);
+        }
+      };
   
+      fetchMonthlyStats();
+    }, []);
 
+
+        useEffect(() => {
+          const fetchLocationOwner = async () => {
+            
+            try {
+              const response = await fetch(`http://localhost:3000/user/getbyuserrole`);
+              if (!response.ok) {
+                throw new Error('Failed to fetch locations');
+              }
+              const data = await response.json();
+              console.log(data.data);
+              // setLocationOwner(data.data || []);
+              setOwnerCount(data.data?.length || 0);
+            } catch (error) {
+              console.error('Error fetching locations Owner:', error);
+            }
+          };
+      
+          fetchLocationOwner();
+        },[]);
+  
+    useEffect(() => {
+      const fetchLocations = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch('http://localhost:3000/alllocation');
+          const data = await response.json();
+    
+          if (response.ok) {
+            setLocations(data.data); 
+            console.log(data.data);
+          } else {
+            setError(data.message || 'Không thể lấy danh sách địa điểm');
+          }
+        } catch (err) {
+          setError('Lỗi kết nối tới API');
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      fetchLocations(); 
+    }, []);
+
+    const pendingLocations = locations.filter(location => location.status === 'inactive');
+
+
+    function getCategoryName(id) {
+      switch (id) {
+        case 'hotel':
+          return 'Khách sạn';
+        case 'homestay':
+          return 'Homestay';
+        case 'guest home':
+          return 'Nhà nghỉ';
+        default:
+          return 'Không xác định'; // Giá trị mặc định nếu id không khớp
+      }
+    }
   return (
     
         <div class="dashboardbody">
@@ -59,13 +147,13 @@ const DashBoardScreen = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <p className="number">1245676543223</p>
+                  <p className="number">{ownerCount}</p>
                 </div>
                 <div className="separator">
                   <div></div>
                 </div>
                 <div className="card-footer">
-                  <p>Cập nhật lần cuối: 30/7/2024</p>
+                  <p>Cập nhật lần cuối: {moment().format('DD/MM/YYYY')}</p>
                 </div>
               </div>
             </div>
@@ -83,13 +171,13 @@ const DashBoardScreen = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <p className="number">12</p>
+                  <p className="number">{monthlyRevenue} VND</p>
                 </div>
                 <div className="separator">
                   <div></div>
                 </div>
                 <div className="card-footer">
-                  <p>Cập nhật lần cuối: 30/7/2024</p>
+                  <p>Cập nhật lần cuối: {moment().format('DD/MM/YYYY')}</p>
                 </div>
               </div>
             </div>
@@ -107,13 +195,13 @@ const DashBoardScreen = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <p className="number">12</p>
+                  <p className="number">1</p>
                 </div>
                 <div className="separator">
                   <div></div>
                 </div>
                 <div className="card-footer">
-                  <p>Cập nhật lần cuối: 30/7/2024</p>
+                  <p>Cập nhật lần cuối: {moment().format('DD/MM/YYYY')}</p>
                 </div>
               </div>
             </div>
@@ -131,31 +219,31 @@ const DashBoardScreen = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <p className="number">12</p>
+                  <p className="number">{monthlyBookings}</p>
                 </div>
                 <div className="separator">
                   <div></div>
                 </div>
                 <div className="card-footer">
-                  <p>Cập nhật lần cuối: 30/7/2024</p>
+                  <p>Cập nhật lần cuối: {moment().format('DD/MM/YYYY')}</p>
                 </div>
               </div>
             </div>
           </div>
           <div class = "new-booking scroll-container mh-scroll">
-            <p class = "new-booking-text">Địa điểm mới</p>
+            <p class = "new-booking-text">Địa điểm chờ duyệt</p>
           <table class="custom-table ">
             <thead>
               <tr>
                 <th>   </th>
                 <th>Tên địa điểm</th>
-                <th>Tên nhà kinh doanh</th>
+                <th>Ngày tạo</th>
                 <th>Loại</th>
                 <th>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              {(businesses || []).map((business) => (
+              {(pendingLocations || []).map((business) => (
                 <tr
                   key={business.id}
                   className="cursor-pointer hover:bg-blue-100"
@@ -163,12 +251,12 @@ const DashBoardScreen = () => {
                 >
                   <td>
                     <div className="location-icon">
-                      <img src="location-icon.png" alt="Location Icon" />
+                      <img  style={{ width: '100px', height: '100px', borderRadius: '50%' }}  src={business.image?.[0].url} alt="Location Icon" />
                     </div>
                   </td>
                   <td>{business.name}</td>
-                  <td>{business.owner}</td>
-                  <td>{business.type}</td>
+                  <td>{moment(business.dateCreated).format('DD/MM/YYYY')}</td>
+                  <td>{getCategoryName(business.category.id)}</td>
                   <td>
                     <span className={business.status === 'đã duyệt' ? 'status-label-2' : 'status-label'}>
                       {business.status}
@@ -194,7 +282,7 @@ const DashBoardScreen = () => {
               />
               </div>
             <div class="scroll-container">
-              <p class="new-business mb-3">Nhà kinh doanh mới</p>
+              <p class="new-business mb-3">Nhà kinh doanh</p>
               <div>
                 {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
@@ -204,10 +292,10 @@ const DashBoardScreen = () => {
                     onClick={() => handleBusinessDetailClick(user.id)} // Bắt sự kiện click
                     style={{ cursor: 'pointer' }}
                   >
-                    <img src="avatar.png" alt="User Avatar" className="user-avatar" />
+                    <img  style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: 10 }}  src={user.image?.[0].url} alt="Location Icon" />
                     <div className="user-details">
                       <h2 className="user-name">{user.name}</h2>
-                      <p className="user-time">{user.time}</p>
+                      <p className="user-time">{moment(user.dateCreated).format('DD/MM/YYYY hh:mm:ss')}</p>
                     </div>
                     <div className="arrow-icon">
                       <FaAngleRight />

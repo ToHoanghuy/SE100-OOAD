@@ -37,12 +37,12 @@ function LoginScreen() {
       
       if (response.ok) {
         let user_id = data;  // Giả sử API trả về userId trong đối tượng data
-        setUserId(data.data);
+        setUserId(data.data._id);
         console.log('data: ', data.data) // Cập nhật userId vào state hoặc context
         console.log('User ID:', userId);
         localStorage.setItem('isAuthenticated', 'true');
         // Sau khi login thành công, lưu id vào localStorage
-        localStorage.setItem('userId', data.data);
+        localStorage.setItem('userId', data.data._id);
         localStorage.setItem('userRole', data.data.userRole);
         // navigate('/dashboard/business');
         if (data.data.userRole === 'admin') {

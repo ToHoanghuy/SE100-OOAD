@@ -119,11 +119,11 @@ const ListLocationScreen = () => {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>
                         <div className="namefield">
-                          {/* <img
-                          src={require(`../assets/images/${location.avatar}`)}
+                          <img
+                          src ={location.image?.[0]?.url}
                           alt="User Avatar"
                           className="user-avatar"
-                        /> */}
+                        />
                           <p>{location.name}</p>
                         </div>
                       </td>

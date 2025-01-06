@@ -25,6 +25,7 @@ function LoginScreen() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userEmail: email, userPassword: password }),
+        credentials: 'include'
       });
 
       const data = await response.json();

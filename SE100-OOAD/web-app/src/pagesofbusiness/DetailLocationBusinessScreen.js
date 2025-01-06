@@ -476,7 +476,13 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                     {address === "Địa chỉ không khả dụng" ? (
                                         <p className="text-red-500">Không tìm thấy địa chỉ cho địa điểm này.</p>
                                     ) : (
-                                        <></>
+                                        <div className ="flex justify-center">
+                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31383.239171865847!2d107.48594181070591!3d10.508156585966674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175bd73c30f60a1%3A0x951e30bb705cd7c3!2zTcOAVSBDYW1waW5nIC0gQ-G6r20gVHLhuqFpIEjhu5MgQ-G7kWM!5e0!3m2!1sen!2s!4v1736102711020!5m2!1sen!2s" 
+                                                width="800" height="350" allowFullScreen loading="lazy" 
+                                            >
+                                            </iframe>
+                                        </div>
+                                        // <></>
                                         //<MapComponent address={address} />
                                     )}
 

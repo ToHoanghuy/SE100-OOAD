@@ -112,11 +112,11 @@ const ListBusinessScreen = () => {
                     <td>{index + 1}</td>
                     <td>
                       <div className="namefield">
-                        {/* <img 
-                          // src={require(`../assets/images/${business.avatar}`)} 
+                        <img 
+                          src={business?.userAvatar?.url} 
                           alt="User Avatar" 
                           className="user-avatar" 
-                        /> */}
+                        />
                         <p>{business?.userName}</p>
                       </div>
                     </td>

@@ -185,11 +185,11 @@ const ListBookingScreen = () => {
                       <td>{index + 1 + (currentPage - 1) * 10}</td>
                       <td>
                         <div className="namefield">
-                          {/* <img
-                          src={require(`../assets/images/${booking.avatar}`)}
+                          <img
+                          src={booking.user?.userAvatar?.url}
                           alt="User Avatar"
                           className="user-avatar"
-                        /> */}
+                        />
                           <p>{booking.user?.userName || "Unknown User"}</p>
                         </div>
                       </td>

@@ -37,6 +37,7 @@ const DashBoardBusinessScreen = () => {
           const userResponse = await fetch(`http://localhost:3000/user/getbyid/${booking.userId}`);
           const userData = await userResponse.json();
           const userName = userData.data.userName;
+          const userAvatar = userData.data.userAvatar;
 
           const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`);
           const roomData = await roomResponse.json();
@@ -45,11 +46,14 @@ const DashBoardBusinessScreen = () => {
           const locationResponse = await fetch(`http://localhost:3000/locationbyid/${locationId}`);
           const locationData = await locationResponse.json();
           const locationName = locationData.data.name;
+          const locationImage = locationData.data.image;
 
           return {
             ...booking,
             userName,
+            userAvatar,
             locationName,
+            locationImage
           };
         }));
 
@@ -188,7 +192,7 @@ const DashBoardBusinessScreen = () => {
                   onClick={() => handleRowClick(booking._id)}>
                   <td>
                     <div className="location-icon">
-                      <img src="location-icon.png" alt="Location Icon" />
+                      <img  style={{ width: '100px', height: '100px', borderRadius: '50%' }}  src={booking.locationImage?.[0].url} alt="Location Icon" />
                     </div>
                   </td>
                   <td>{booking.locationName}</td>
@@ -232,8 +236,8 @@ const DashBoardBusinessScreen = () => {
                   onClick={() => handleBusinessDetailClick(booking._id)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <img src="avatar.png" alt="User Avatar" className="user-avatar" />
-                  <div className="user-details">
+                      <img  style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: 10 }}  src={booking.userAvatar?.url} alt="Location Icon" />
+                      <div className="user-details">
                     <h2 className="user-name">{booking.userName}</h2>
                     <p className="user-time">{moment(booking.dateBooking).format('DD-MM-YYYY hh:mm:ss')}</p>
                   </div>

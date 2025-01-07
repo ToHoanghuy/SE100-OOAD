@@ -152,11 +152,11 @@ function User() {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/user/storage/favorite"
-                                    className={`user_sub_menu_row ${location.pathname === "/user/storage/favorite" ? "current_user_row" : ""}`}
+                                <Link to="/user/storage/collection"
+                                    className={`user_sub_menu_row ${location.pathname === "/user/storage/collection" ? "current_user_row" : ""}`}
                                 >
                                     <i class="fa-solid fa-heart user_sub_menu_icon"></i>
-                                    <span className="user_sub_menu_title">Yêu thích</span>
+                                    <span className="user_sub_menu_title">Bộ sưu tập</span>
                                 </Link>
                             </li>
                         </ul>

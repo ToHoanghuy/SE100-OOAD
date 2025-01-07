@@ -255,6 +255,11 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 5px;
+    gap: 5px;
+}
+.place_service_ele{
+    font-size: 10px;
+    color: #00BABA;
 }
 
 .place_service_ele span {

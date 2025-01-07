@@ -89,3 +89,25 @@ export const  formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return `${date.getDate()} tháng ${date.getMonth() + 1} năm ${date.getFullYear()}`;
 }
+
+export const renderStars = (rating) => {
+    const solidStars = Math.floor(rating); // Số sao đầy
+    const emptyStars = 5 - solidStars;    // Số sao rỗng
+
+    return (
+        <div className="place_ele_star">
+            {/* Hiển thị sao đầy */}
+            {Array(solidStars)
+                .fill(0)
+                .map((_, index) => (
+                    <i key={`solid-${index}`} className="fa-solid fa-star"></i>
+                ))}
+            {/* Hiển thị sao rỗng */}
+            {Array(emptyStars)
+                .fill(0)
+                .map((_, index) => (
+                    <i key={`empty-${index}`} className="fa-regular fa-star"></i>
+                ))}
+        </div>
+    );
+}

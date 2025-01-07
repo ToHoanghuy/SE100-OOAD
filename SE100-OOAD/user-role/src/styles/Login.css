@@ -161,6 +161,10 @@ body
     font-size: 13px;
     color: #00BABA;
 }
+.error_text
+{
+    color: rgb(251, 63, 63);
+}
 .sub_input
 {
     margin-bottom: 10px;

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function FileInputPasswork({labelInput="Mật khẩu"}) {
-    const [inputContent, setInputContent] = useState();
+function FileInputPasswork({labelInput="Mật khẩu", value, onChange, checkNull, setCheckPassword}) {
+    const [inputContent, setInputContent] = useState(value);
     const [inputNote, setInputNote] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -10,12 +10,14 @@ function FileInputPasswork({labelInput="Mật khẩu"}) {
     const handleChange = (e) => {
         const value = e.target.value;
         setInputContent(value);
+        setCheckPassword(true);
 
         if (value.length < 6) {
             setInputNote("Mật khẩu phải từ 6 đến 15 kí tự.");
         } else {
             setInputNote("");
         }
+        onChange(e.target.value);
     };
 
     const handleEyeClick = () => {
@@ -29,6 +31,13 @@ function FileInputPasswork({labelInput="Mật khẩu"}) {
         }
     };
 
+    useEffect(() => {
+        if (!checkNull) {
+          setInputNote("Mật khẩu không được để trống bạn");
+        } else {
+          setInputNote("");
+        }
+      }, [checkNull]);
     return (
         <div className="input_frame OpacityEffect">
             <div className="file_input" >
@@ -42,7 +51,7 @@ function FileInputPasswork({labelInput="Mật khẩu"}) {
                     <i className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}></i>
                 </span>
             </div>
-            <span className="login_note">{inputNote}</span>
+            <span className={`login_note ${!checkNull ? 'error_text' : ''}`}>{inputNote}</span>
         </div>
     );
 }

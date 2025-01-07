@@ -5,11 +5,13 @@
     justify-content: center;
     background-color: #FFFFFF;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 .search_bar
 {
     width: 91%;
-    height: 85px;
+    height: auto;
     display: grid;
     grid-template-columns: 1% 23% 19% 28% 18% 4% 1%;
     gap: 1%; 

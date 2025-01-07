@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const GalleryPopUp = ({ images, closePopup,clickImg }) => {
+const GalleryPopUp = ({ name, images, closePopup,clickImg }) => {
     const [thisImg, setThisImg] = useState(clickImg);
     const [width, setWidth] = useState(0);
     const [showPopup, setShowPopup] = useState(false);
@@ -17,6 +17,7 @@ const GalleryPopUp = ({ images, closePopup,clickImg }) => {
         var imgWidth;
         var imgLength;
         if (thisImg > 3 && thisImg < (img.length - 5)) {
+         
             imgLength = img[thisImg - 4].offsetWidth + 2 * img_Margin;
             imgWidth = width + imgLength;
             setWidth(imgWidth)
@@ -30,8 +31,10 @@ const GalleryPopUp = ({ images, closePopup,clickImg }) => {
             imgsRefs.current.forEach((img, index) => {
                 img.style.transform = `translateX(-${imgWidth}px)`;
             });
+            // return
         }
-        else if (thisImg >= (img.length - 5)) {
+        else if (thisImg >= (img.length - img.length/2)) {
+            // alert('hi')
             imgLength = img[thisImg - 4].offsetWidth + 2 * img_Margin;
             imgWidth = width + imgLength;
             setWidth(imgWidth)
@@ -122,7 +125,7 @@ const GalleryPopUp = ({ images, closePopup,clickImg }) => {
             <div className="overlay" onClick={handleClose}></div>
             <div className="gallery_pop_up_frame">
                 <div className="gallery_pop_up_frame_header">
-                    <span>Ho Coc Camping, Vung Tau</span>
+                    <span>{name}</span>
                     <div className="close_pop_up" onClick={handleClose}>
                         <span>Đóng</span><i className="fa-solid fa-x"></i>
                     </div>
@@ -134,7 +137,7 @@ const GalleryPopUp = ({ images, closePopup,clickImg }) => {
                         </div>
                     </div>
                     <div className="pop_up_middle">
-                        <img id="img_center" src={images[thisImg]} alt="center" />
+                        <img id="img_center" src={images[thisImg].url} alt="center" />
                     </div>
                     <div className="pop_up_right">
                         <div className="pop_up_btn_move" onClick={handleNext}>
@@ -153,7 +156,7 @@ const GalleryPopUp = ({ images, closePopup,clickImg }) => {
                             <img
                                 key={index}
                                 className={`detail_img ${index === thisImg ? 'this_img' : ''}`}
-                                src={img}
+                                src={img.url}
                                 alt={`detail-${index}`}
                                 onClick={() => handleImageClick(index)}
                                 ref={(el) => (imgsRefs.current[index] = el)}

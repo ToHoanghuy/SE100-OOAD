@@ -61,7 +61,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
 
     const handleCancelAddRoom = () => {
         setCurrentTab2('viewratingservice')
-    } 
+    }
 
     const services = [
         { id: "cancelable", name: "Hủy miễn phí trong 24h", icon: <FaTimesCircle className="mr-2 w-4" /> },
@@ -163,7 +163,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
 
     useEffect(() => {
         const fetchLocationInfo = async () => {
-            try {   
+            try {
                 const response = await fetch(`http://localhost:3000/locationbyid/${id}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -193,7 +193,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
 
                 const updatedReviews = await Promise.all(
                     data.data.map(async (review) => {
-                        console.log('review: ',review.senderId)
+                        console.log('review: ', review.senderId)
                         try {
                             const userResponse = await fetch(`http://localhost:3000/user/getbyid/${review.senderId}`);
                             if (userResponse.ok) {
@@ -240,27 +240,27 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
     }, [id]);
 
     useEffect(() => {
-        if (!selectedRoomId) return; 
-    
+        if (!selectedRoomId) return;
+
         const fetchRoomDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:3000/room/getbyid/${selectedRoomId}`); 
+                const response = await fetch(`http://localhost:3000/room/getbyid/${selectedRoomId}`);
                 const data = await response.json();
                 console.log(data.data);
                 if (response.ok) {
-                    setRoomData(data.data); 
+                    setRoomData(data.data);
                 } else {
                     console.error("Lỗi khi lấy thông tin phòng:", data);
                 }
             } catch (error) {
                 console.error("Lỗi khi gọi API:", error);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
-    
-        fetchRoomDetails(); 
+
+        fetchRoomDetails();
     }, [selectedRoomId]);
 
     const handleEditClick = () => {
@@ -476,9 +476,9 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                     {address === "Địa chỉ không khả dụng" ? (
                                         <p className="text-red-500">Không tìm thấy địa chỉ cho địa điểm này.</p>
                                     ) : (
-                                        <div className ="flex justify-center">
-                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31383.239171865847!2d107.48594181070591!3d10.508156585966674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175bd73c30f60a1%3A0x951e30bb705cd7c3!2zTcOAVSBDYW1waW5nIC0gQ-G6r20gVHLhuqFpIEjhu5MgQ-G7kWM!5e0!3m2!1sen!2s!4v1736102711020!5m2!1sen!2s" 
-                                                width="800" height="350" allowFullScreen loading="lazy" 
+                                        <div className="flex justify-center">
+                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31383.239171865847!2d107.48594181070591!3d10.508156585966674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175bd73c30f60a1%3A0x951e30bb705cd7c3!2zTcOAVSBDYW1waW5nIC0gQ-G6r20gVHLhuqFpIEjhu5MgQ-G7kWM!5e0!3m2!1sen!2s!4v1736102711020!5m2!1sen!2s"
+                                                width="800" height="350" allowFullScreen loading="lazy"
                                             >
                                             </iframe>
                                         </div>
@@ -523,19 +523,26 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                     )}
                                 </div>
                                 <div className="mt-6">
-                                    <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">Tên địa điểm</label>
-                                        {editMode ? (
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                value={locationInfo.name}
-                                                onChange={handleInputChange}
-                                                className="w-full p-2 border rounded-lg"
-                                            />
-                                        ) : (
-                                            <p className="text-gray-900">{locationInfo.name}</p>
-                                        )}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="w-3/4">
+                                            <p className="block text-gray-700 text-sm font-bold mb-2">Tên địa điểm</p>
+                                            {isEditing ? (
+                                                <input
+                                                    type="text"
+                                                    name="tenDiaDiem"
+                                                    value={locationInfo.tenDiaDiem}
+                                                    onChange={handleInputChange}
+                                                    className="w-full p-2 border rounded-lg"
+                                                />
+                                            ) : (
+                                                <p className="text-gray-900">{locationInfo?.name || 'Hồ Cốc du lịch Vũng TàuTàu'}</p>
+                                            )}
+                                        </div>
+                                        <div className="w-1/4 text-right">
+                                            {/* Đây là trạng thái thêm, bạn có thể thay đổi nội dung dưới đây */}
+                                            <span className="text-sm text-gray-500">Trạng thái</span>
+                                            <span>{locationInfo.status}</span>
+                                        </div>
                                     </div>
 
                                     <div className="mb-4">
@@ -654,7 +661,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                             <div className="flex flex-col items-center">
                                                                 <p className="text-gray-600">Giá</p>
                                                                 <p className="text-red-600 font-bold text-lg">
-                                                                    {room?. pricePerNight?.toLocaleString()} VND
+                                                                    {room?.pricePerNight?.toLocaleString()} VND
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -672,35 +679,35 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                             <div>
                                                 {reviews ? (
                                                     <div>
-                                                    {reviews.map((review) => (
-                                                        <div key={review.id}>
-                                                            <div class="flex items-center mb-4">   
-                                                                <img alt="Profile picture of Hoang Huy" class="w-12 h-12 rounded-full mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg" width="50" />                                                                                                              
-                                                                <div>
-                                                                    <p class="font-semibold">{review.userName}</p>
-                                                                    <div className="flex items-center">
-                                                                        {/* Render rating stars */}
-                                                                        {Array.from({ length: Math.floor(review.rating) }).map((_, index) => (
-                                                                        <FaStar key={index} className="text-yellow-500" />
-                                                                        ))}
-                                                                        {review.rating % 1 !== 0 && <FaStarHalfAlt className="text-yellow-500" />}
-                                                                        <span className="ml-2 text-gray-600">{review.rating.toFixed(1)}</span>
+                                                        {reviews.map((review) => (
+                                                            <div key={review.id}>
+                                                                <div class="flex items-center mb-4">
+                                                                    <img alt="Profile picture of Hoang Huy" class="w-12 h-12 rounded-full mr-4" height="50" src="https://storage.googleapis.com/a1aa/image/O5bug1WBccZwJ527TONg0tRsK6lOKxgmwdTsBcoffjoNNVlTA.jpg" width="50" />
+                                                                    <div>
+                                                                        <p class="font-semibold">{review.userName}</p>
+                                                                        <div className="flex items-center">
+                                                                            {/* Render rating stars */}
+                                                                            {Array.from({ length: Math.floor(review.rating) }).map((_, index) => (
+                                                                                <FaStar key={index} className="text-yellow-500" />
+                                                                            ))}
+                                                                            {review.rating % 1 !== 0 && <FaStarHalfAlt className="text-yellow-500" />}
+                                                                            <span className="ml-2 text-gray-600">{review.rating.toFixed(1)}</span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+                                                                <p class="text-gray-700">{review.review}</p>
                                                             </div>
-                                                            <p class="text-gray-700">{review.review}</p>
-                                                        </div>
-                                                        
-                                                        
-                                                        
-                                                    ))}
+
+
+
+                                                        ))}
                                                     </div>
                                                 ) : (
                                                     <p>No reviews available for this location.</p>
                                                 )}
-                                               
+
                                             </div>
-                                           
+
 
                                         </div>
 
@@ -735,7 +742,7 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                         </div>
                                         <div class="mb-4">
                                             <h2 class="font-bold mb-2">Dịch vụ:</h2>
-                                            
+
                                             <div className="flex flex-wrap gap-2">
                                                 {roomData?.facility.map((facility, index) => (
                                                     <div key={index} className="flex items-center bg-gray-200 rounded-full px-3 py-1">
@@ -765,39 +772,39 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                             <a class="text-xl font-bold mb-4 text-black">Phòng</a>&gt;<span>Thêm phòng</span>
                                             {/* <a href="#" class="hover:underline">Phòng</a> */}
                                         </div>
-                                        <input 
+                                        <input
                                             value={formData.name}
-                                            onChange={handleInputAddChange} 
+                                            onChange={handleInputAddChange}
                                             name="name"
-                                            type="text" placeholder="Tên phòng" 
+                                            type="text" placeholder="Tên phòng"
                                             className=" p-3 mb-4 border border-gray-300 rounded-lg w-room"
                                         />
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                             <div className="grid">
                                                 <p>Giường đôi</p>
-                                                <input 
+                                                <input
                                                     name="doubleBeds"
                                                     value={formData.doubleBeds || ""}
                                                     onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                             <div className="grid">
                                                 <p>Giường đơn</p>
-                                                <input 
+                                                <input
                                                     name="singleBeds"
                                                     value={formData.singleBeds || ""}
                                                     onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
                                             <div className="grid">
                                                 <p>Diện tích</p>
-                                                <input 
+                                                <input
                                                     name="area"
                                                     value={formData.area || ""}
                                                     onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
-                                            
+
                                             <div className="grid">
                                                 <p>Số lượng phòng</p>
-                                                <input 
+                                                <input
                                                     name="quantity"
                                                     value={formData.quantity || ""}
                                                     onChange={handleInputAddChange} type="number" className="grid flex p-3 border border-gray-300 rounded-lg"></input>
@@ -823,17 +830,17 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                                                 </label>
                                             ))}
                                         </div>
-                                        
-                                        
+
+
                                         <div class="flex items-center justify-between">
                                             <div className="flex items-center justify-center mt-2">
                                                 <h2 class="text-black font-bold mr-2">Giá</h2>
-                                                <input 
+                                                <input
                                                     name="pricePerNight"
                                                     value={formData.pricePerNight || ""}
-                                                    onChange={handleInputAddChange}  type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input>
+                                                    onChange={handleInputAddChange} type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input>
                                             </div>
-                                            
+
                                             <div class="flex">
                                                 <button onClick={handleCancelAddRoom} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">Hủy</button>
                                                 <button onClick={handleSubmit} class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">Tạo</button>

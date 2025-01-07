@@ -43,7 +43,8 @@ const Header = ({ mainTitle,subTitle }) => {
           </div>
           <div className="admin-info items-center space-x-2 border rounded-lg p-2">
           <img
-            src={userData?.userAvatar?.url || 'avatar.png'}
+
+            src={userData?.userAvatar || require('../assets/images/avt.png')}
             alt="Admin Avatar"
             className="admin-avatar"
           />            

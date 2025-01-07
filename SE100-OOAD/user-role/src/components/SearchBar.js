@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import LocationBar from '../components/LocationBar';
 import ResidenceBar from '../components/ResidenceBar';
 import DateTimeBar from '../components/DateTimeBar';
@@ -7,7 +8,7 @@ import QuantityBar from '../components/QuantityBar';
 
 
 function SearchBar() {
-
+    const navigate = useNavigate();
     const [showOptions, setShowOptions] = useState([false,false]); // Mảng trạng thái cho các dropdown
     const selectionOptionRefs = useRef([]); // Mảng ref cho selectionOption
     const selectionBtnRefs = useRef([]); // Mảng ref cho selectionBtn
@@ -121,7 +122,9 @@ function SearchBar() {
                 selectionOptionRef={(el) => selectionOptionRefs.current[3] = el} // Gán ref động cho selectionOption
             />
             <div className="search">
-                <button className="search_button"><i className="fa-solid fa-magnifying-glass"></i></button>
+                <button className="search_button" 
+                        onClick={() => navigate('/search')}
+                ><i className="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div></div>
         </div>

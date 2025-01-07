@@ -7,11 +7,42 @@ import QuantityBar from '../components/QuantityBar';
 
 
 
-function SearchBar() {
+function SearchBar({ cost, rating, services, onSearch }) {
     const navigate = useNavigate();
-    const [showOptions, setShowOptions] = useState([false,false]); // Mảng trạng thái cho các dropdown
+    const [from, setFrom] = useState('')
+    const [to, setTo] = useState('')
+    const [showOptions, setShowOptions] = useState([false,false, false]); // Mảng trạng thái cho các dropdown
     const selectionOptionRefs = useRef([]); // Mảng ref cho selectionOption
     const selectionBtnRefs = useRef([]); // Mảng ref cho selectionBtn
+    
+
+    const handleSearchClick = () => {
+        const categories = ["hotel", "homestay", "guest home"];
+        const categoryIndex = showOptions.findIndex((option) => option); // Tìm vị trí của `true`
+        const category = categoryIndex !== -1 ? categories[categoryIndex] : null;
+        const searchParams = {
+            costMin: cost[0],
+            costMax: cost[1],
+            rating: rating,
+            // services: services,
+            category: category,
+            // fromDate: from,
+            // toDate: to,
+        };
+
+        const filteredParams = Object.fromEntries(
+            Object.entries(searchParams).filter(([_, value]) => value !== null && value !== undefined)
+        );
+        
+        onSearch(filteredParams);
+        const queryString = new URLSearchParams(filteredParams).toString();
+        navigate(`/search?${queryString}`);  // Gọi hàm từ component cha để gửi dữ liệu
+    };
+
+    useEffect (() =>{
+        console.log(showOptions);
+        
+    },[from, to, showOptions])
 
     const toggleOption = (index,n) => {
         setShowOptions(prevState => {
@@ -109,7 +140,9 @@ function SearchBar() {
                 selectionBtnRef={(el) => selectionBtnRefs.current[1] = el} // Gán ref động cho selectionBtn
                 selectionOptionRef={(el) => selectionOptionRefs.current[1] = el} // Gán ref động cho selectionOption
             />
-            <DateTimeBar 
+            <DateTimeBar
+                setFrom={setFrom}
+                setTo={setTo}
                 toggleOption={() => toggleOption(2,1)} 
                 showOptions={showOptions[2]} 
                 selectionBtnRef={(el) => selectionBtnRefs.current[2] = el} // Gán ref động cho selectionBtn
@@ -123,7 +156,7 @@ function SearchBar() {
             />
             <div className="search">
                 <button className="search_button" 
-                        onClick={() => navigate('/search')}
+                        onClick={handleSearchClick}
                 ><i className="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div></div>

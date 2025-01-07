@@ -51,7 +51,7 @@ function Login() {
                 {
                     
                     if (data.data) {
-                        localStorage.setItem('authToken', data.data);
+                        localStorage.setItem('authToken', data.data._id);
                     }
                     Swal.fire({
                         title: 'Đăng nhập',

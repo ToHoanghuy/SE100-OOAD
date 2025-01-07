@@ -242,9 +242,9 @@ const DashBoardScreen = () => {
             <tbody>
               {(pendingLocations || []).map((business) => (
                 <tr
-                  key={business.id}
+                  key={business._id}
                   className="cursor-pointer hover:bg-blue-100"
-                  onClick={() => handleRowClick(business.id)}
+                  onClick={() => handleRowClick(business._id)}
                 >
                   <td>
                     <div className="location-icon">
@@ -265,16 +265,12 @@ const DashBoardScreen = () => {
                   <td>
                     <span
                       className={
-                        business.status === "active"
+                        business.status === "đã duyệt"
                           ? "status-label-2"
                           : "status-label"
                       }
                     >
-                      {business.status === "inactive" ? (
-                        "Chờ phê duyệt"
-                      ) : (
-                        <span>Chưa xác định</span>
-                      )}
+                      {business.status}
                     </span>
                   </td>
                 </tr>
@@ -305,7 +301,7 @@ const DashBoardScreen = () => {
                 <div
                   className="user-info"
                   key={user.id}
-                  onClick={() => handleBusinessDetailClick(user.id)} // Bắt sự kiện click
+                  onClick={() => handleBusinessDetailClick(user._id)} // Bắt sự kiện click
                   style={{ cursor: "pointer" }}
                 >
                   <img

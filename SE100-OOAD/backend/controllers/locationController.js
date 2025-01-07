@@ -53,14 +53,23 @@ module.exports.createLocation = async (req, res, next) => {
         publicId: file.filename
     }))
     try {
-        const parseredCategory = JSON.parse(category)
-        console.log(parseredCategory)
+        let parsedCategory;
+        try {
+            parsedCategory = JSON.parse(category);
+        } catch (err) {
+            return res.status(400).json({
+                isSuccess: false,
+                data: 'Invalid category format',
+                error: err.message,
+            });
+        }
+        console.log(parsedCategory)
         const locationData = new Location({
             name,
             description,
             slug: '',
             address,
-            category: parseredCategory,
+            category: parsedCategory,
             ownerId: res.locals.user._id,
             image: images
         });

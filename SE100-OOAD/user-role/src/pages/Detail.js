@@ -11,6 +11,7 @@ import RatingBar from '../components/RatingBar';
 import YourComment from '../components/YourComment';
 import Comment from '../components/Comment';
 import ChatPopUp from '../components/ChatPopUp';
+import Swal from 'sweetalert2';
 
 function Detail() {
     const { detailId } = useParams();
@@ -18,12 +19,13 @@ function Detail() {
 
     const [location, setLocation] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const [collections, setCollections] = useState([]);
     const [availableRooms, setAvailableRooms] = useState([]);
     const [roomStatus, setRoomStatus] = useState('');
 
     const [services, setServices] = useState([]);
-    const [reviews, setReviews] = useState([]);
     const [countReviews, setCountReviews] = useState([]);
+    const [reviews, setReviews] = useState([]);
     const [checkInDate, setCheckInDate] = useState([]);
     const [checkOutDate, setCheckOutDate] = useState([]);
     // const [selectedRoom, setSelectedRoom] = useState([]);
@@ -76,7 +78,7 @@ function Detail() {
         try {
             const response = await fetch(`http://localhost:3000/review/location/${detailId}`);
             const result = await response.json();
-
+    
             if (response.ok && result.isSuccess) {
                 const reviews = result.data;
                 setReviews(reviews);
@@ -106,12 +108,27 @@ function Detail() {
         }
     };
 
+    const getCollections = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/collection/getbyuserid/${localStorage.getItem("authToken")}`);
+            const result = await response.json();
+
+            if (response.ok && result.isSuccess) {
+                setCollections(result.data);  // Gán dữ liệu vào state
+            } else {
+                console.error(result.error || 'Failed to fetch data');
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
         getDetailLocation();
         getReviews();
         getService();
         getRooms();
+        getCollections();
     }, []);
 
     const [isFavorited, setIsFavorited] = useState(false);
@@ -137,49 +154,6 @@ function Detail() {
 
     const [boundary, setBoundary] = useState(1);
 
-    const detailData = [
-        {
-            name: "The Sóng Apartment - Bear Homestay Vũng Tàu",
-            address: "28 Đường Thi Sách, Vũng Tàu, Việt Nam",
-            province: "Vũng Tàu",
-            raiting: 4.5,
-            reviews: 355,
-            services: [
-                { id: 1, name: 'Wifi miễn phí' },
-                { id: 2, name: 'Nhà hàng' },
-                { id: 3, name: 'Bồn tắm' },
-                { id: 4, name: 'Hồ bơi' },
-                { id: 5, name: 'Gần biển' },
-            ],
-            images: [
-                "/images/detail/detail1.jpg",
-                "/images/detail/detail2.jpg",
-                "/images/detail/detail3.jpg",
-                "/images/detail/detail4.jpg",
-                "/images/detail/detail5.jpg",
-                "/images/detail/detail6.jpg",
-                "/images/detail/detail7.jpg",
-                "/images/detail/detail8.jpg",
-                "/images/detail/detail9.jpg",
-                "/images/detail/detail10.jpg",
-                "/images/detail/detail11.jpg",
-                "/images/detail/detail12.jpg",
-                "/images/detail/detail13.jpg",
-                "/images/detail/detail14.jpg",
-                "/images/detail/detail15.jpg",
-                "/images/detail/detail16.jpg"
-            ]
-        }
-    ];
-    // const ratings = [
-    //     { value: 5, percentage: 50 },
-    //     { value: 4, percentage: 60 },
-    //     { value: 3, percentage: 30 },
-    //     { value: 2, percentage: 0 },
-    //     { value: 1, percentage: 0 },
-    // ];
-
-    const [ratings, setRatings] = useState([]);
 
     const tongleChatPopUp = () => {
         setChatPopUp(!showChatPopUp);
@@ -201,7 +175,6 @@ function Detail() {
     };
 
     const choiceRoom = () => {
-
         var targetPosition;
         targetPosition = choiceRoomRef.current.offsetTop - 2 * scrollBoundaryRef.current.offsetHeight;
         if (targetPosition) {
@@ -220,20 +193,20 @@ function Detail() {
 
     //Render tình trạng phòng
     const [status, setStatus] = useState(null);
-    useEffect(() => {
-        const statusValue = 1; // giả sử lấy giá trị này từ API hoặc dữ liệu động khác
-        if (statusValue === 1) {
-            setStatus({
-                text: "Còn phòng",
-                color: '#199904'
-            });
-        } else {
-            setStatus({
-                text: "Hết phòng",
-                color: '#F24B4B'
-            });
-        }
-    }, []);
+    // useEffect(() => {
+    //     const statusValue = 1; // giả sử lấy giá trị này từ API hoặc dữ liệu động khác
+    //     if (statusValue === 1) {
+    //         setStatus({
+    //             text: "Còn phòng",
+    //             color: '#199904'
+    //         });
+    //     } else {
+    //         setStatus({
+    //             text: "Hết phòng",
+    //             color: '#F24B4B'
+    //         });
+    //     }
+    // }, []);
 
     const [isVisible, setIsVisible] = useState(false);
 
@@ -303,11 +276,6 @@ function Detail() {
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
-        // e.preventDefault();
-        // //    alert('hi')
-        // const queryParams = new URLSearchParams(availableRooms).toString();
-        // navigate(`/booking?${queryParams}`);
-
         const queryParams = new URLSearchParams();
 
         quantity.forEach(item => {
@@ -325,9 +293,68 @@ function Detail() {
         navigate(`/booking?${queryParams.toString()}`);
     };
 
+    const [showModal, setShowModal] = useState(false);
 
-    const detail = detailData[0];
+    const handleClickCollection = () => {
+        // alert('hi')
+        setShowModal(!showModal)
+    }
+    const handleChoiceCollection = () => {
+        alert('gọi API')
+        // setShowModal(!showModal)
+    }
+    const [isInputVisible, setIsInputVisible] = useState(false); // Quản lý trạng thái hiển thị ô nhập
+    const [collectionName, setCollectionName] = useState(''); // Quản lý giá trị ô nhập
+    const containerRef = useRef(null);
 
+    const handleClickCreate = () => {
+        // Nếu có tên bộ sưu tập hợp lệ, thực hiện tạo
+        if (collectionName.trim()) {
+            Swal.fire({
+                title: 'Bạn muốn tạo bộ sưu tập?',
+                text: 'Vui lòng xác nhận',
+                icon: 'question',
+                showCancelButton: true,  // Hiển thị nút hủy
+                confirmButtonText: 'Tạo', // Văn bản cho nút xác nhận
+                cancelButtonText: 'Không', // Văn bản cho nút hủy
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Tiếp tục!', 'Tạo thành công', 'success');
+
+                } else if (result.isDismissed) {
+                    // Khi người dùng chọn "Không"
+                    Swal.fire('Hủy bỏ!', 'Bạn đã chọn hủy bỏ', 'info');
+                }
+            });
+            setIsInputVisible(false);
+            setCollectionName(""); // Reset giá trị
+        } else {
+            setIsInputVisible(false);
+            setCollectionName(""); // Reset giá trị
+        }
+
+    };
+    const handleEnterCreate = () => {
+        // Nếu có tên bộ sưu tập hợp lệ, thực hiện tạo
+        if (collectionName.trim()) {
+            Swal.fire('Tiếp tục!', 'Tạo thành công', 'success');
+            setIsInputVisible(false);
+            setCollectionName(""); // Reset giá trị
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        // Chỉ gọi handleCreate khi nhấn Enter
+        if (e.key === 'Enter') {
+            handleEnterCreate();
+        }
+    };
+
+    const handleInputChange = (e) => {
+        if (e.key !== 'Enter') {
+            setCollectionName(e.target.value);
+        }
+    };
 
 
     if (location) {
@@ -373,12 +400,49 @@ function Detail() {
                             </div>
                             <div className="travel_title_info">
                                 <i className="fa-solid fa-star"></i>
-                                <span className="detail_text">{formatRating(location.rating)} ({detail.reviews} Reviews)</span>
+                                <span className="detail_text">{formatRating(location.rating)} ( Reviews)</span>
                             </div>
                             <div className="overview_function_btn">
-                                <button className="heart_btn" onClick={() => toggleFavorite(isFavorited, setIsFavorited)}>
+                                <button className="heart_btn" onClick={handleClickCollection}>
                                     <i className={`fa-heart ${isFavorited ? 'fa-solid' : 'fa-regular'}`}></i>
                                 </button>
+                                {showModal &&
+                                    <div className='collection_pop_up'>
+                                        {/* <div className='collection_pop_up_title'>chọn bộ sưu tập</div> */}
+                                        <ul>
+                                            <li className='add_new_collection_li'>
+                                                <div className='add_new_collection'
+                                                    onClick={!isInputVisible ? () => setIsInputVisible(true) : null}
+                                                >
+                                                    {!isInputVisible && (
+                                                        <>
+                                                            <i className="fa-solid fa-plus"></i>
+                                                            <span>Bộ sưu tập mới</span>
+                                                        </>
+                                                    )}
+                                                    {isInputVisible && (
+                                                        <
+                                                            input
+                                                            type="text"
+                                                            autoFocus
+                                                            placeholder="Nhập tên"
+                                                            value={collectionName}
+                                                            onChange={handleInputChange}
+                                                            onBlur={handleClickCreate} // Xử lý khi click ra ngoài
+                                                            onKeyDown={handleKeyDown} // Xử lý khi nhấn Enter
+                                                        />
+                                                    )}
+                                                </div>
+                                            </li>
+                                            {collections.map((ele, index) => (
+                                                <li >
+                                                    <i class="fa-regular fa-circle" onClick={handleChoiceCollection}></i>
+                                                    <span>{ele.name}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                }
                                 <button className="booking_btn" onClick={() => handleBoundaryClick(2)}>Đặt ngay</button>
                             </div>
                         </div>
@@ -416,6 +480,7 @@ function Detail() {
                                 />
                             </div>
                         </div>
+
                         <div className="other_info_container OpacityEffect">
                             <div className="top_other_info_container">
 
@@ -426,14 +491,6 @@ function Detail() {
                             </div>
                         </div>
                         <div className="overview_service_container OpacityEffect">
-                            {/* {detail.services.map((service, index) => (
-                                <div key={index} className="overview_service_item service_ele">
-                                    <i className={getIconClass(service.id)}></i>
-                                    <span className="service_name">
-                                        {service.name}
-                                    </span>
-                                </div>
-                            ))} */}
                             {services.map((service, index) => (
                                 <div key={index} className="overview_service_item service_ele">
                                     <i className={getIconClass(service.name)}></i>
@@ -480,7 +537,7 @@ function Detail() {
                                 />
                             ))}
                             <div ref={choiceRoomRef}>
-                            {selected &&
+                                {selected &&
 
                                     <div className='choice_room' >
                                         <div className='choice_room_header'>Phòng đã chọn</div>
@@ -502,8 +559,8 @@ function Detail() {
                                             </div>
                                         </div>
                                     </div>
-                                
-                                            }</div>                          
+
+                                } </div>
                         </div>
                     </div>
                 </form>
@@ -512,7 +569,7 @@ function Detail() {
                         <h2 className="detail_container_tilte OpacityEffect">Đánh giá của khách hàng</h2>
                         <div className="rating_container OpacityEffect">
                             <div className="rating_overview OpacityEffect">
-                            <span className="raiting_value">{formatRating(location.rating)}</span>
+                                <span className="raiting_value">{formatRating(location.rating)}</span>
                                 {/* <div className="raiting_star">
                                     <i className="fa-solid fa-star"></i>
                                     <i className="fa-solid fa-star"></i>

@@ -104,7 +104,10 @@ const ListBookingScreen = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const handleRowClick = (id) => {
+  const handleRowClick = (id, booking, userId) => {
+    console.log('choosed booking: ',JSON.stringify(booking) );
+    localStorage.setItem('selectedBooking', JSON.stringify(booking));
+    localStorage.setItem('userOfBookingId', userId);
     navigate(`/booking/detail/${id}`);
   };
 
@@ -210,7 +213,7 @@ const ListBookingScreen = () => {
                         <button
                           type="button"
                           className="icon-container iconview"
-                          onClick={() => handleRowClick(booking._id)}
+                          onClick={() => handleRowClick(booking._id, booking, booking.userId )}
                         >
                           <FaEye />
                         </button>

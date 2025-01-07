@@ -140,6 +140,7 @@ function SearchPage() {
                                     discountPrice={ele.discountPrice}
                                     favrorited={ele.favrorited}
                                     path={ele.path}
+                                    showHert={false}
                                 // ref={(el) => (cardRefs.current[index] = el)}
                                 />
 

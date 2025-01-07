@@ -1,33 +1,34 @@
-import React from 'react';
-import '../styles/ListLocationScreen.css';
-import { useState, useEffect } from 'react';
-import { FaAngleRight, FaBell, FaEye, FaSearch } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import "../styles/ListLocationScreen.css";
+import { useState, useEffect } from "react";
+import { FaAngleRight, FaBell, FaEye, FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 // import { locations } from '../pages/BusinessData';
-import Pagination from '../components/Pagination';
-
+import Pagination from "../components/Pagination";
 
 const ListLocationBusinessScreen = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchLocations = async () => {
       // Hiển thị trạng thái loading
       try {
-        const response = await fetch(`http://localhost:3000/locationbyuserid/${userId}`);
+        const response = await fetch(
+          `http://localhost:3000/locationbyuserid/${userId}`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch locations');
+          throw new Error("Failed to fetch locations");
         }
         const data = await response.json();
         setLocations(data.data || []);
       } catch (error) {
-        console.error('Error fetching locations:', error);
+        console.error("Error fetching locations:", error);
       }
     };
 
@@ -69,21 +70,21 @@ const ListLocationBusinessScreen = () => {
 
   function getCategoryName(id) {
     switch (id) {
-      case 'hotel':
-        return 'Khách sạn';
-      case 'homestay':
-        return 'Homestay';
-      case 'guest home':
-        return 'Nhà nghỉ';
+      case "hotel":
+        return "Khách sạn";
+      case "homestay":
+        return "Homestay";
+      case "guest home":
+        return "Nhà nghỉ";
       default:
-        return 'Không xác định'; // Giá trị mặc định nếu id không khớp
+        return "Không xác định"; // Giá trị mặc định nếu id không khớp
     }
   }
 
   return (
-    <div class="container">
+    <div class="container pg-0">
       <div class="containerformobile">
-
+        {/* <div class="containerlistbusiness widthlistbusiness"> */}{" "}
         <div class="containerlistbusiness widthlistbusiness">
           <div class="listbusinessbody scroll-container mh-900">
             <div className="flex justify-between">
@@ -97,18 +98,16 @@ const ListLocationBusinessScreen = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-                <div className="search-1">
-                  <button
-                    className="bg-blue-500 text-white text-sm px-3 py-1.5 rounded-lg"
-                    title="Click để thêm"
-                    onClick={() => handleAddLocationClick()}
-                  >
-                    Thêm địa điểm mới
-                  </button>
-                </div>
-              
+              <div className="search-1">
+                <button
+                  className="bg-blue-500 text-white text-sm px-3 py-1.5 rounded-lg"
+                  title="Click để thêm"
+                  onClick={() => handleAddLocationClick()}
+                >
+                  Thêm địa điểm mới
+                </button>
+              </div>
             </div>
-
 
             <table>
               <thead>
@@ -132,7 +131,11 @@ const ListLocationBusinessScreen = () => {
                     <td>
                       <div className="namefield">
                         <img
-                          src={location?.image ? require('../assets/images/avt.png') : require('../assets/images/avt.png')}
+                          src={
+                            location?.image
+                              ? require("../assets/images/avt.png")
+                              : require("../assets/images/avt.png")
+                          }
                           alt="User Avatar"
                           className="user-avatar"
                         />
@@ -142,10 +145,7 @@ const ListLocationBusinessScreen = () => {
                     <td>{getCategoryName(location?.category?.id)}</td>
                     <td>{location?.address}</td>
                     <td>
-                      <button
-                        type="button"
-                        className="icon-container iconview"
-                      >
+                      <button type="button" className="icon-container iconview">
                         <FaEye />
                       </button>
                     </td>
@@ -162,7 +162,6 @@ const ListLocationBusinessScreen = () => {
           />
         </div>
       </div>
-
     </div>
   );
 };

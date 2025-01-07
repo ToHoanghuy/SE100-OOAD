@@ -1,14 +1,15 @@
-
 import React, { useState } from "react";
 import { FaAngleRight, FaBell, FaEye } from "react-icons/fa";
 import Chart from "react-apexcharts";
 import "../styles/StatisticScreen.css";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const StatisticScreen = () => {
   const [years, setYears] = useState(new Date().getFullYear() - 1);
   const [successRate, setSuccessRate] = useState(0);
-  const [seriesData, setSeriesData] = useState([{ name: 'Doanh thu', data: [] }]);
+  const [seriesData, setSeriesData] = useState([
+    { name: "Doanh thu", data: [] },
+  ]);
   const failureRate = 100 - successRate;
   const chartOptions = {
     chart: {
@@ -38,7 +39,7 @@ const StatisticScreen = () => {
   };
 
   const handleYearChange = (event) => {
-    setYears(event.target.value); 
+    setYears(event.target.value);
   };
 
   useEffect(() => {
@@ -51,21 +52,24 @@ const StatisticScreen = () => {
 
         const result = await response.json();
         const bookings = result.data || []; // Danh sách các booking
-        console.log('chart:', bookings);
+        console.log("chart:", bookings);
 
         // Lọc booking theo năm được chọn
-        const filteredBookings = bookings.filter(booking => {
+        const filteredBookings = bookings.filter((booking) => {
           const bookingYear = new Date(booking.dateBooking).getFullYear();
           return bookingYear === parseInt(years);
         });
 
         // Tính toán số lượng trạng thái
         const totalBookings = filteredBookings.length;
-        const completedBookings = filteredBookings.filter(booking => booking.status === "complete").length;
+        const completedBookings = filteredBookings.filter(
+          (booking) => booking.status === "complete"
+        ).length;
         const canceledBookings = totalBookings - completedBookings;
 
         // Cập nhật tỷ lệ thành công
-        const successRate2 = totalBookings > 0 ? (completedBookings / totalBookings) * 100 : 0;
+        const successRate2 =
+          totalBookings > 0 ? (completedBookings / totalBookings) * 100 : 0;
         setSuccessRate(successRate2);
 
         setChartData({
@@ -95,7 +99,9 @@ const StatisticScreen = () => {
 
         // Gọi API cho từng tháng (1 -> 12)
         for (let month = 1; month <= 12; month++) {
-          const response = await fetch(`http://localhost:3000/bookings/revenue/?month=${month}&year=${years}`);
+          const response = await fetch(
+            `http://localhost:3000/bookings/revenue/?month=${month}&year=${years}`
+          );
           if (!response.ok) {
             throw new Error(`Failed to fetch revenue for month ${month}`);
           }
@@ -104,9 +110,9 @@ const StatisticScreen = () => {
         }
         console.log(monthlyData);
 
-        setSeriesData([{ name: 'Doanh thu', data: monthlyData }]); // Cập nhật dữ liệu biểu đồ
+        setSeriesData([{ name: "Doanh thu", data: monthlyData }]); // Cập nhật dữ liệu biểu đồ
       } catch (error) {
-        console.error('Error fetching yearly revenue:', error);
+        console.error("Error fetching yearly revenue:", error);
       }
     };
     fetchYearlyRevenue();
@@ -114,24 +120,23 @@ const StatisticScreen = () => {
     // fetchServiceBookingRates();
   }, [years]);
 
-
   const [chartData, setChartData] = useState({
     series: [successRate, failureRate],
     options: {
       chart: {
-        type: 'donut',
+        type: "donut",
       },
-      labels: ['Thành công', 'Thất bại'],
-      colors: ['#69c0ff', 'rgba(244,91,105,0.6)'],
+      labels: ["Thành công", "Thất bại"],
+      colors: ["#69c0ff", "rgba(244,91,105,0.6)"],
       plotOptions: {
         pie: {
           donut: {
-            size: '70%',
+            size: "70%",
             labels: {
               show: true,
               total: {
                 show: true,
-                label: 'Tổng số',
+                label: "Tổng số",
                 formatter: () => `100%`,
               },
             },
@@ -142,24 +147,26 @@ const StatisticScreen = () => {
         enabled: false,
       },
       legend: {
-        position: 'bottom',
-        horizontalAlign: 'center',
+        position: "bottom",
+        horizontalAlign: "center",
         markers: {
           width: 12,
           height: 12,
         },
       },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 300,
-          },
-          legend: {
-            position: 'bottom',
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 300,
+            },
+            legend: {
+              position: "bottom",
+            },
           },
         },
-      }],
+      ],
     },
   });
 
@@ -173,9 +180,15 @@ const StatisticScreen = () => {
         const data = await response.json();
         console.log(data.data);
         // Đếm số lượng từng loại
-        const hotelCount = data.data.filter((location) => location?.category?.id === "hotel").length;
-        const motelCount = data.data.filter((location) => location?.category?.id === "guest home").length;
-        const homestayCount = data.data.filter((location) => location?.category?.id === "homestay").length;
+        const hotelCount = data.data.filter(
+          (location) => location?.category?.id === "hotel"
+        ).length;
+        const motelCount = data.data.filter(
+          (location) => location?.category?.id === "guest home"
+        ).length;
+        const homestayCount = data.data.filter(
+          (location) => location?.category?.id === "homestay"
+        ).length;
         const total = hotelCount + motelCount + homestayCount;
         console.log(homestayCount, hotelCount, motelCount);
 
@@ -187,10 +200,17 @@ const StatisticScreen = () => {
         // Cập nhật series
         setChartData2((prevData) => ({
           ...prevData,
-          series: [parseFloat(hotelPercentage), parseFloat(motelPercentage), parseFloat(homestayPercentage)],
+          series: [
+            parseFloat(hotelPercentage),
+            parseFloat(motelPercentage),
+            parseFloat(homestayPercentage),
+          ],
         }));
-        setSeries([parseFloat(hotelPercentage), parseFloat(motelPercentage), parseFloat(homestayPercentage)])
-
+        setSeries([
+          parseFloat(hotelPercentage),
+          parseFloat(motelPercentage),
+          parseFloat(homestayPercentage),
+        ]);
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
@@ -199,18 +219,14 @@ const StatisticScreen = () => {
     fetchLocationData();
   }, []);
 
-  const [series, setSeries] = useState([10, 20, 70])
+  const [series, setSeries] = useState([10, 20, 70]);
   const [chartData2, setChartData2] = useState({
     series: [series],
     options: {
       chart: {
         type: "donut",
       },
-      labels: [
-        "Khách sạn",
-        "Nhà nghỉ",
-        "Homestay",
-      ],
+      labels: ["Khách sạn", "Nhà nghỉ", "Homestay"],
       colors: ["#69c0ff", "#00E396", "#FEB019"],
       plotOptions: {
         pie: {
@@ -254,14 +270,16 @@ const StatisticScreen = () => {
   });
 
   return (
-    <div class="container">
+    <div class="container pg-0">
       <div class="containerformobile">
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: "20px" }}>
           <label htmlFor="yearSelect">Chọn năm: </label>
           <select id="yearSelect" value={years} onChange={handleYearChange}>
             {/* Thêm các năm vào đây, ví dụ từ 2020 đến năm hiện tại */}
-            {[2020, 2021, 2022, 2023, 2024, 2025].map(year => (
-              <option key={year} value={year}>{year}</option>
+            {[2020, 2021, 2022, 2023, 2024, 2025].map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
             ))}
           </select>
         </div>
@@ -305,4 +323,3 @@ const StatisticScreen = () => {
 };
 
 export default StatisticScreen;
-

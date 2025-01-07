@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 
 import { formatDate, formatDateTime } from "../utils/dateUtils";
 import { formatCurrency } from "../utils/formatCurrency";
-import moment from 'moment';
+import moment from "moment";
 
 const DetailBookingScreen = () => {
   const [currentTab, setCurrentTab] = useState("customerinfo");
@@ -96,17 +96,19 @@ const DetailBookingScreen = () => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/user/getbyid/${userOfBookingId}`);
+      const response = await fetch(
+        `http://localhost:3000/user/getbyid/${userOfBookingId}`
+      );
       const data = await response.json();
 
       if (response.ok) {
         setUserData(data.data);
-        console.log('data of detail booking: ', data.data);
+        console.log("data of detail booking: ", data.data);
       } else {
-        setError(data.message || 'Không thể lấy thông tin người dùng');
+        setError(data.message || "Không thể lấy thông tin người dùng");
       }
     } catch (err) {
-      setError('Có lỗi xảy ra khi gọi API');
+      setError("Có lỗi xảy ra khi gọi API");
     } finally {
       setLoading(false);
     }
@@ -115,58 +117,65 @@ const DetailBookingScreen = () => {
   const fetchLocationData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/locationbyid/${booking.locationId}`);
+      const response = await fetch(
+        `http://localhost:3000/locationbyid/${booking.locationId}`
+      );
       const data = await response.json();
 
       if (response.ok) {
-        const locationResponse = await fetch(`http://localhost:3000/user/getbyid/${data.data.ownerId}`);
+        const locationResponse = await fetch(
+          `http://localhost:3000/user/getbyid/${data.data.ownerId}`
+        );
         const locationData = await locationResponse.json();
         // setLocationData(data.data);
-        console.log('data of detail booking: ', data.data);
+        console.log("data of detail booking: ", data.data);
         if (locationResponse.ok) {
           setLocationData({
             ...data.data,
-            ownerName: locationData?.data?.userName || 'Unknown Location',
+            ownerName: locationData?.data?.userName || "Unknown Location",
           });
-          console.log('Location detail:', {
+          console.log("Location detail:", {
             ...data.data,
-            ownerName: locationData?.data?.userName || 'Unknown Location',
+            ownerName: locationData?.data?.userName || "Unknown Location",
           });
-        }
-        else {
-          setError(locationData.message || 'Không thể lấy thông tin location');
+        } else {
+          setError(locationData.message || "Không thể lấy thông tin location");
         }
       } else {
-        setError(data.message || 'Không thể lấy thông tin người dùng');
+        setError(data.message || "Không thể lấy thông tin người dùng");
       }
     } catch (err) {
-      setError('Có lỗi xảy ra khi gọi API');
+      setError("Có lỗi xảy ra khi gọi API");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const userOfBooking = localStorage.getItem('userOfBookingId');
+    const userOfBooking = localStorage.getItem("userOfBookingId");
     if (userOfBooking) {
-      console.log('get booking from localstorage: ', userOfBooking);
+      console.log("get booking from localstorage: ", userOfBooking);
       setUserOfBookingId(userOfBooking);
     }
-    const storedBooking = localStorage.getItem('selectedBooking');
+    const storedBooking = localStorage.getItem("selectedBooking");
     if (storedBooking) {
-      console.log('get booking from localstorage: ', JSON.parse(storedBooking));
+      console.log("get booking from localstorage: ", JSON.parse(storedBooking));
       setBooking(JSON.parse(storedBooking));
     }
   }, [bookingId, booking?.status]);
 
-  useEffect(() => {
-    if (userOfBookingId) {
-      fetchUserData();
-    }
-    if (booking) {
-      fetchLocationData();
-    }
-  }, [userOfBookingId], [booking, booking?.status]);
+  useEffect(
+    () => {
+      if (userOfBookingId) {
+        fetchUserData();
+      }
+      if (booking) {
+        fetchLocationData();
+      }
+    },
+    [userOfBookingId],
+    [booking, booking?.status]
+  );
 
   const handleCustomerInfoClick = () => {
     setCurrentTab("customerinfo");
@@ -177,9 +186,8 @@ const DetailBookingScreen = () => {
   };
 
   const handleBookingInfoClick = () => {
-    setCurrentTab('bookinginfo')
-
-  }
+    setCurrentTab("bookinginfo");
+  };
 
   return (
     <div class="container">
@@ -221,21 +229,27 @@ const DetailBookingScreen = () => {
             </div>
             <div class="mt-6">
               <div class="flex">
-                <button onClick={handleBookingInfoClick} className={`flex items-center px-4 py-2 ${currentTab === 'bookinginfo' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'} rounded-t-lg`}>
-                  <i class="fas fa-user mr-2">
-                  </i>
+                <button
+                  onClick={handleBookingInfoClick}
+                  className={`flex items-center px-4 py-2 ${
+                    currentTab === "bookinginfo"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  } rounded-t-lg`}
+                >
+                  <i class="fas fa-user mr-2"></i>
                   <span>
                     <FontAwesomeIcon icon={faUser} className="mr-2" />
                     Thông tin booking
                   </span>
-
                 </button>
                 <button
                   onClick={handleCustomerInfoClick}
-                  className={`flex items-center px-4 py-2 ${currentTab === "customerinfo"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                    } rounded-t-lg ml-2`}
+                  className={`flex items-center px-4 py-2 ${
+                    currentTab === "customerinfo"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  } rounded-t-lg ml-2`}
                 >
                   <i class="fas fa-user mr-2"></i>
                   <span>
@@ -245,10 +259,11 @@ const DetailBookingScreen = () => {
                 </button>
                 <button
                   onClick={handleLocationInfoClick}
-                  class={`flex items-center px-4 py-2 ${currentTab === "locationinfo"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                    } rounded-t-lg ml-2`}
+                  class={`flex items-center px-4 py-2 ${
+                    currentTab === "locationinfo"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  } rounded-t-lg ml-2`}
                 >
                   <i class="fas fa-map-marker-alt mr-2"></i>
                   <span>
@@ -257,14 +272,18 @@ const DetailBookingScreen = () => {
                   </span>
                 </button>
               </div>
-              {currentTab === 'bookinginfo' && (
+              {currentTab === "bookinginfo" && (
                 <div class="border border-gray-200 rounded-b-lg p-4">
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <div class="mb-2 text-gray-500">Mã Booking</div>
                       <div class="mb-4">{booking?._id}</div>
                       <div class="mb-2 text-gray-500">Ngày checkin</div>
-                      <div class="mb-4">{moment(booking?.checkinDate).format('DD/MM/YYYY HH:mm:ss')}</div>
+                      <div class="mb-4">
+                        {moment(booking?.checkinDate).format(
+                          "DD/MM/YYYY HH:mm:ss"
+                        )}
+                      </div>
                       <div class="mb-2 text-gray-500">Tổng tiền</div>
                       <div class="mb-4">{booking?.totalPriceAfterTax}</div>
                       {/* <div class="mb-2 text-gray-500">Tên liên hệ</div>
@@ -276,9 +295,17 @@ const DetailBookingScreen = () => {
                     </div>
                     <div>
                       <div class="mb-2 text-gray-500">Ngày đặt</div>
-                      <div class="mb-4">{moment(booking?.dateBooking).format('DD/MM/YYYY HH:mm:ss')}</div>
+                      <div class="mb-4">
+                        {moment(booking?.dateBooking).format(
+                          "DD/MM/YYYY HH:mm:ss"
+                        )}
+                      </div>
                       <div class="mb-2 text-gray-500">Ngày checkout</div>
-                      <div class="mb-4">{moment(booking?.checkoutDate).format('DD/MM/YYYY HH:mm:ss')}</div>
+                      <div class="mb-4">
+                        {moment(booking?.checkoutDate).format(
+                          "DD/MM/YYYY HH:mm:ss"
+                        )}
+                      </div>
                       {/* <div class="mb-2 text-gray-500">Số CMND/CCCD</div>
                                                           <div class="mb-4">079303041653</div> */}
                       <div class="mb-2 text-gray-500">Số tiền đã trả</div>
@@ -291,7 +318,10 @@ const DetailBookingScreen = () => {
 
                       <div className="flex flex-wrap gap-2">
                         {booking?.items.map((item, index) => (
-                          <div key={index} className="flex items-center bg-gray-200 rounded-full px-3 py-1">
+                          <div
+                            key={index}
+                            className="flex items-center bg-gray-200 rounded-full px-3 py-1"
+                          >
                             {/* {getFacilityIcon(item.roomId)} */}
                             <span class="mr-2">Số lượng: </span>
                             <span class="font-bold">{item.quantity}</span>
@@ -299,27 +329,27 @@ const DetailBookingScreen = () => {
                         ))}
                       </div>
                     </div>
-
                   </div>
                   <div class="flex items-center justify-between">
                     <div className="flex items-center justify-center mt-2">
                       <h2 class="text-black font-bold mr-2">Trạng thái</h2>
                       <span
-                        className={`status-label${booking.status === 'canceled'
-                          ? ''
-                          : booking.status === 'complete'
-                            ? '-2'
-                            : '-1'
-                          }`}
+                        className={`status-label${
+                          booking.status === "canceled"
+                            ? ""
+                            : booking.status === "complete"
+                            ? "-2"
+                            : "-1"
+                        }`}
                       >
-                        {booking.status === 'pending' && 'Chờ duyệt'}
-                        {booking.status === 'confirm' && 'Đã xác nhận'}
-                        {booking.status === 'canceled' && 'Đã hủy'}
-                        {booking.status === 'complete' && 'Hoàn thành'}
-                        {booking.status !== 'pending' &&
-                          booking.status !== 'confirm' &&
-                          booking.status !== 'canceled' &&
-                          booking.status !== 'complete' &&
+                        {booking.status === "pending" && "Chờ duyệt"}
+                        {booking.status === "confirm" && "Đã xác nhận"}
+                        {booking.status === "canceled" && "Đã hủy"}
+                        {booking.status === "complete" && "Hoàn thành"}
+                        {booking.status !== "pending" &&
+                          booking.status !== "confirm" &&
+                          booking.status !== "canceled" &&
+                          booking.status !== "complete" &&
                           booking.status}
                       </span>
                       {/* <input 
@@ -328,9 +358,7 @@ const DetailBookingScreen = () => {
                                                                    type="number" className="w-48 p-3 border border-gray-300 rounded-lg"></input> */}
                     </div>
 
-                    <div class="flex">
-                      
-                    </div>
+                    <div class="flex"></div>
                   </div>
                 </div>
               )}
@@ -378,12 +406,13 @@ const DetailBookingScreen = () => {
                       <div class="mb-4">{locationData.ownerName}</div>
                       <div class="mb-2 text-gray-500">Loại</div>
                       <div className="mb-4">
-                        {
-                          locationData?.category?.id === 'hotel' ? 'Khách sạn' :
-                            locationData?.category?.id === 'homestay' ? 'Homestay' :
-                              locationData?.category?.id === 'guest_home' ? 'Nhà nghỉ' :
-                                'Danh mục không xác định'
-                        }
+                        {locationData?.category?.id === "hotel"
+                          ? "Khách sạn"
+                          : locationData?.category?.id === "homestay"
+                          ? "Homestay"
+                          : locationData?.category?.id === "guest_home"
+                          ? "Nhà nghỉ"
+                          : "Danh mục không xác định"}
                       </div>
                     </div>
 
@@ -395,7 +424,11 @@ const DetailBookingScreen = () => {
                       <div class="mb-2 text-gray-500">
                         Ngày đăng ký kinh doanh
                       </div>
-                      <div class="mb-4">{moment(locationData.dateCreated).format('DD/MM/YYYY HH:mm:ss')}</div>
+                      <div class="mb-4">
+                        {moment(locationData.dateCreated).format(
+                          "DD/MM/YYYY HH:mm:ss"
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

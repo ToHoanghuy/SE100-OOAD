@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import SideBar from '../components/SideBar';
-import '../styles/DashBoardScreen.css';
-import { FaAngleRight, FaBell } from 'react-icons/fa';
-import Calendar from 'react-calendar';
-import pagination from '../components/Pagination';
-import PercentageIndicator from '../components/PercentageIndicator';
-import { bookings, users } from '../pages/BusinessData';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import moment from 'moment';
-
+import React, { useState } from "react";
+import SideBar from "../components/SideBar";
+import "../styles/DashBoardScreen.css";
+import { FaAngleRight, FaBell, FaMoneyBillAlt } from "react-icons/fa";
+import Calendar from "react-calendar";
+import pagination from "../components/Pagination";
+import PercentageIndicator from "../components/PercentageIndicator";
+import { bookings, users } from "../pages/BusinessData";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import moment from "moment";
 
 const DashBoardBusinessScreen = () => {
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
   const [value, setValue] = useState(new Date());
@@ -27,35 +26,45 @@ const DashBoardBusinessScreen = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
+        const response = await fetch(
+          `http://localhost:3000/booking/getbybusinessid/${userId}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
 
-        const allBookingsWithDetails = await Promise.all(data.data.map(async (booking) => {
-          const userResponse = await fetch(`http://localhost:3000/user/getbyid/${booking.userId}`);
-          const userData = await userResponse.json();
-          const userName = userData.data.userName;
-          const userAvatar = userData.data.userAvatar;
+        const allBookingsWithDetails = await Promise.all(
+          data.data.map(async (booking) => {
+            const userResponse = await fetch(
+              `http://localhost:3000/user/getbyid/${booking.userId}`
+            );
+            const userData = await userResponse.json();
+            const userName = userData.data.userName;
+            const userAvatar = userData.data.userAvatar;
 
-          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`);
-          const roomData = await roomResponse.json();
-          const locationId = roomData.data.locationId;
+            const roomResponse = await fetch(
+              `http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`
+            );
+            const roomData = await roomResponse.json();
+            const locationId = roomData.data.locationId;
 
-          const locationResponse = await fetch(`http://localhost:3000/locationbyid/${locationId}`);
-          const locationData = await locationResponse.json();
-          const locationName = locationData.data.name;
-          const locationImage = locationData.data.image;
+            const locationResponse = await fetch(
+              `http://localhost:3000/locationbyid/${locationId}`
+            );
+            const locationData = await locationResponse.json();
+            const locationName = locationData.data.name;
+            const locationImage = locationData.data.image;
 
-          return {
-            ...booking,
-            userName,
-            userAvatar,
-            locationName,
-            locationImage
-          };
-        }));
+            return {
+              ...booking,
+              userName,
+              userAvatar,
+              locationName,
+              locationImage,
+            };
+          })
+        );
 
         setBookings(allBookingsWithDetails);
       } catch (error) {
@@ -66,9 +75,11 @@ const DashBoardBusinessScreen = () => {
     fetchBookings();
   }, [userId]);
 
-  const pendingBookings = bookings.filter(booking => booking.status === 'pending');
+  const pendingBookings = bookings.filter(
+    (booking) => booking.status === "pending"
+  );
 
-  // const filteredUsers = selectedDate 
+  // const filteredUsers = selectedDate
   //   ? users.filter(user => {
   //       const userDate = new Date(user.time);
   //       return userDate.toDateString() === selectedDate.toDateString();
@@ -76,7 +87,7 @@ const DashBoardBusinessScreen = () => {
   //   : [];
 
   const [monthlyBookings, setMonthlyBookings] = useState(0); // Số booking trong tháng
-  const [monthlyRevenue, setMonthlyRevenue] = useState(0);   // Doanh thu trong tháng
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0); // Doanh thu trong tháng
 
   useEffect(() => {
     const fetchMonthlyStats = async () => {
@@ -84,9 +95,11 @@ const DashBoardBusinessScreen = () => {
         // Lấy tháng và năm hiện tại
         const currentMonth = new Date().getMonth() + 1; // JavaScript getMonth() trả từ 0-11
         const currentYear = new Date().getFullYear();
-        console.log('userId: ', userId);
+        console.log("userId: ", userId);
         // Gọi API với query params
-        const response = await fetch(`http://localhost:3000/bookings/revenue/${userId}?month=${currentMonth}&year=${currentYear}`);
+        const response = await fetch(
+          `http://localhost:3000/bookings/revenue/${userId}?month=${currentMonth}&year=${currentYear}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch monthly stats");
         }
@@ -104,35 +117,35 @@ const DashBoardBusinessScreen = () => {
 
   const filteredBookingsByDate = selectedDate
     ? bookings.filter((booking) =>
-      moment(booking.dateBooking).isSame(selectedDate, 'day')
-    )
+        moment(booking.dateBooking).isSame(selectedDate, "day")
+      )
     : bookings;
 
   const handleRowClick = (id) => {
     navigate(`/business/booking/detail/${id}`);
-  }
+  };
 
   const handleBusinessDetailClick = (id) => {
     navigate(`/business/booking/detail/${id}`);
   };
 
   return (
-
     <div class="dashboardbody">
       <div class="leftframe">
         <div class="welcomebusiness flex justify-between">
-
-          <div class="align-center ml-2 mt-8" >
+          <div class="align-center ml-2 mt-8">
             <p class=" flex justify-center">Chào mừng trở lại</p>
             <p class="flex justify-center"></p>
           </div>
-          <img src={require('../assets/images/welcome.png')}></img>
+          <img src={require("../assets/images/welcome.png")}></img>
         </div>
         <div class="chart business-card-2">
           <div>
             <div className="business-card">
               <div className="card-header">
                 <div class="circle">
+                  {" "}
+                  <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
                 </div>
                 <p>Booking trong tháng</p>
                 <div className="frame">
@@ -146,7 +159,7 @@ const DashBoardBusinessScreen = () => {
                 <div></div>
               </div>
               <div className="card-footer">
-                <p>Cập nhật lần cuối: {moment().format('DD/MM/YYYY')}</p>
+                <p>Cập nhật lần cuối: {moment().format("DD/MM/YYYY")}</p>
               </div>
             </div>
           </div>
@@ -154,6 +167,8 @@ const DashBoardBusinessScreen = () => {
             <div className="business-card ">
               <div className="card-header">
                 <div class="circle">
+                  {" "}
+                  <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
                 </div>
                 <p>Doanh thu trong tháng</p>
                 <div className="frame">
@@ -167,7 +182,7 @@ const DashBoardBusinessScreen = () => {
                 <div></div>
               </div>
               <div className="card-footer">
-                <p>Cập nhật lần cuối: {moment().format('DD/MM/YYYY')}</p>
+                <p>Cập nhật lần cuối: {moment().format("DD/MM/YYYY")}</p>
               </div>
             </div>
           </div>
@@ -177,7 +192,7 @@ const DashBoardBusinessScreen = () => {
           <table class="custom-table ">
             <thead>
               <tr>
-                <th>   </th>
+                <th> </th>
                 <th>Tên địa điểm</th>
                 <th>Tên nhà kinh doanh</th>
                 <th>Thời gian</th>
@@ -189,31 +204,44 @@ const DashBoardBusinessScreen = () => {
                 <tr
                   key={booking.id}
                   className="cursor-pointer hover:bg-blue-100"
-                  onClick={() => handleRowClick(booking._id)}>
+                  onClick={() => handleRowClick(booking._id)}
+                >
                   <td>
                     <div className="location-icon">
-                      <img  style={{ width: '100px', height: '100px', borderRadius: '50%' }}  src={booking.locationImage?.[0].url} alt="Location Icon" />
+                      <img
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "50%",
+                        }}
+                        src={booking.locationImage?.[0].url}
+                        alt="Location Icon"
+                      />
                     </div>
                   </td>
                   <td>{booking.locationName}</td>
                   <td>{booking.userName}</td>
-                  <td>{moment(booking.dateBooking).format('DD-MM-YYYY')}</td>
+                  <td>{moment(booking.dateBooking).format("DD-MM-YYYY")}</td>
                   <td>
-                    <span className={booking.status === 'đã duyệt' ? 'status-label-2' : 'status-label'}>
-                      {booking.status === 'pending' ? 'Chờ duyệt' : booking.status}
+                    <span
+                      className={
+                        booking.status === "đã duyệt"
+                          ? "status-label-2"
+                          : "status-label"
+                      }
+                    >
+                      {booking.status === "pending"
+                        ? "Chờ phê duyệt"
+                        : booking.status}
                     </span>
                   </td>
                 </tr>
-
-
               ))}
-
             </tbody>
           </table>
         </div>
       </div>
       <div class="rightframe">
-
         <p class="staticbydate">Thống kê theo ngày </p>
         <div class="flex items-center justify-center mb-4">
           <Calendar
@@ -222,7 +250,9 @@ const DashBoardBusinessScreen = () => {
             value={value}
             locale="vi-VN"
             navigationLabel={({ date, label, locale, view }) => label}
-            tileContent={({ date, view }) => view === 'month' && date.getDay() === 0 ? null : null}
+            tileContent={({ date, view }) =>
+              view === "month" && date.getDay() === 0 ? null : null
+            }
           />
         </div>
         <div class="scroll-container">
@@ -234,12 +264,25 @@ const DashBoardBusinessScreen = () => {
                   className="user-info"
                   key={booking.id}
                   onClick={() => handleBusinessDetailClick(booking._id)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
-                      <img  style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: 10 }}  src={booking.userAvatar?.url} alt="Location Icon" />
-                      <div className="user-details">
+                  <img
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      marginRight: 10,
+                    }}
+                    src={booking.userAvatar?.url}
+                    alt="Location Icon"
+                  />
+                  <div className="user-details">
                     <h2 className="user-name">{booking.userName}</h2>
-                    <p className="user-time">{moment(booking.dateBooking).format('DD-MM-YYYY hh:mm:ss')}</p>
+                    <p className="user-time">
+                      {moment(booking.dateBooking).format(
+                        "DD-MM-YYYY hh:mm:ss"
+                      )}
+                    </p>
                   </div>
                   <div className="arrow-icon">
                     <FaAngleRight />

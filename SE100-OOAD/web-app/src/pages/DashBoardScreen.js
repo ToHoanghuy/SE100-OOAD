@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import SideBar from "../components/SideBar";
 import "../styles/DashBoardScreen.css";
-import { FaAngleRight, FaBell } from "react-icons/fa";
+import { FaAngleRight, FaBell, FaMoneyBillAlt } from "react-icons/fa";
 import Calendar from "react-calendar";
 import pagination from "../components/Pagination";
 import PercentageIndicator from "../components/PercentageIndicator";
@@ -137,7 +137,9 @@ const DashBoardScreen = () => {
           <div>
             <div className="business-card">
               <div className="card-header">
-                <div class="circle"></div>
+                <div class="circle">
+                  <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
+                </div>
                 <p>Tổng nhà kinh doanh</p>
                 <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
@@ -160,7 +162,9 @@ const DashBoardScreen = () => {
           <div>
             <div className="business-card">
               <div className="card-header">
-                <div class="circle"></div>
+                <div class="circle">
+                  <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
+                </div>
                 <p>Doanh thu trong tháng 7</p>
                 <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
@@ -183,7 +187,9 @@ const DashBoardScreen = () => {
           <div>
             <div className="business-card">
               <div className="card-header">
-                <div class="circle"></div>
+                <div class="circle">
+                  <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
+                </div>
                 <p>Nhà kinh doanh mới</p>
                 <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
@@ -206,7 +212,9 @@ const DashBoardScreen = () => {
           <div>
             <div className="business-card">
               <div className="card-header">
-                <div class="circle"></div>
+                <div class="circle">
+                  <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
+                </div>
                 <p>Số lượt booking trong tháng</p>
                 <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
@@ -265,12 +273,14 @@ const DashBoardScreen = () => {
                   <td>
                     <span
                       className={
-                        business.status === "đã duyệt"
+                        business.status === "active"
                           ? "status-label-2"
-                          : "status-label"
+                          : "status-label status-waiting"
                       }
                     >
-                      {business.status}
+                      {business.status === "inactive"
+                        ? "Chờ phê duyệt"
+                        : business.status}
                     </span>
                   </td>
                 </tr>

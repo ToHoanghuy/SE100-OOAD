@@ -1,55 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import '../styles/ListBookingScreen.css';
-import { useNavigate } from 'react-router-dom';
-import { FaSearch, FaEye } from 'react-icons/fa';
-import Pagination from '../components/Pagination';
-import { bookings } from '../pages/BusinessData';
-import axios from 'axios';
-import moment from 'moment';
-import '../styles/ListBookingScreen.css';
+import React, { useState, useEffect } from "react";
+import "../styles/ListBookingScreen.css";
+import { useNavigate } from "react-router-dom";
+import { FaSearch, FaEye } from "react-icons/fa";
+import Pagination from "../components/Pagination";
+import { bookings } from "../pages/BusinessData";
+import axios from "axios";
+import moment from "moment";
+import "../styles/ListBookingScreen.css";
 import { useDebounce } from "use-debounce";
 
 const ListBookingBusinessScreen = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [bookings, setBookings] = useState([]);
   const [debouncedSearchTerm] = useDebounce(searchTerm, 1000);
 
-  const userId = localStorage.getItem('userId');
-  console.log('businessid ', userId);
+  const userId = localStorage.getItem("userId");
+  console.log("businessid ", userId);
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/booking/getbybusinessid/${userId}`);
+        const response = await fetch(
+          `http://localhost:3000/booking/getbybusinessid/${userId}`
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log('list booking: ',data.data)
+        console.log("list booking: ", data.data);
 
-        const bookingsWithDetails = await Promise.all(data.data.map(async (booking) => {
+        const bookingsWithDetails = await Promise.all(
+          data.data.map(async (booking) => {
+            const userResponse = await fetch(
+              `http://localhost:3000/user/getbyid/${booking.userId}`
+            );
+            const userData = await userResponse.json();
+            const userName = userData.data.userName;
 
-          const userResponse = await fetch(`http://localhost:3000/user/getbyid/${booking.userId}`);
-          const userData = await userResponse.json();
-          const userName = userData.data.userName;
+            const roomResponse = await fetch(
+              `http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`
+            );
+            const roomData = await roomResponse.json();
+            const locationId = roomData.data.locationId;
+            console.log("location: ", locationId);
 
-          const roomResponse = await fetch(`http://localhost:3000/room/getbyid/${booking.items?.[0].roomId}`);
-          const roomData = await roomResponse.json();
-          const locationId = roomData.data.locationId;
-          console.log('location: ', locationId)
-
-          const locationResponse = await fetch(`http://localhost:3000/locationbyid/${locationId}`);
-          const locationData = await locationResponse.json();
-          const locationName = locationData.data.name;
-          return {
-            ...booking,
-            userName,
-            locationId,
-            locationName,
-          };
-        }));
+            const locationResponse = await fetch(
+              `http://localhost:3000/locationbyid/${locationId}`
+            );
+            const locationData = await locationResponse.json();
+            const locationName = locationData.data.name;
+            return {
+              ...booking,
+              userName,
+              locationId,
+              locationName,
+            };
+          })
+        );
 
         setBookings(bookingsWithDetails);
       } catch (error) {
@@ -65,9 +74,9 @@ const ListBookingBusinessScreen = () => {
   };
 
   const handleRowClick = (id, booking, userId) => {
-    console.log('choosed booking: ',JSON.stringify(booking) );
-    localStorage.setItem('selectedBooking', JSON.stringify(booking));
-    localStorage.setItem('userOfBookingId', userId);
+    console.log("choosed booking: ", JSON.stringify(booking));
+    localStorage.setItem("selectedBooking", JSON.stringify(booking));
+    localStorage.setItem("userOfBookingId", userId);
     navigate(`/business/booking/detail/${id}`);
   };
 
@@ -93,7 +102,7 @@ const ListBookingBusinessScreen = () => {
   const totalItems = filteredData.length;
 
   return (
-    <div className="container">
+    <div className="container pg-0">
       <div className="containerformobile">
         <div className="containerlistbusiness widthlistbusiness">
           <div className="listbusinessbody scroll-container mh-900">
@@ -126,13 +135,19 @@ const ListBookingBusinessScreen = () => {
                   <tr
                     key={booking.id}
                     className="clickable-row"
-                    onClick={() => handleRowClick(booking._id, booking, booking.userId)}
+                    onClick={() =>
+                      handleRowClick(booking._id, booking, booking.userId)
+                    }
                   >
                     <td>{index + 1}</td>
                     <td>
                       <div className="namefield">
                         <img
-                          src={booking.avatar ? require(`../assets/images/${booking.avatar}`) : require('../assets/images/avt.png')}
+                          src={
+                            booking.avatar
+                              ? require(`../assets/images/${booking.avatar}`)
+                              : require("../assets/images/avt.png")
+                          }
                           alt="User Avatar"
                           className="user-avatar"
                         />
@@ -140,27 +155,27 @@ const ListBookingBusinessScreen = () => {
                       </div>
                     </td>
                     <td>{booking.userName}</td>
-                    <td>{moment(booking.dateBooking).format('DD-MM-YYYY')}</td>
+                    <td>{moment(booking.dateBooking).format("DD-MM-YYYY")}</td>
                     <td>
-                    <span
-                      className={`status-label${
-                        booking.status === 'canceled' 
-                          ? '' 
-                          : booking.status === 'complete' 
-                          ? '-2' 
-                          : '-1'
-                      }`}
-                    >
-                      {booking.status === 'pending' && 'Chờ duyệt'}
-                      {booking.status === 'confirm' && 'Đã xác nhận'}
-                      {booking.status === 'canceled' && 'Đã hủy'}
-                      {booking.status === 'complete' && 'Hoàn thành'}
-                      {booking.status !== 'pending' && 
-                      booking.status !== 'confirm' && 
-                      booking.status !== 'canceled' && 
-                      booking.status !== 'complete' && 
-                      booking.status}
-                    </span>
+                      <span
+                        className={`status-label${
+                          booking.status === "canceled"
+                            ? ""
+                            : booking.status === "complete"
+                            ? "-2"
+                            : "-1"
+                        }`}
+                      >
+                        {booking.status === "pending" && "Chờ duyệt"}
+                        {booking.status === "confirm" && "Đã xác nhận"}
+                        {booking.status === "canceled" && "Đã hủy"}
+                        {booking.status === "complete" && "Hoàn thành"}
+                        {booking.status !== "pending" &&
+                          booking.status !== "confirm" &&
+                          booking.status !== "canceled" &&
+                          booking.status !== "complete" &&
+                          booking.status}
+                      </span>
                     </td>
                     <td>{booking.totalPriceAfterTax}</td>
                     <td>

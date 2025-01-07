@@ -250,6 +250,7 @@ const DetailLocationScreen = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex space-x-2 items-start">
                 {/* Check if location is approved */}
                 {location.status === "active" ? (

@@ -384,24 +384,49 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
       <div class="containerformobile">
         <div class="containerlistbusiness widthlistbusiness">
           <div class="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center">
-              <img
-                alt="Profile picture of a person"
-                class="w-20 h-20 rounded-full mr-4"
-                height="80"
-                src="https://storage.googleapis.com/a1aa/image/0FPVWfLJ1m0nJS9YfULFrbvezZsDHus5bXhqxVDA6tO9UMKnA.jpg"
-                width="80"
-              />
-              <div>
-                <h1 class="text-xl font-bold">{userData?.userName}</h1>
-                <div class="flex items-center text-gray-600 mt-2">
-                  <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
-                  <span>{userData?.phoneNumber || "0123456789"}</span>
+            <div class="flex justify-between">
+              <div class="flex items-center">
+                <img
+                  alt="Profile picture of a person"
+                  class="w-20 h-20 rounded-full mr-4"
+                  height="80"
+                  src="https://storage.googleapis.com/a1aa/image/0FPVWfLJ1m0nJS9YfULFrbvezZsDHus5bXhqxVDA6tO9UMKnA.jpg"
+                  width="80"
+                />
+                <div>
+                  <h1 class="text-xl font-bold">{userData?.userName}</h1>
+                  <div class="flex items-center text-gray-600 mt-2">
+                    <FontAwesomeIcon icon={faPhoneAlt} className="mr-2" />
+                    <span>{userData?.phoneNumber || "0123456789"}</span>
+                  </div>
+                  <div class="flex items-center text-gray-600 mt-1">
+                    <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+                    <span>{userData?.userEmail || "abc@example.com"}</span>
+                  </div>
                 </div>
-                <div class="flex items-center text-gray-600 mt-1">
-                  <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
-                  <span>{userData?.userEmail || "abc@example.com"}</span>
-                </div>
+              </div>
+
+              <div className="flex space-x-2 items-start">
+                {/* Check if location is approved */}
+                {locationInfo.status === "active" ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-green-500 font-semibold">
+                      Đã phê duyệt
+                    </span>
+                  </div>
+                ) : locationInfo.status === "rejected" ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-red-500 font-semibold">
+                      Đã từ chối
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-yellow-500 font-semibold">
+                      Chờ xét duyệt
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <div class="mt-6">
@@ -630,11 +655,6 @@ const DetailLocationBusinessScreen = ({ mapLoaded }) => {
                           {locationInfo?.name || "Hồ Cốc du lịch Vũng TàuTàu"}
                         </p>
                       )}
-                    </div>
-                    <div className="w-1/4 text-right">
-                      {/* Đây là trạng thái thêm, bạn có thể thay đổi nội dung dưới đây */}
-                      <span className="text-sm text-gray-500">Trạng thái</span>
-                      <span>{locationInfo.status}</span>
                     </div>
                   </div>
 

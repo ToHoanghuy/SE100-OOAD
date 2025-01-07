@@ -115,7 +115,8 @@ const ListLocationBusinessScreen = () => {
                   <th>STT</th>
                   <th>Tên nhà kinh doanh</th>
                   <th>Loại</th>
-                  <th>địa chỉ</th>
+                  <th>Địa chỉ</th>
+                  <th>Trạng thái</th>
                   <th></th>
                 </tr>
               </thead>
@@ -144,6 +145,27 @@ const ListLocationBusinessScreen = () => {
                     </td>
                     <td>{getCategoryName(location?.category?.id)}</td>
                     <td>{location?.address}</td>
+                    <td>
+                      {/* Hiển thị trạng thái */}
+                      <span>
+                        {" "}
+                        {location.status === "inactive" ? (
+                          <span className="status-label status-waiting">
+                            Chờ phê duyệt
+                          </span>
+                        ) : location.status === "active" ? (
+                          <span className="status-label status-completed">
+                            Đã phê duyệt
+                          </span>
+                        ) : location.status === "rejected" ? (
+                          <span className="status-label status-cancelled">
+                            Bị từ chối
+                          </span>
+                        ) : (
+                          <span>Chưa xác định</span>
+                        )}
+                      </span>
+                    </td>
                     <td>
                       <button type="button" className="icon-container iconview">
                         <FaEye />

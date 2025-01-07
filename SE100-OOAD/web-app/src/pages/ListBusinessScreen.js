@@ -34,13 +34,13 @@ const ListBusinessScreen = () => {
   };
 
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredData = businesses.filter((business) => {
+  const filteredData = locationOwner.filter((business) => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
-      business.name.toLowerCase().includes(searchTermLower) || 
-      business.code.toLowerCase().includes(searchTermLower) || 
-      business.contact.toLowerCase().includes(searchTermLower) || 
-      business.phone.toLowerCase().includes(searchTermLower)
+      business?.userName.toLowerCase().includes(searchTermLower) || 
+      business?.userEmail.toLowerCase().includes(searchTermLower) || 
+      // business.contact.toLowerCase().includes(searchTermLower) || 
+      business.userPhoneNumber.toLowerCase().includes(searchTermLower)
     );
   });
 
@@ -103,7 +103,7 @@ const ListBusinessScreen = () => {
                 </tr>
               </thead>
               <tbody className="row-container">
-                {locationOwner.map((business, index) => (
+                {currentData.map((business, index) => (
                   <tr 
                     key={business._id} 
                    

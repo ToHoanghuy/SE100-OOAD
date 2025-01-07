@@ -1209,3 +1209,51 @@
     background: linear-gradient(45deg, #25f0f0, #00BABA);
     border-color: #0bcfcf;
 }
+
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Hiệu ứng mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Đảm bảo modal luôn nằm trên cùng */
+  }
+  
+  /* Nội dung modal */
+  .modal_content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    width: 80%;
+    max-width: 1000px; /* Giới hạn kích thước tối đa */
+    text-align: center;
+  }
+  
+  /* Button đóng modal */
+  .close_button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #ff4d4f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .close_button:hover {
+    background: #d9363e;
+  }
+  
+  /* Điều chỉnh iframe trong modal */
+  .modal_content iframe {
+    border-radius: 8px;
+    width: 100%;
+    height: 650px;
+  }

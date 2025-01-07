@@ -57,7 +57,12 @@ app.listen(PORT, () => {
 //Route
 //app.get('*', checkUser)
 
-app.get('/', (req, res) => res.render('home'))
+app.get('/', (req, res) => {
+    res.status(200).json({
+        isSuccess: true,
+        message: 'Welcome to the homepage',
+    });
+});
 app.get('/signup', (req, res) => {res.render('signup')})
 app.get('/signin', (req, res) => {res.render('signin')})
 app.get('/set-cookie', (req, res) => {

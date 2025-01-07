@@ -245,9 +245,9 @@ const DashBoardScreen = () => {
             <tbody>
               {(pendingLocations || []).map((business) => (
                 <tr
-                  key={business.id}
+                  key={business._id}
                   className="cursor-pointer hover:bg-blue-100"
-                  onClick={() => handleRowClick(business.id)}
+                  onClick={() => handleRowClick(business._id)}
                 >
                   <td>
                     <div className="location-icon">
@@ -289,7 +289,7 @@ const DashBoardScreen = () => {
                   <div
                     className="user-info"
                     key={user.id}
-                    onClick={() => handleBusinessDetailClick(user.id)} // Bắt sự kiện click
+                    onClick={() => handleBusinessDetailClick(user._id)} // Bắt sự kiện click
                     style={{ cursor: 'pointer' }}
                   >
                     <img  style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: 10 }}  src={user.image?.[0].url} alt="Location Icon" />

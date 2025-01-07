@@ -1,0 +1,190 @@
+.chat_pop_up
+{
+    position: fixed;
+    z-index: 3;
+    background-color: white;
+    box-shadow: 0px -0.5px 4px rgba(0, 0, 0, 0.2);
+    bottom: 0;
+    width: 25%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    right: 6%;
+    border-radius: 8px 8px 0px 0px;
+    /* overflow: hidden; */
+}
+
+.chat_header {
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    border-bottom: 1.5px solid #ddd;
+    height: 12%;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    display: flex; /* Sử dụng Flexbox */
+    justify-content: space-between; /* Căn 2 phần tử ra hai bên */
+    align-items: center;
+}
+.chat_header span
+{
+    font-size: 20px;
+    color: #646464;
+    width: 80%;
+}
+.chat_header i
+{
+    margin-top: 4.5px;
+    cursor: pointer;
+    font-size: 18px;
+    background: linear-gradient( 45deg, #AAD6FF, #5BA3E2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.chat_header i:hover {
+    background: linear-gradient(45deg,#00dede, #00BABA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.chat_body {
+    flex: 1;
+    padding: 6px 16px 6px 16px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    scroll-behavior: smooth;
+    max-height: 75vh;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE và Edge */
+}
+.chat_body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari và Edge */
+}
+
+.chat_message {
+    margin: 9px 0;
+    padding: 10px 12px 10px 12px;
+    border-radius: 8px;
+    max-width: 75%; /* Giới hạn tối đa 70% chiều rộng container */
+    word-wrap: break-word; /* Tự động xuống dòng nếu nội dung quá dài */
+    word-break: break-word; /* Xử lý từ dài */
+    overflow-wrap: break-word; /* Đảm bảo tương thích với trình duyệt khác */
+    width: fit-content;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
+.chat_message.user {
+    background: linear-gradient(45deg ,#dcf8c6, #d1f8b4);
+    margin-left: auto; /* Di chuyển sang bên phải của container */
+    display: block; /* Sử dụng flexbox để căn thẳng hàng */
+}
+
+.chat_message.hotel {
+    background-color: #e5e5ea;
+    background: linear-gradient(45deg ,#eaeaec, #e5e5ea);
+    /* align-self: flex-start; */
+}
+
+.chat_footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 10px; */
+    padding: 11px 12px 11px 12px;
+    border-top: 1px solid #ddd;
+    background-color: white;
+    height: 13%;
+    bottom: 0px;
+}
+
+.chat_footer_input {
+    width: 87%;
+    background-color: white;
+    border: 1.25px solid #ddd;
+    margin-right: 2%;
+    display: flex;
+    align-items: center; /* Căn giữa các thành phần */
+    border-radius: 5px;
+}
+
+.chat_input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.chat_footer_input:focus-within{
+    border: 1px solid #5BA3E2;
+    outline: 0.5px solid #5BA3E2; 
+}
+.send_mess_btn {
+    padding: 8px 16px;
+    /* background-color: #007bff; */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: linear-gradient(#AAD6FF, #5BA3E2);
+    font-weight: bold;
+    /* font-size: 18px; */
+
+}
+
+.send_mess_btn:hover {
+    /* background-color: #0056b3; */
+    background: linear-gradient(#00dede, #00BABA);
+}
+
+.emoji_picker_container {
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    position: absolute;   
+}
+
+.user_chat_frame_right .emoji_picker_container 
+{
+    bottom: 10%;
+    right: 10%;
+    transform: scale(0.9); /* Phóng to lên khi hover */
+}
+.chat_pop_up .emoji_picker_container 
+{
+    bottom: 8%;
+    right: 25%;
+    transform: scale(0.88); /* Phóng to lên khi hover */
+}
+
+.emoji_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin-right: 5.5px;
+}
+
+.emoji_button i{
+    background: linear-gradient( 45deg, #AAD6FF, #5BA3E2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.emoji_button i:hover{
+    background: linear-gradient(45deg, #00dede, #00BABA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.user_chat_frame_right .emoji_button i{
+    font-size: 20px;
+}
+.chat_pop_up .emoji_button i{
+    font-size: 19px;
+}

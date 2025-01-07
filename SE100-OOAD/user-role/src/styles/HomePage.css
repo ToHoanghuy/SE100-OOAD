@@ -225,7 +225,40 @@ body {
     margin: 20px;
     background-color: white;
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2); 
+    overflow: hidden;
 }
+.residence_note img{
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+}
+.residence_note {
+    position: relative;
+    width: 100%; /* Hoặc theo kích thước mong muốn */
+  }
+  
+  .residence_note img {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.5s ease-in-out; /* Hiệu ứng mờ dần */
+  }
+  
+  .residence_note.zoomEffect img {
+    animation: glowEffect 0.5s ease-in-out; /* Tạo hiệu ứng lóe sáng */
+  }
+  
+  @keyframes glowEffect {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
 .app_ads_banner
 {
     width: 87%;
@@ -274,7 +307,10 @@ body {
 
 .card_ele
 {   
-    transition: transform 0.7s ease, opacity  1s ease-out !important;
+    transition: transform 2s ease, opacity  1s ease-out !important;
+}
+.province_card{
+    transition: transform 0.9s ease!important;
 }
 
 .discover_container .card_ele
@@ -459,7 +495,9 @@ body {
 }
 .card_info_star
 {
-    width: 20%;
+    /* width: 20%; */
+    padding-left: 8px;
+    padding-right: 8px;
     height: 22px;
     background-color: #99cbfa;
     border-radius: 4px;
@@ -473,7 +511,7 @@ body {
 {
     color: white;
     font-size: 11px;
-    margin-left: 14%;
+    /* margin-left: 14%; */
 }
 .card_info_star span
 {

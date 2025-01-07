@@ -69,6 +69,20 @@ module.exports.logout_get = (req, res) => {
     res.redirect('/');
 
 }
+module.exports.getUserByUserRole = async (req, res, next) => {
+    const userRole = 'location-owner'
+    try {
+        const result = await authServices.getByUserRole(userRole)
+        res.status(201).json({
+            isSuccess: true,
+            data: result,
+            error: null
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
 
 module.exports.getAllUser = async (req, res, next) => {
     try {

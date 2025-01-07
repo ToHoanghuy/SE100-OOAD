@@ -30,6 +30,15 @@ const getUserById = async (id) => {
         throw new NotFoundException('Not found specific user');
 };
 
+const getByUserRole = async (role) => {
+    const users = await User.find({ userRole: role });
+    if (users.length !== 0) {
+        return users;
+    } else {
+        throw new NotFoundException('No users found with this role');
+    }
+};
+
 const updateUser = async (id, userData) => {
     const result = await User.findByIdAndUpdate(id, userData, {new: true, runValidators: true})
     if(result)
@@ -63,5 +72,6 @@ module.exports = {
     getUserById,
     updateUser,
     updateAvata,
+    getByUserRole,
     deleteUser,
 };

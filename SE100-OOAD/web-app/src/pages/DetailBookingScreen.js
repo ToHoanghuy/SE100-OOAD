@@ -375,7 +375,7 @@ const DetailBookingScreen = () => {
                       <div class="mb-2 text-gray-500">Mã địa điểm</div>
                       <div class="mb-4">{locationData?._id}</div>
                       <div class="mb-2 text-gray-500">Tên chủ sở hữu</div>
-                      <div class="mb-4">{locationData.ownerName}</div>
+                      <div class="mb-4">{locationData?.ownerName}</div>
                       <div class="mb-2 text-gray-500">Loại</div>
                       <div className="mb-4">
                         {
@@ -389,13 +389,13 @@ const DetailBookingScreen = () => {
 
                     <div>
                       <div class="mb-2 text-gray-500">Tên địa điểm</div>
-                      <div class="mb-4">{locationData.name}</div>
+                      <div class="mb-4">{locationData?.name}</div>
                       <div class="mb-2 text-gray-500">Địa chỉ</div>
-                      <div class="mb-4">{locationData.address}</div>
+                      <div class="mb-4">{locationData?.address}</div>
                       <div class="mb-2 text-gray-500">
                         Ngày đăng ký kinh doanh
                       </div>
-                      <div class="mb-4">{moment(locationData.dateCreated).format('DD/MM/YYYY HH:mm:ss')}</div>
+                      <div class="mb-4">{moment(locationData?.dateCreated).format('DD/MM/YYYY HH:mm:ss')}</div>
                     </div>
                   </div>
                 </div>

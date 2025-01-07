@@ -100,12 +100,12 @@ function YourComment() {
         <div className="comment OpacityEffect">
             <div className="your_comment comment_left_side">
                 <div className="user_avt">
-                    <img src="/images/avt.jpg" alt="User Avatar" />
+                    <img src="/images/default_avt.jpg" alt="User Avatar" />
                 </div>
                 <button className="send_cmt_btn" onClick={handleSendComment}>Gửi</button>
             </div>
             <div className="your_comment comment_right_side">
-                <span className="user_name">Bé Nghĩa nè</span>
+                <span className="user_name">Tô Hoàng Huy</span>
                 <div className="user_raiting" onMouseLeave={handleMouseLeave}>
                     {renderStars()} {/* Render sao */}
                 </div>

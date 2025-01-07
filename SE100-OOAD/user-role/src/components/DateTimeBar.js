@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function DateTimeBar({ toggleOption, showOptions, selectionBtnRef, selectionOptionRef }) {
+function DateTimeBar({setFrom, setTo, toggleOption, showOptions, selectionBtnRef, selectionOptionRef }) {
     const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
     const daysOfWeek = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
@@ -35,12 +35,16 @@ function DateTimeBar({ toggleOption, showOptions, selectionBtnRef, selectionOpti
         if (!startDate) {
             setStartDate({ date, month, year, calenderIndex, daysOfWeekValue });
             setinputFrom(daysOfWeekValue + ", " + date + "/" + (month + 1) + "/" + year)
+
+            setFrom((month + 1) + "/" + date + "/" + year)
         }
         else {
             if (!endDate) {
                 if (date === startDate.date && month === startDate.month && year === startDate.year) {
                     setStartDate(null)
                     setinputFrom('')
+
+                    setFrom('')
                 }
                 else {
                     if (date > startDate.date && month === startDate.month && year === startDate.year
@@ -48,12 +52,18 @@ function DateTimeBar({ toggleOption, showOptions, selectionBtnRef, selectionOpti
                         || year > startDate.year) {
                         setEndDate({ date, month, year, calenderIndex, daysOfWeekValue });
                         setinputTo(daysOfWeekValue + ", " + date + "/" + (month + 1) + "/" + year)
+
+                        setTo((month + 1) + "/" + date + "/" + year)
                     }
                     else {
                         setEndDate(startDate)
                         setinputTo(startDate.daysOfWeekValue + ", " + startDate.date + "/" + (startDate.month + 1) + "/" + startDate.year)
+                        setTo((startDate.month + 1) + "/" + startDate.date + "/" + startDate.year)
+                        
                         setStartDate({ date, month, year, calenderIndex, daysOfWeekValue })
                         setinputFrom(daysOfWeekValue + ", " + date + "/" + (month + 1) + "/" + year)
+                        setFrom((month + 1) + "/" + date + "/" + year)
+                        
                     }
                 }
             }
@@ -61,18 +71,26 @@ function DateTimeBar({ toggleOption, showOptions, selectionBtnRef, selectionOpti
                 if (date === startDate.date && month === startDate.month && year === startDate.year) {
                     setStartDate(endDate)
                     setinputFrom(endDate.daysOfWeekValue + ", " + endDate.date + "/" + (endDate.month + 1) + "/" + endDate.year)
+                    setFrom((endDate.month + 1) + "/" + endDate.date + "/" + endDate.year)
+
                     setEndDate(null)
                     setinputTo('')
+                    setTo('')
                 }
                 else if (date === endDate.date && month === endDate.month && year === endDate.year) {
                     setEndDate(null)
                     setinputTo('')
+                    setTo('') 
                 }
                 else {
                     setStartDate({ date, month, year, calenderIndex, daysOfWeekValue })
                     setinputFrom(daysOfWeekValue + ", " + date + "/" + (month + 1) + "/" + year)
+                    setFrom((month + 1) + "/" + date + "/" + year)
+                    
                     setEndDate(null)
                     setinputTo('')
+                    setTo('')
+                    
                 }
             }
         }

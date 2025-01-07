@@ -14,7 +14,11 @@ import HistoryBooking from './pages/HistoryBooking';
 import ChatPage from './pages/ChatPage';
 import Notification from './pages/Notification';
 import Favorite from './pages/Favorite';
+import CollectionLayout from './pages/CollectionLayout';
+import CollectionDetail from './pages/CollectionDetail';
+
 import Booking from './pages/Booking';
+
 
 import './styles/styleForAll.css';
 
@@ -29,8 +33,8 @@ function App() {
   const backToTop = useRef(null);
 
   useEffect(() => {
-   
-    window.scrollTo(0, 0);    
+
+    window.scrollTo(0, 0);
   }, [location]);
 
   useEffect(() => {
@@ -93,7 +97,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/search" element={<SearchPage/>} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path='/register' element={<Register />} />
@@ -106,10 +110,16 @@ function App() {
           <Route path="notification" element={<Notification />} />
           <Route path="storage/historybooking" element={<HistoryBooking />} />
           <Route path="storage/chat" element={<ChatPage />} />
-          <Route path="storage/favorite" element={<Favorite />} />
+          {/* <Route path="storage/favorite" element={<Favorite />} /> */}
+
+          <Route path="storage/collection" element={<CollectionLayout />}>
+            <Route index element={<Favorite />} />
+            <Route path=":id" element={<CollectionDetail />} />
+          </Route>
+
           {/* <Route path="settings" element={<UserSettings />} /> */}
         </Route>
-        <Route path="/booking" element={<Booking/>} />
+        <Route path="/booking" element={<Booking />} />
       </Routes>
 
     </div>

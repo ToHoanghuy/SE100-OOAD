@@ -135,7 +135,7 @@ function WhiteMenuBar() {
                                     <i class="fa-solid fa-user"></i>
                                     <span>Thông tin cá nhân</span>
                                 </Link>
-                                <Link to='user/storage/favorite' className='sub_user_menu_row'>
+                                <Link to='user/storage/collection' className='sub_user_menu_row'>
                                     <i class="fa-solid fa-heart"></i>
                                     <span>Bộ sưu tập</span>
                                 </Link >

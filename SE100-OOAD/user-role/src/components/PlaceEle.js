@@ -76,6 +76,7 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
     const [isFavorited, setIsFavorited] = useState(favrorited);
     const [minPrice, setMinPrice] = useState('')
     const [rooms, setRooms] = useState([]);
+    const [location, setLocation] = useState([]);
     const [services, setServices] = useState([]);
     const [reviews, setReviews] = useState([]);
 
@@ -90,6 +91,22 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
             const data = await response.json();
             if (data.isSuccess) {
                 setRooms(data.data);
+            } else {
+                // console.error(data.error);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            // setLoading(false);
+        }
+    };
+    const getLocation = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/locationbyid/${path}`);
+            const data = await response.json();
+            if (data.isSuccess) {
+                console.log('location: ', data.data);
+                setLocation(data.data);
             } else {
                 // console.error(data.error);
             }
@@ -133,11 +150,13 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
     useEffect(() => {
         getServices();
         getReviews();
+        getLocation();
+
     }, [rooms]);
 
     useEffect(() => {
         if (rooms) {
-            if (rooms.length > 0) {
+            if (rooms?.length > 0) {
                 const minPriceValue = Math.min(...rooms.map(room => room.pricePerNight));
                 setMinPrice(minPriceValue);
             }
@@ -148,7 +167,7 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
     return (
         <Link to={`/detail/${path}`} className='place_ele OpacityEffect'>
             <div className='place_ele_img'>
-                <img src={ele?.image[0]?.url} />
+                <img src={location.image?.[0]?.url} />
 
                 <div className='place_ele_heart' onClick={(e) => toggleFavorite(isFavorited, setIsFavorited, e)}>
                     <i className={`fa-heart ${isFavorited ? 'fa-solid' : 'fa-regular'}`}></i>
@@ -157,26 +176,26 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
             </div>
             <div className='place_ele_detail'>
                 <div className='place_ele_detail_left_side'>
-                    <span className='place_ele_name'>{ele.name}</span>
+                    <span className='place_ele_name'>{location.name}</span>
                     <div className='place_ele_star'>
                         {/* <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-regular fa-star"></i> */}
-                        {renderStars(ele.rating)}
+                        {renderStars(location.rating || [])}
                     </div>
                     <div className='place_ele_province'>
                         <i className="fa-solid fa-location-dot"></i>
-                        <span>{ele.address}</span>
+                        <span>{location.address}</span>
                     </div>
                     <div className='place_ele_service_frame'>
                         {/* services. */}
                         {services.map((service, index) => (
                             <div key={index} className="place_service_ele">
-                                <i className={getIconClass(service.name)}></i>
+                                <i className={getIconClass(service?.name)}></i>
                                 <span>
-                                    {service.name}
+                                    {service?.name}
                                 </span>
                             </div>
                         ))}
@@ -188,7 +207,7 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
                             <span className='place_ele_rank'>Tốt</span>
                             <span className='place_ele_number_of_reivews'>{reviews?.length || 0} đánh giá</span>
                         </div>
-                        <span className='place_ele_raiting_value'>{formatRating(ele.rating)}</span>
+                        <span className='place_ele_raiting_value'>{formatRating(location?.rating)}</span>
                     </div>
                     <div className='place_ele_booking'>
                         <div className='place_ele_discount_frame'>
@@ -196,7 +215,11 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
                             <span className='place_ele_original_price'>Chỉ từ</span>
                             <div className='place_ele_discount_value'>0%</div>
                         </div>
-                        <span className='place_ele_discount_price'>VNĐ {formatPrice(minPrice)}</span>
+                        <span className='place_ele_discount_price'>VNĐ {formatPrice(
+                                                                        ele?.reduce((min, current) => 
+                                                                        current.pricePerNight < min.pricePerNight ? current : min
+                                                                        ).pricePerNight
+                                                                    )}</span>
                         <button className='place_ele_btn'>Đặt phòng</button>
                     </div>
                 </div>

@@ -18,6 +18,9 @@ function DateTimeBar({setFrom, setTo, toggleOption, showOptions, selectionBtnRef
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
+    // const [from, setFrom] = useState('');
+    // const [to, setTo] = useState('');
+
     const days1Ref = useRef(null);
     const days2Ref = useRef(null);
 

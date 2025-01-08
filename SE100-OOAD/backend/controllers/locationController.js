@@ -95,7 +95,6 @@ module.exports.createLocation = async (req, res, next) => {
             }
         })
     }
-
 }
 
 //--GET ALL LOCATION DATA--\\

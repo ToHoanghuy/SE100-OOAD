@@ -241,7 +241,7 @@ const DashBoardScreen = () => {
           </div>
         </div>
         <div class="new-booking scroll-container mh-scroll">
-          <p class="new-booking-text">Địa điểm chờ duyệt</p>
+          <p class="new-booking-text">Địa điểm chờ duyệt trong ngày</p>
           <table class="custom-table ">
             <thead>
               <tr>

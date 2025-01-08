@@ -5,6 +5,7 @@ import "../styles/StatisticScreen.css";
 import { useEffect } from "react";
 
 const StatisticScreen = () => {
+  // trừ 1 khỏi năm hiện tại
   const [years, setYears] = useState(new Date().getFullYear() - 1);
   const [successRate, setSuccessRate] = useState(0);
   const [seriesData, setSeriesData] = useState([
@@ -94,7 +95,7 @@ const StatisticScreen = () => {
   useEffect(() => {
     const fetchYearlyRevenue = async () => {
       try {
-        // Lấy năm hiện tại
+        // Mảng chứa doanh thu hàng tháng (1-12)
         const monthlyData = [];
 
         // Gọi API cho từng tháng (1 -> 12)
@@ -220,6 +221,7 @@ const StatisticScreen = () => {
   }, []);
 
   const [series, setSeries] = useState([10, 20, 70]);
+
   const [chartData2, setChartData2] = useState({
     series: [series],
     options: {
@@ -285,9 +287,9 @@ const StatisticScreen = () => {
         </div>
         <div class="containerlistbusiness widthlistbusiness">
           <Chart
-            options={chartOptions}
-            series={seriesData}
-            type="line"
+            options={chartOptions} // Cấu hình biểu đồ
+            series={seriesData} // Dữ liệu biểu đồ
+            type="line" // Loại biểu đồ
             height={350}
           />
           <div class="chartcontainer">

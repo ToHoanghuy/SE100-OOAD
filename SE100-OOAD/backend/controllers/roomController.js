@@ -1,6 +1,6 @@
 const Room = require('../models/Room')
 const roomSvc = require('../services/roomSvc')
-const cloudinary = require('../config/cloudinaryConfig')
+//const cloudinary = require('../config/cloudinaryConfig')
 
 module.exports.getAllRoom = async (req, res, next) => {
     try {
@@ -58,14 +58,15 @@ module.exports.createRoom = async (req, res, next) => {
         description,
         facility,
         bed,
+        image,
     } = req.body
-    const images = req.files.map((file) => ({
-        url: file.path,
-        publicId: file.filename
-    }))
-    const facilityParsered = JSON.parse(facility)
-    const bedParsered = JSON.parse(bed)
-    console.log(facilityParsered, bedParsered)
+    // const images = req.files.map((file) => ({
+    //     url: file.path,
+    //     publicId: file.filename
+    // }))
+    // const facilityParsered = JSON.parse(facility)
+    // const bedParsered = JSON.parse(bed)
+    // console.log(facilityParsered, bedParsered)
     try{
         const roomData =  new Room({
             locationId,
@@ -75,9 +76,10 @@ module.exports.createRoom = async (req, res, next) => {
             area,
             pricePerNight,
             description,
-            facility: facilityParsered,
-            bed: bedParsered,
-            image: images, 
+            facility, //facilityParsered
+            bed, //bedParsered
+            image,
+            //image: images, 
         })
         const savedRoom = await roomSvc.createRoom(roomData)
         res.status(201).json({
@@ -87,19 +89,19 @@ module.exports.createRoom = async (req, res, next) => {
         })
     }
     catch (error) {
-       req.files.map(async file => {
-            try {
-                await cloudinary.uploader.destroy(file.filename);
-                console.log(`Deleted: ${file.filename}`);
-                res.status(404).json({
-                isSuccess: true,
-                data: 'upload fail',
-                error: null,
-            });
-            } catch (err) {
-                next(err)
-            }
-        })
+        // req.files.map(async file => {
+        //     try {
+        //         await cloudinary.uploader.destroy(file.filename);
+        //         console.log(`Deleted: ${file.filename}`);
+        //         res.status(404).json({
+        //         isSuccess: true,
+        //         data: 'upload fail',
+        //         error: null,
+        //     });
+        //     } catch (err) {
+        //         next(err)
+        //     }
+        // })
         next(error)
     }
 }

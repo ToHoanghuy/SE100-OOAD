@@ -2,16 +2,16 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
-const imageSchema = new Schema({
-    url: {
-        type: String,
-        required: true
-    },
-    publicId: {
-        type: String,
-        required: true
-    }
-})
+// const imageSchema = new Schema({
+//     url: {
+//         type: String,
+//         required: true
+//     },
+//     publicId: {
+//         type: String,
+//         required: true
+//     }
+// })
 
 const facilitySchema = new Schema({
     name: { type: String, required: true },
@@ -39,7 +39,7 @@ const roomSchema = new Schema({
     description: { type: String},
     facility: { type: [facilitySchema], default: [] },
     bed: {type: [bedSchema], default: []},
-    image: { type: [imageSchema], default: []},
+    image: { type: [String], default: []}, //[imageSchema]
     area: {type: Number, required: true}
     }, 
     {collection: 'Room'}

@@ -156,7 +156,9 @@ const DetailLocationScreen = () => {
     const fetchRoomDetails = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:3000/room/getbyid/${selectedRoomId}`);
+        const response = await fetch(
+          `http://localhost:3000/room/getbyid/${selectedRoomId}`
+        );
         const data = await response.json();
         console.log(data.data);
         if (response.ok) {
@@ -189,7 +191,7 @@ const DetailLocationScreen = () => {
 
   const handleViewDetails = (roomId) => {
     setSelectedRoomId(roomId);
-    setCurrentTab2('roomDetails');
+    setCurrentTab2("roomDetails");
   };
 
   const getFacilityIcon = (id) => {
@@ -198,11 +200,11 @@ const DetailLocationScreen = () => {
         return <FaTimesCircle className="mr-2 w-4 p-0" />;
       case "tub":
         return <FaHotTub className="mr-2 w-4" />;
-      case 'wifi':
+      case "wifi":
         return <FaWifi className="mr-2 w-4" />;
-      case 'volumeoff':
+      case "volumeoff":
         return <FaVolumeOff className="mr-2 w-4" />;
-      case 'ac':
+      case "ac":
         return <FaSnowflake className="mr-2 w-4" />;
       default:
         return <FaSnowflake className="mr-2 w-4" />; // Nếu không có dịch vụ nào khớp, trả về null
@@ -210,7 +212,7 @@ const DetailLocationScreen = () => {
   };
 
   const handleViewExitRoomDetail = () => {
-    setCurrentTab2('viewratingservice');
+    setCurrentTab2("viewratingservice");
   };
 
   const navigate = useNavigate();
@@ -248,12 +250,19 @@ const DetailLocationScreen = () => {
                   </div>
                 </div>
               </div>
+
               <div className="flex space-x-2 items-start">
                 {/* Check if location is approved */}
                 {location.status === "active" ? (
                   <div className="flex items-center space-x-2">
                     <span className="text-green-500 font-semibold">
-                      Đã duyệt
+                      Đã phê duyệt
+                    </span>
+                  </div>
+                ) : location.status === "rejected" ? (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-red-500 font-semibold">
+                      Đã từ chối
                     </span>
                   </div>
                 ) : (
@@ -285,10 +294,11 @@ const DetailLocationScreen = () => {
               <div class="flex">
                 <button
                   onClick={handleBaseInfoClick}
-                  className={`flex items-center px-4 py-2 ${currentTab === "baseinfo"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                    } rounded-t-lg`}
+                  className={`flex items-center px-4 py-2 ${
+                    currentTab === "baseinfo"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  } rounded-t-lg`}
                 >
                   {/* <FontAwesomeIcon icon={faUser} className="mr-2" /> */}
                   <FaSearchLocation className="mr-2 text-2xl" />
@@ -296,10 +306,11 @@ const DetailLocationScreen = () => {
                 </button>
                 <button
                   onClick={handleSpecificInfoClick}
-                  class={`flex items-center px-4 py-2 ${currentTab === "specificinfo"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                    } rounded-t-lg ml-2`}
+                  class={`flex items-center px-4 py-2 ${
+                    currentTab === "specificinfo"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  } rounded-t-lg ml-2`}
                 >
                   {/* <FontAwesomeIcon icon={faUser} className="mr-2" /> */}
                   <MdEventNote className="mr-2 text-2xl" />
@@ -307,10 +318,11 @@ const DetailLocationScreen = () => {
                 </button>
                 <button
                   onClick={handleRatingServiceClick}
-                  class={`flex items-center px-4 py-2 ${currentTab === "ratingservice"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                    } rounded-t-lg ml-2`}
+                  class={`flex items-center px-4 py-2 ${
+                    currentTab === "ratingservice"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  } rounded-t-lg ml-2`}
                 >
                   <FaRankingStar className="mr-2 text-2xl" />
                   <span>Dịch vụ và đánh giá</span>
@@ -355,10 +367,13 @@ const DetailLocationScreen = () => {
                 </div>
                 <div>
                   <div className="flex justify-center">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31383.239171865847!2d107.48594181070591!3d10.508156585966674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175bd73c30f60a1%3A0x951e30bb705cd7c3!2zTcOAVSBDYW1waW5nIC0gQ-G6r20gVHLhuqFpIEjhu5MgQ-G7kWM!5e0!3m2!1sen!2s!4v1736102711020!5m2!1sen!2s"
-                      width="800" height="350" allowFullScreen loading="lazy"
-                    >
-                    </iframe>
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31383.239171865847!2d107.48594181070591!3d10.508156585966674!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175bd73c30f60a1%3A0x951e30bb705cd7c3!2zTcOAVSBDYW1waW5nIC0gQ-G6r20gVHLhuqFpIEjhu5MgQ-G7kWM!5e0!3m2!1sen!2s!4v1736102711020!5m2!1sen!2s"
+                      width="800"
+                      height="350"
+                      allowFullScreen
+                      loading="lazy"
+                    ></iframe>
                   </div>
                 </div>
               </div>
@@ -580,8 +595,9 @@ const DetailLocationScreen = () => {
                         <div key={review._id} className="mt-3">
                           <div className="flex items-center mb-4">
                             <img
-                              alt={`Profile picture of ${senders[review.senderId]?.name || "Unknown"
-                                }`}
+                              alt={`Profile picture of ${
+                                senders[review.senderId]?.name || "Unknown"
+                              }`}
                               className="w-12 h-12 rounded-full mr-4"
                               height="50"
                               src={
@@ -639,7 +655,12 @@ const DetailLocationScreen = () => {
                           ) : (
                             <FaBed className="mr-2 w-6" />
                           )}
-                          <span>{bed?.quantity} {bed?.category === "single" ? "Giường đơn" : "Giường đôi"}</span>
+                          <span>
+                            {bed?.quantity}{" "}
+                            {bed?.category === "single"
+                              ? "Giường đơn"
+                              : "Giường đôi"}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -651,7 +672,10 @@ const DetailLocationScreen = () => {
 
                       <div className="flex flex-wrap gap-2">
                         {roomData?.facility.map((facility, index) => (
-                          <div key={index} className="flex items-center bg-gray-200 rounded-full px-3 py-1">
+                          <div
+                            key={index}
+                            className="flex items-center bg-gray-200 rounded-full px-3 py-1"
+                          >
                             {getFacilityIcon(facility.id)}
                             <span>{facility?.name}</span>
                           </div>
@@ -660,12 +684,19 @@ const DetailLocationScreen = () => {
                     </div>
                     <div class="mb-4">
                       <span class="font-bold">Trạng thái:</span>
-                      <span class="text-blue-500 status-room">Còn {roomData?.capacity} phòng</span>
+                      <span class="text-blue-500 status-room">
+                        Còn {roomData?.capacity} phòng
+                      </span>
                     </div>
                     <div class="flex items-center justify-between">
-                      <div class="text-green-500 text-2xl font-bold">{roomData?.pricePerNight} VND</div>
+                      <div class="text-green-500 text-2xl font-bold">
+                        {roomData?.pricePerNight} VND
+                      </div>
                       <div class="flex">
-                        <button onClick={handleViewExitRoomDetail} class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2">
+                        <button
+                          onClick={handleViewExitRoomDetail}
+                          class="bg-grey-500 text-black px-6 py-2 rounded-full shadow-md hover:bg-grey-600 mr-2"
+                        >
                           Thoát
                         </button>
                         {/* <button class="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600">

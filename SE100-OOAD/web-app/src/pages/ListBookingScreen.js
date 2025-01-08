@@ -24,6 +24,7 @@ const ListBookingScreen = () => {
     pending: "Đang chờ",
     canceled: "Đã hủy",
     complete: "Hoàn thành",
+    cancelled: "Đã hủy",
   };
 
   // fetch data from api
@@ -132,8 +133,8 @@ const ListBookingScreen = () => {
       "Đã hủy": "status-cancelled",
       "Đã duyệt": "status-approved",
       "Hoàn thành": "status-completed",
-      "canceled": "status-cancelled",
-      "confirm": "status-approved",
+      canceled: "status-cancelled",
+      confirm: "status-approved",
     };
     return statusClasses[status] || "status-default";
   };
@@ -152,7 +153,7 @@ const ListBookingScreen = () => {
     return <div>{error}</div>;
   }
   return (
-    <div class="container">
+    <div class="container pg-0">
       <div class="containerformobile">
         <div class="containerlistbusiness widthlistbusiness">
           <div class="listbusinessbody scroll-container mh-900">
@@ -189,10 +190,10 @@ const ListBookingScreen = () => {
                       <td>
                         <div className="namefield">
                           <img
-                          src={booking.user?.userAvatar?.url}
-                          alt="User Avatar"
-                          className="user-avatar"
-                        />
+                            src={booking.user?.userAvatar?.url}
+                            alt="User Avatar"
+                            className="user-avatar"
+                          />
                           <p>{booking.user?.userName || "Unknown User"}</p>
                         </div>
                       </td>

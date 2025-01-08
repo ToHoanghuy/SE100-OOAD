@@ -84,7 +84,7 @@ const ListLocationScreen = () => {
   }
 
   return (
-    <div class="container">
+    <div class="container pg-0">
       <div class="containerformobile">
         <div class="containerlistbusiness widthlistbusiness">
           <div class="listbusinessbody scroll-container mh-900">
@@ -120,10 +120,10 @@ const ListLocationScreen = () => {
                       <td>
                         <div className="namefield">
                           <img
-                          src ={location.image?.[0]?.url}
-                          alt="User Avatar"
-                          className="user-avatar"
-                        />
+                            src={location.image?.[0]?.url}
+                            alt="User Avatar"
+                            className="user-avatar"
+                          />
                           <p>{location.name}</p>
                         </div>
                       </td>

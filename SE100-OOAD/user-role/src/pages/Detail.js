@@ -22,6 +22,7 @@ function Detail() {
     const [collections, setCollections] = useState([]);
     const [availableRooms, setAvailableRooms] = useState([]);
     const [roomStatus, setRoomStatus] = useState('');
+    const [ratings, setRatings] = useState([]);
 
     const [services, setServices] = useState([]);
     const [countReviews, setCountReviews] = useState([]);

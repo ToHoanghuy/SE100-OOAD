@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
 
-function ServiceFilter({name}) {
+function ServiceFilter({name, onToggleService}) {
     const [isCheck, setIsCheck] = useState(false);
     const toggleCheck = () => {
+        const newState = !isCheck;
         setIsCheck(!isCheck);
+        onToggleService(name, newState);
     };
     
     return (

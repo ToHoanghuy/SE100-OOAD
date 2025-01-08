@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const Location = require('../models/Location')
 const Schema = mongoose.Schema;
 
 

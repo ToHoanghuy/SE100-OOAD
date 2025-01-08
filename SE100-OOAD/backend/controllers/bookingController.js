@@ -100,6 +100,7 @@ module.exports.createBooking = async (req, res, next) => {
     
     try {
         const bookingData = new Booking({
+            userId: res.locals.user._id,
             dateBooking,
             checkinDate,
             checkoutDate,

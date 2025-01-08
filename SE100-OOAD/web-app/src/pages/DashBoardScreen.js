@@ -165,7 +165,7 @@ const DashBoardScreen = () => {
                 <div class="circle">
                   <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
                 </div>
-                <p>Doanh thu trong tháng 7</p>
+                <p>Doanh thu trong tháng</p>
                 <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
                         12%

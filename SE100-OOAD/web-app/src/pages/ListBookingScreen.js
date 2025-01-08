@@ -103,7 +103,10 @@ const ListBookingScreen = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const handleRowClick = (id) => {
+  const handleRowClick = (id, booking, userId) => {
+    console.log('choosed booking: ',JSON.stringify(booking) );
+    localStorage.setItem('selectedBooking', JSON.stringify(booking));
+    localStorage.setItem('userOfBookingId', userId);
     navigate(`/booking/detail/${id}`);
   };
 
@@ -185,11 +188,11 @@ const ListBookingScreen = () => {
                       <td>{index + 1 + (currentPage - 1) * 10}</td>
                       <td>
                         <div className="namefield">
-                          {/* <img
-                          src={require(`../assets/images/${booking.avatar}`)}
+                          <img
+                          src={booking.user?.userAvatar?.url}
                           alt="User Avatar"
                           className="user-avatar"
-                        /> */}
+                        />
                           <p>{booking.user?.userName || "Unknown User"}</p>
                         </div>
                       </td>
@@ -209,7 +212,7 @@ const ListBookingScreen = () => {
                         <button
                           type="button"
                           className="icon-container iconview"
-                          onClick={() => handleRowClick(booking._id)}
+                          onClick={() => handleRowClick(booking._id, booking, booking.userId )}
                         >
                           <FaEye />
                         </button>

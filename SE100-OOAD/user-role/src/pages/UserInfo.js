@@ -1,4 +1,5 @@
 import { Routes, Route, Link, useLocation, Outlet } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import React, { useState, useRef, useEffect } from 'react';
 import '../styles/User.css';
 import UserInfoFile from '../components/UserInfoFile';
@@ -7,6 +8,28 @@ import Swal from "sweetalert2";
 function UserInfo() {
     const [isButtonActive, setIsButtonActive] = useState(false);
     const [selectedGender, setSelectedGender] = useState(0); // 0: Nam, 1: Nữ, 2: Khác
+
+    const [user, setUser] = useState([]);
+    const getUser = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/user/getbyid/${localStorage.getItem("authToken")}`);
+            const data = await response.json();
+            // console.log('User :',data.data)
+            if (data.isSuccess) {
+                setUser(data.data);
+            } else {
+                console.error(data.error);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            // setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getUser();
+    }, []);
 
     const [userData, setUserData] = useState({
         username: "Hiếu Nghĩa cute hong",
@@ -67,14 +90,17 @@ function UserInfo() {
 
     return (
         <div class="user_section">
+            <Helmet>
+                <title>Travel Social | Thông Tin Cá Nhân</title>
+            </Helmet>
             <div className="user_title_section user_section_frame">
                 <span className="OpacityEffect">Thông tin cá nhân</span>
             </div>
             <div className="user_content_section user_section_frame">
                 <UserInfoFile
-                    label="Tên đăng nhập"
+                    label="Tên người dùng"
                     type="text"
-                    value={userData.username}
+                    value={user.userName}
                     placeholder="Hãy nhập tên"
                     isEditing={isEditing.username}
                     onEdit={() => handleEdit("username")}
@@ -83,7 +109,7 @@ function UserInfo() {
                 <UserInfoFile
                     label="Email"
                     type="email"
-                    value={userData.email}
+                    value={user.userEmail}
                     placeholder="Cập nhật email"
                     isEditing={isEditing.email}
                     onEdit={() => handleEdit("email")}
@@ -92,7 +118,7 @@ function UserInfo() {
                 <UserInfoFile
                     label="Số điện thoại"
                     type="text"
-                    value={userData.phone}
+                    value={user.userPhoneNumber||''}
                     placeholder="Cập nhật số điện thoại"
                     isEditing={isEditing.phone}
                     onEdit={() => handleEdit("phone")}
@@ -101,14 +127,14 @@ function UserInfo() {
                 <UserInfoFile
                     label="Ngày sinh"
                     type="date"
-                    value={userData.dob}
+                    value={user.userDateOfBirth||''}
                     placeholder="Cập nhật ngày sinh"
                     isEditing={isEditing.dob}
                     onEdit={() => handleEdit("dob")}
                     onChange={(value) => handleChange("dob", value)}
                     dob={true}
                 />
-                <div className="input_user_frame OpacityEffect">
+                {/* <div className="input_user_frame OpacityEffect">
                     <label>Giới tính</label>
                     <div className="file_checkbox_user">
                         <div className="file_checkbox"
@@ -130,11 +156,11 @@ function UserInfo() {
                             <span>Khác</span>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <UserInfoFile
                     label="Địa chỉ"
                     type="text"
-                    value={userData.address}
+                    value={user.userAddress||''}
                     placeholder="Cập nhật địa chỉ"
                     isEditing={isEditing.address}
                     onEdit={() => handleEdit("address")}

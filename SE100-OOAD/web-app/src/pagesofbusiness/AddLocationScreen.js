@@ -30,29 +30,34 @@ const AddLocationScreen = () => {
 
     const handleSubmit = async () => {
         const formData = new FormData();
-
+    
         // Append text fields
         formData.append("name", locationName);
         formData.append("ownerId", userId);
         formData.append("address", address);
-        formData.append("type", JSON.stringify(type));
+        formData.append("category", JSON.stringify(type));
         formData.append("description", description);
-        //formData.append("businessProof", businessProof);
-
+    
         // Append image files
-        images.forEach((image, index) => {
-            formData.append(`images`, image.file);
+        images.forEach((image) => {
+            formData.append("file", image.file); // use "file" if that's the field name you need
         });
 
+        console.log(formData);
+    
         try {
-            const response = await axios.post("http://localhost:3000/createlocation", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    
-                },
+            const response = await fetch(`http://localhost:3000/createlocation`, {
+                method: "POST",
+                body: formData,
+                credentials: "include", // Cho phép gửi cookie (tương tự với "withCredentials: true" trong axios)
             });
-
-            console.log("Response:", response.data);
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const responseData = await response.json();
+            console.log("Response:", responseData);
             alert("Địa điểm đã được tạo thành công!");
             navigate("/locations");
         } catch (error) {
@@ -60,6 +65,7 @@ const AddLocationScreen = () => {
             alert("Có lỗi xảy ra khi tạo địa điểm!");
         }
     };
+    
 
     const handleAddImage = (e) => {
         const file = e.target.files[0];

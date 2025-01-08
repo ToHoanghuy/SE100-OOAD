@@ -11,8 +11,8 @@ const getAllReviews = async () => {
 
 const getReviewById = async (id) => {
     const result = await Review.findById(id)
-    if(result)
-        return result
+    if(result) 
+        return result 
     else 
         throw new NotFoundException('Can not found this review')
 }

@@ -14,6 +14,7 @@ router.get('/locationbycategory/:categoryId', locationController.getLocationByCa
 
 router.get('/locationbyuserid/:userId', locationController.getLocationByUserId);
 router.get('/locationbyname', locationController.getLocationByName);
+router.get('/search', locationController.searchLocationsAndRooms);
 
 router.get('/locationbyid/:locationId', locationController.getLocationById);
 //update

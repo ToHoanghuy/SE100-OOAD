@@ -1,15 +1,33 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getIconClass } from '../function/functionEffect';
+import { getFacilityIconClass } from '../function/functionEffect';
 import { formatPrice } from '../function/formatPrice';
 import Swal from "sweetalert2";
 
-function RoomInfo({ services }) {
+function RoomInfo({ room, quantityRoom, setQuantityRoom, choiceRoom }) {
     const [quantity, setQuantity] = useState(0);
-    const maxRooms = 3; // Số phòng trống
-    const price= 7500000
+    // const maxRooms = 3; // Số phòng trống
+    // const price=  ''
+    // const getRoom = async () => {
+    //     try {
+    //         const response = await fetch(`http://localhost:3000/user/getbyid/${localStorage.getItem("authToken")}`);
+    //         const data = await response.json();
+    //         // console.log('User :',data.data)
+    //         if (data.isSuccess) {
+    //             setUser(data.data);
+    //         } else {
+    //             console.error(data.error);
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     } finally {
+    //         // setLoading(false);
+    //     }
+    // };
+    // console.log(room.facility)
+
 
     const increment = () => {
-        if (quantity < maxRooms) {
+        if (quantity < room.quantity) {
             setQuantity(prevQuantity => prevQuantity + 1);
         }
 
@@ -27,31 +45,41 @@ function RoomInfo({ services }) {
         if (/^[0-9]*$/.test(value) || value === "") {
             // setQuantity(value === "" ? 0 : parseInt(value));
             value = value === "" ? 0 : parseInt(value);
-            // Nếu giá trị lớn hơn maxRooms, đặt giá trị bằng maxRooms
-            if (value > maxRooms) {
-                value = maxRooms;
+            if (value > room.quantity) {
+                // alert(room.quantity)
+                value = room.quantity;
             }
             setQuantity(value);
         }
     };
 
     const booking = () => {
-        if(quantity ==0)
+        // if(quantity ==0)
+        // {
+        //     Swal.fire({
+        //         title: 'Chọn phòng thất bại',
+        //         text: 'Bạn chưa chọn số lượng!',
+        //         icon: 'error',
+        //         confirmButtonText: 'Tiếp tục',
+        //         customClass: {
+        //             confirmButton: 'custom_swal_button' 
+        //         }
+        //     });
+        // }else{
+        console.log('ok: ', quantityRoom)
+        setQuantityRoom(quantityRoom.map(ele =>
+            ele.id === room._id ? { ...ele, quantity_value: quantity } : ele
+        ));
+        if(quantity >0)
         {
-            Swal.fire({
-                title: 'Thất bại',
-                text: 'Bạn chưa chọn số lượng!',
-                icon: 'error',
-                confirmButtonText: 'Tiếp tục',
-                customClass: {
-                    confirmButton: 'custom_swal_button' 
-                }
-            });
+            choiceRoom()
         }
+        // }
+
     };
 
     return (
-        <div class="room_info OpacityEffect">
+        <div class="room_info">
             <div class="room_info_detail">
                 <div class="room_facilities">
                     <div class="room_facilities_ele">
@@ -65,13 +93,13 @@ function RoomInfo({ services }) {
                 </div>
                 <div class="room_service">
                     <span class="room_service_title">
-                        <i class="fa-solid fa-hand-holding-heart"></i>Dịch vụ
+                        <i class="fa-solid fa-hand-holding-heart"></i>Tiện nghi
                     </span>
                     <div class="room_service_detail">
-                        {services.map((service, index) => (
+                        {room.facility.map((facility, index) => (
                             <div class="room_service_item service_ele">
-                                <i className={getIconClass(service.id)}></i>
-                                <span class="service_name">{service.name}</span>
+                                <i className={getFacilityIconClass(facility.name)}></i>
+                                <span class="service_name">{facility.name}</span>
                             </div>
                         ))}
                     </div>
@@ -89,16 +117,20 @@ function RoomInfo({ services }) {
                             />
                             <button className="quantity_btn" onClick={increment}>+</button>
                         </div>
-                        <span className="vacant_room">Còn {maxRooms} phòng trống</span>
+                        <span className="vacant_room">Còn {room.quantity} phòng trống</span>
                     </div>
                 </div>
             </div>
             <div class="book_now">
+                <div className='room_name'>
+                    <i class="fa-solid fa-door-open"></i>
+                    {room.name}</div>
                 <div class="room_price">
                     <span class="room_price_text">Giá</span>
-                    <span class="room_price_value">VNĐ {formatPrice(price)}</span>
+                    <span class="room_price_value">VNĐ {formatPrice(room.pricePerNight)}</span>
+                    <button class="booking_btn" onClick={booking}>Chọn</button>
                 </div>
-                <button class="booking_btn" onClick={booking}>Đặt ngay</button>
+                {/* <button class="booking_btn" onClick={booking}>Đặt ngay</button> */}
             </div>
         </div>
     )

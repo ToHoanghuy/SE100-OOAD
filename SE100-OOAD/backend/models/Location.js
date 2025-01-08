@@ -60,7 +60,7 @@ const locationSchema = new Schema({
     longtitude: Number,
     status: {
         type: String,
-        enum: ['active', 'inactive'],
+        enum: ['active', 'inactive', 'rejected'],
         default: 'inactive'
     }
 },  

@@ -4,13 +4,21 @@ import './App.css';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import NewsPage from './pages/News';
+import SearchPage from './pages/SearchPage';
 import ContactPage from './pages/Contact';
 import Detail from './pages/Detail';
 import User from './pages/User';
 import UserInfo from './pages/UserInfo';
 import UserPasswork from './pages/UserPasswork';
+import HistoryBooking from './pages/HistoryBooking';
+import ChatPage from './pages/ChatPage';
+import Notification from './pages/Notification';
+import Favorite from './pages/Favorite';
+import CollectionLayout from './pages/CollectionLayout';
+import CollectionDetail from './pages/CollectionDetail';
+
 import Booking from './pages/Booking';
+
 
 import './styles/styleForAll.css';
 
@@ -25,8 +33,8 @@ function App() {
   const backToTop = useRef(null);
 
   useEffect(() => {
-   
-    window.scrollTo(0, 0);    
+
+    window.scrollTo(0, 0);
   }, [location]);
 
   useEffect(() => {
@@ -89,7 +97,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/news" element={<NewsPage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path='/register' element={<Register />} />
@@ -99,9 +107,19 @@ function App() {
           <Route index element={<Navigate to="account/info" replace />} />
           <Route path="account/info" element={<UserInfo />} />
           <Route path="account/passwork" element={<UserPasswork />} />
-          <Route path="booking" element={<Booking />} />
+          <Route path="notification" element={<Notification />} />
+          <Route path="storage/historybooking" element={<HistoryBooking />} />
+          <Route path="storage/chat" element={<ChatPage />} />
+          {/* <Route path="storage/favorite" element={<Favorite />} /> */}
+
+          <Route path="storage/collection" element={<CollectionLayout />}>
+            <Route index element={<Favorite />} />
+            <Route path=":id" element={<CollectionDetail />} />
+          </Route>
+
           {/* <Route path="settings" element={<UserSettings />} /> */}
         </Route>
+        <Route path="/booking" element={<Booking />} />
       </Routes>
 
     </div>

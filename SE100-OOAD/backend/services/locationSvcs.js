@@ -98,9 +98,10 @@ const updateLocation = async(locationId, updateData) => {
 const changeStatusLocation = async(locationId, status) => {
     const updatedLocation = await Location.findByIdAndUpdate(locationId, {status: status}, {new: true, runValidators: true})
 
+    console.log(status);
     if(status === 'active')
         console.log('Send approve email to owner')
-    if(status === 'inactive')
+    if(status === 'rejected')
         console.log('Send reject email to owner')
 
     if(updatedLocation)

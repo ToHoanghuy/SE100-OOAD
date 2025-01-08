@@ -4,13 +4,16 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserData } from '../store/slides/userSlide';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const Header = ({ mainTitle,subTitle }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   console.log('dispatch: ', dispatch);  // Log out dispatch to see if it's available
   const userInfo = useSelector((state) => state.user.userInfo);
   const [userData, setUserDataa] = useState(null);
+  const [showMenu, setShowMenu] = useState(false); // State to toggle menu
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -31,6 +34,25 @@ const Header = ({ mainTitle,subTitle }) => {
     fetchUserDetails();
   }, [dispatch]);
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/logout', {
+        method: 'GET',
+        credentials: 'include', // Include cookies in request
+      });
+
+      if (response.ok) {
+        console.log('Logged out successfully');
+        localStorage.removeItem('userId'); // Clear user data from localStorage
+        navigate('/'); // Redirect to login page
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
     return (
       <div className="dashboard-header">
         <div class="header-section1">
@@ -41,9 +63,10 @@ const Header = ({ mainTitle,subTitle }) => {
           <div className="notification-icon bg-gray-100 p-3 rounded-lg">
             <FaBell />
           </div>
-          <div className="admin-info items-center space-x-2 border rounded-lg p-2">
+        <div className="admin-info items-center space-x-2 border rounded-lg p-2" onClick={() => setShowMenu(!showMenu)} >
           <img
-            src={userData?.userAvatar?.url || 'avatar.png'}
+
+            src={userData?.userAvatar || require('../assets/images/avt.png')}
             alt="Admin Avatar"
             className="admin-avatar"
           />            
@@ -56,6 +79,16 @@ const Header = ({ mainTitle,subTitle }) => {
                 Quản trị viên
               </div>
             </div>
+            {showMenu && (
+            <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg p-2 w-40">
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          )}
           </div>
           
         </div>

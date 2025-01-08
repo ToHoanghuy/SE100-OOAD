@@ -51,7 +51,7 @@ module.exports.signin_post =  async (req, res) => { //Check login
         )
         res.status(200).json({
             isSucess: true,
-            data: user._id,
+            data: user,
             error: null
         })
     }
@@ -65,9 +65,25 @@ module.exports.signin_post =  async (req, res) => { //Check login
 }
 
 module.exports.logout_get = (req, res) => {
-    res.cookie('jwt', '', {maxAge: 1});
-    res.redirect('/');
-
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.status(200).json({
+        isSuccess: true,
+        message: 'Logged out successfully',
+    });
+};
+module.exports.getUserByUserRole = async (req, res, next) => {
+    const userRole = 'location-owner'
+    try {
+        const result = await authServices.getByUserRole(userRole)
+        res.status(201).json({
+            isSuccess: true,
+            data: result,
+            error: null
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 }
 
 module.exports.getAllUser = async (req, res, next) => {

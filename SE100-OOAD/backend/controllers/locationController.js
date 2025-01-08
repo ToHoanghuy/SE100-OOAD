@@ -53,14 +53,23 @@ module.exports.createLocation = async (req, res, next) => {
         publicId: file.filename
     }))
     try {
-        const parseredCategory = JSON.parse(category)
-        console.log(parseredCategory)
+        let parsedCategory;
+        try {
+            parsedCategory = JSON.parse(category);
+        } catch (err) {
+            return res.status(400).json({
+                isSuccess: false,
+                data: 'Invalid category format',
+                error: err.message,
+            });
+        }
+        console.log(parsedCategory)
         const locationData = new Location({
             name,
             description,
             slug: '',
             address,
-            category: parseredCategory,
+            category: parsedCategory,
             ownerId: res.locals.user._id,
             image: images
         });
@@ -214,5 +223,106 @@ module.exports.deleteLocation = async (req, res, next) => {
         next(error)
     }
 }
+
+// /controllers/locationController.js
+
+//const Location = require('../models/locationSchema');
+//const Room = require('../models/roomSchema');
+
+// Hàm xử lý tìm kiếm location và room
+module.exports.searchLocationsAndRooms = async (req, res) => {
+    try {
+        const { rating, costMin, costMax, category } = req.query;
+
+        // Tạo các điều kiện lọc động
+        const locationQuery = {};
+        if (rating) locationQuery['rating'] = { $gte: parseFloat(rating) };
+        if (category) locationQuery['category.id'] = category;
+
+        const roomPriceQuery = {};
+        if (costMin) roomPriceQuery.$gte = parseFloat(costMin);
+        if (costMax) roomPriceQuery.$lte = parseFloat(costMax);
+
+        const aggregatePipeline = [
+            // Kết nối với Rooms
+            {
+                $lookup: {
+                    from: 'Room',
+                    localField: '_id',
+                    foreignField: 'locationId',
+                    as: 'rooms',
+                },
+            },
+            // {
+            //     $project: {
+            //         _id: 1,
+            //         location: '$name',
+            //         rating: 1,
+            //         rooms: 1, // Kiểm tra xem `rooms` có dữ liệu không
+            //     },
+            // },
+            // Áp dụng điều kiện lọc cho Location
+            {
+                $match: locationQuery,
+            },
+            // Nếu có điều kiện lọc giá, lọc các phòng theo `pricePerNight`
+            ...(costMin || costMax
+                ? [
+                    {
+                        $addFields: {
+                            matchingRooms: {
+                                $filter: {
+                                    input: '$rooms',
+                                    as: 'room',
+                                    cond: {
+                                        $and: [
+                                            { $gte: ['$$room.pricePerNight', roomPriceQuery.$gte || 0] },
+                                            { $lte: ['$$room.pricePerNight', roomPriceQuery.$lte || Infinity] },
+                                        ],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        $match: {
+                            'matchingRooms.0': { $exists: true }, // Chỉ giữ các Location có ít nhất 1 phòng thỏa mãn
+                        },
+                    },
+                ]
+                : []),
+            // Dự án kết quả trả về
+            {
+                $project: {
+                    _id: 1,
+                    location: '$name',
+                    rating: 1,
+                    category: 1,
+                    matchingRooms: 1,
+                },
+            },
+        ];
+
+        const locations = await Location.aggregate(aggregatePipeline);
+
+        res.json(locations);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+// module.exports = {
+//     searchLocationsAndRooms
+// };
+
 
 //--DELETE LOCATION DATA--\\

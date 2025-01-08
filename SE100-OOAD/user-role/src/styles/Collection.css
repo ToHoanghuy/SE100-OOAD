@@ -1,0 +1,113 @@
+.all_collection{
+    padding-top: 35px;
+    padding-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px
+}
+
+.collection_frame{
+    width: 80%;
+    height: 100px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add_collection{
+    background: linear-gradient(45deg, rgb(237, 237, 237), rgb(231, 231, 231));
+    gap: 10px;
+}
+.add_collection i{
+    font-size: 20px;
+    color: #395668;
+}
+.add_collection span{
+    font-size: 18px;
+    color: #395668;
+}
+
+.collection{
+    /* color: aliceblue; */
+    color: #395668;
+    font-size: 18px;
+    font-weight: bold;
+}
+.collection_frame:hover{
+    transform: scale(1.02);
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user_booking_frame .place_ele{
+    margin-left: 0;
+    margin-bottom: 0;
+}
+.user_booking_frame .place_ele:hover {
+    box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
+}
+.collection_header{
+    height: 10%;
+    min-height: 7vh;
+    width: 100%;
+    border-bottom: 1.5px solid #eaeaea;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    color: #395668;
+    gap: 10px;
+    /* gap:8px; */
+}
+
+.collection_header span{
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    /* margin-right: 10px; */
+}
+.collection_header i{
+    font-size: 20px;
+    cursor: pointer;
+}
+.collection_header i:hover{
+    background: linear-gradient(
+        to right,
+        #cfe9ff, /* Hồng đậm hơn */
+        #8ebbff, /* Tím đậm hơn */
+        #9a88ff  /* Cam đậm hơn */
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+/* .collection_box{
+    width: 200px;
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+} */
+.add_collection input{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 40%;
+    box-sizing: border-box;
+    /* text-align: center;  */
+    outline: none;
+    border: none;
+}
+.add_collection input:focus{
+    outline: none;
+}

@@ -200,10 +200,19 @@ const deleteBooking = async (bookingId) => {
 
 const getBookingByBusinessId = async (businessId) => {
     const locations = await Location.find({ ownerId: businessId });
+    console.log('locations: ',locations)
     const locationIds = locations.map(location => location._id);
     const rooms = await Room.find({ locationId: { $in: locationIds } });
+    console.log('rooms: ', rooms);
     const roomIds = rooms.map(room => room._id);
-    const bookings = await Booking.find({ roomId: { $in: roomIds } });
+    console.log('roomId: ',roomIds);
+    const bookings = await Booking.find({
+        items: {
+            $elemMatch: {
+                roomId: { $in: roomIds }, 
+            },
+        },
+    });
     return bookings;
 };
 
@@ -271,20 +280,35 @@ const getBookingRevenueByMonthForBusiness = async (businessId, month, year) => {
               $gte: startDate,
               $lt: endDate,
             },
-            roomId: { $in: roomIds },
+            "items.roomId": { $in: roomIds },
           }
         },
+        // {
+        //     $unwind: "$items", 
+        // },
+        // {
+        //     $match: {
+        //         "items.roomId": { $in: roomIds }, 
+        //     },
+        // },
+        // {
+        //     $group: {
+        //       _id: "$_id", // Gom nhóm theo bookingId
+        //         // totalRevenue: { $sum: "totalPriceAfterTax" }, // Tính tổng revenue cho mỗi booking
+        //     },
+        // },
 
         {
           $group: {
-            _id: null,  // Nhóm tất cả bookings lại với nhau
-            totalRevenue: { $sum: "$totalPrice" },
+            _id: null,  
+            totalRevenue: { $sum: "$totalPriceAfterTax" },
             totalBookings: { $sum: 1 },
           }
         }
       ]);
+
   
-      console.log('Bookings Result:', bookings); // Kiểm tra kết quả bookings
+      console.log('Bookings Result:', bookings); 
   
       if (bookings.length > 0) {
         return {
@@ -301,7 +325,7 @@ const getBookingRevenueByMonthForBusiness = async (businessId, month, year) => {
       console.log('Error:', error);
       throw new Error("Error retrieving revenue data: " + error.message);
     }
-  };
+};
   
 module.exports = {
     updateStatusBooking,

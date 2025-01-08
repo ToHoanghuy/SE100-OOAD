@@ -149,7 +149,7 @@ const DashBoardBusinessScreen = () => {
                 </div>
                 <p>Booking trong tháng</p>
                 <div className="frame">
-                  <PercentageIndicator class="percentage" percentage={-12} />
+                  {/* <PercentageIndicator class="percentage" percentage={-12} /> */}
                 </div>
               </div>
               <div className="card-body">
@@ -172,7 +172,7 @@ const DashBoardBusinessScreen = () => {
                 </div>
                 <p>Doanh thu trong tháng</p>
                 <div className="frame">
-                  <PercentageIndicator class="percentage" percentage={18} />
+                  {/* <PercentageIndicator class="percentage" percentage={18} /> */}
                 </div>
               </div>
               <div className="card-body">

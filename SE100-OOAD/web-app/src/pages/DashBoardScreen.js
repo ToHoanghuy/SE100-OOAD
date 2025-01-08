@@ -21,15 +21,16 @@ const DashBoardScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [ownerCount, setOwnerCount] = useState(0);
+  const [pendingLocationCount, setPendingLocationCount] = useState(0);
   const onChange = (newDate) => {
     setValue(newDate);
     setSelectedDate(newDate); // Cập nhật ngày đã chọn
   };
 
-  const filteredUsers = selectedDate
-    ? locations.filter((user) => {
+  const filteredLocations = selectedDate
+    ? locations.filter((location) => {
         // Giả sử mỗi user có một thuộc tính date chứa ngày mà họ có dữ liệu
-        const userDate = new Date(user.dateCreated); // Thay đổi 'user.date' thành thuộc tính thực tế của bạn
+        const userDate = new Date(location.dateCreated); // Thay đổi 'user.date' thành thuộc tính thực tế của bạn
         return userDate.toDateString() === selectedDate.toDateString();
       })
     : [];
@@ -99,7 +100,11 @@ const DashBoardScreen = () => {
         const data = await response.json();
 
         if (response.ok) {
+          const pendingLocationCount = data.data.filter(
+            (location) => location.status === "inactive"
+          );
           setLocations(data.data);
+          setPendingLocationCount(pendingLocationCount.length);
           console.log(data.data);
         } else {
           setError(data.message || "Không thể lấy danh sách địa điểm");
@@ -145,7 +150,7 @@ const DashBoardScreen = () => {
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
                         12%
                     </p> */}
-                  <PercentageIndicator class="percentage" percentage={-12} />
+                  {/* <PercentageIndicator class="percentage" percentage={-12} /> */}
                 </div>
               </div>
               <div className="card-body">
@@ -170,7 +175,7 @@ const DashBoardScreen = () => {
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
                         12%
                     </p> */}
-                  <PercentageIndicator class="percentage" percentage={12} />
+                  {/* <PercentageIndicator class="percentage" percentage={12} /> */}
                 </div>
               </div>
               <div className="card-body">
@@ -190,16 +195,16 @@ const DashBoardScreen = () => {
                 <div class="circle">
                   <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
                 </div>
-                <p>Nhà kinh doanh mới</p>
+                <p>Tổng địa điểm chờ duyệt</p>
                 <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
                         12%
                     </p> */}
-                  <PercentageIndicator class="percentage" percentage={-12} />
+                  {/* <PercentageIndicator class="percentage" percentage={-12} /> */}
                 </div>
               </div>
               <div className="card-body">
-                <p className="number">1</p>
+                <p className="number">{pendingLocationCount}</p>
               </div>
               <div className="separator">
                 <div></div>
@@ -216,12 +221,12 @@ const DashBoardScreen = () => {
                   <FaMoneyBillAlt size={40}></FaMoneyBillAlt>
                 </div>
                 <p>Số lượt booking trong tháng</p>
-                <div className="frame">
+                {/* <div className="frame">
                   {/* <p className={`percentage ${1 < 0 ? 'decrease' : 'increase'}`}>
                         12%
                     </p> */}
-                  <PercentageIndicator class="percentage" percentage={-12} />
-                </div>
+                {/* <PercentageIndicator class="percentage" percentage={-12} /> */}
+                {/* </div> */}
               </div>
               <div className="card-body">
                 <p className="number">{monthlyBookings}</p>
@@ -304,10 +309,10 @@ const DashBoardScreen = () => {
           />
         </div>
         <div class="scroll-container">
-          <p class="new-business mb-3">Nhà kinh doanh</p>
+          <p class="new-business mb-3">Địa điểm kinh doanh đăng ký ngày</p>
           <div>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
+            {filteredLocations.length > 0 ? (
+              filteredLocations.map((user) => (
                 <div
                   className="user-info"
                   key={user.id}

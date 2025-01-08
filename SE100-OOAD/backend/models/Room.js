@@ -2,6 +2,17 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
+const imageSchema = new Schema({
+    url: {
+        type: String,
+        required: true
+    },
+    publicId: {
+        type: String,
+        required: true
+    }
+})
+
 const facilitySchema = new Schema({
     name: { type: String, required: true },
     quantity: { type: Number, default: 1},
@@ -22,13 +33,13 @@ const roomSchema = new Schema({
         required: true },
     name: { type: String, required: true },
     quantity: {type: String, required: true, min: 0},
-    rating: { type: Number, min: 0, max: 5 },
+    rating: { type: Number, min: 0, max: 5 , default: 0},
     pricePerNight: { type: Number, required: true },
     capacity: {type: Number, required: true},
     description: { type: String},
     facility: { type: [facilitySchema], default: [] },
     bed: {type: [bedSchema], default: []},
-    image: { type: [String], default: []},
+    image: { type: [imageSchema], default: []},
     area: {type: Number, required: true}
     }, 
     {collection: 'Room'}

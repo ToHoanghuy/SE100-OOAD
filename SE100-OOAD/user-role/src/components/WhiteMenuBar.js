@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../styles/WhiteMenuBar.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 function WhiteMenuBar() {
@@ -14,6 +14,12 @@ function WhiteMenuBar() {
     const [isLoggedIn, setIsLoggedIn] = useState('');
     const [subUserMenu, setSubUserMenu] = useState(false);
     const userRef = useRef(null);
+
+    const navigate = useNavigate();
+
+    const handleNavigation = () => {
+      navigate('/search');
+    };
 
     const getUser = async () => {
         try {
@@ -101,10 +107,10 @@ function WhiteMenuBar() {
         >
             <div className="left_side">
                 <div className="logo">
-                    <img src="/images/logo.png" />
+                    <img  src="/images/logo.png" />
                 </div>
                 <Link to='/' className={`menu_bar_text ${location.pathname === "/" ? "current_page" : ""}`}>Trang Chủ</Link>
-                <Link className={`menu_bar_text ${location.pathname === "/detail" ? "current_page" : ""}`}>Địa điểm</Link>
+                <Link to='/search' className={`menu_bar_text ${location.pathname === "/search" ? "current_page" : ""}`}>Địa điểm</Link>
                 <span className="menu_bar_text">Giới thiệu</span>
             </div>
             <div className="right_side">

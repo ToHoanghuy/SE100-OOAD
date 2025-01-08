@@ -106,7 +106,8 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
             const data = await response.json();
             if (data.isSuccess) {
                 console.log('location: ', data.data);
-                setLocation(data.data);
+                setLocation(data.data); 
+                localStorage.setItem('locationId', data.data._id);
             } else {
                 // console.error(data.error);
             }
@@ -215,11 +216,13 @@ function PlaceEle({ ele, showHeart, path, favrorited }) {
                             <span className='place_ele_original_price'>Chỉ từ</span>
                             <div className='place_ele_discount_value'>0%</div>
                         </div>
-                        <span className='place_ele_discount_price'>VNĐ {formatPrice(
-                                                                        ele?.reduce((min, current) => 
-                                                                        current.pricePerNight < min.pricePerNight ? current : min
-                                                                        ).pricePerNight
-                                                                    )}</span>
+                        <span className='place_ele_discount_price'>
+  VNĐ {ele && ele.length > 0 ? formatPrice(
+    ele.reduce((min, current) => 
+      current.pricePerNight < min.pricePerNight ? current : min
+    , ele[0]).pricePerNight
+  ) : 'N/A'}
+</span>
                         <button className='place_ele_btn'>Đặt phòng</button>
                     </div>
                 </div>
